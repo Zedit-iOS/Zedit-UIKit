@@ -9,21 +9,25 @@
 /* Begin PBXBuildFile section */
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
-		E1BC32B82CCF78BE0026C60F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B72CCF78BE0026C60F /* ViewController.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
+		E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */; };
+		E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */; };
+		E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32CB2CCF841A0026C60F /* Project.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zedit-UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E1BC32B72CCF78BE0026C60F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E1BC32BC2CCF78C10026C60F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1BC32BF2CCF78C10026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
+		E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
+		E1BC32CB2CCF841A0026C60F /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +62,10 @@
 			children = (
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
-				E1BC32B72CCF78BE0026C60F /* ViewController.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
+				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
+				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
+				E1BC32CB2CCF841A0026C60F /* Project.swift */,
 				E1BC32BC2CCF78C10026C60F /* Assets.xcassets */,
 				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
 				E1BC32C12CCF78C10026C60F /* Info.plist */,
@@ -138,9 +144,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1BC32B82CCF78BE0026C60F /* ViewController.swift in Sources */,
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
+				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
+				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
+				E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
