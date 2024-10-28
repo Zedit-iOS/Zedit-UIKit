@@ -9,7 +9,7 @@ import UIKit
 
 class ProjectsTableViewController: UITableViewController {
     
-    var projects:[Project] = [Project(name: "Avinash")]
+    var projects:[Project] = [Project(name: "Avinash", video: "hi")]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +25,7 @@ class ProjectsTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,16 +35,21 @@ class ProjectsTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "project", for: indexPath) as! ProjectsTableViewCell
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "project", for: indexPath)
         // Configure the cell...
         let project = projects[indexPath.row]
-        cell.update(with: project)
+        var content = cell.defaultContentConfiguration()
+        content.text="\(project.name)"
+        cell.contentConfiguration = content
         cell.showsReorderControl = true
 
         return cell
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 
     /*
     // Override to support conditional editing of the table view.
