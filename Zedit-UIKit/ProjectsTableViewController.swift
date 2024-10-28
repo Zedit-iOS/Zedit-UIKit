@@ -9,10 +9,11 @@ import UIKit
 
 class ProjectsTableViewController: UITableViewController {
     
-    var projects:[Project] = [Project(name: "Avinash", video: "hi")]
+    var projects:[Project] = [Project(name: "Avinash", video: "hi"),Project(name: "vinay", video: "12se")]
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.leftBarButtonItem = editButtonItem
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -49,6 +50,16 @@ class ProjectsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let project = projects[indexPath.row]
+        print("\(project.video)")
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let movedProject = projects.remove(at: sourceIndexPath.row)
+        projects.insert(movedProject, at: destinationIndexPath.row)
     }
 
     /*
