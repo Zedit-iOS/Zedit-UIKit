@@ -60,6 +60,21 @@
             </objects>
             <point key="canvasLocation" x="328" y="-33"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="JPz-D5-oUQ">
+            <objects>
+                <viewController id="9Lp-0K-qM7" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pvm-kM-bS5">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ReJ-UC-R89"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M2Y-va-npI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="745" y="740"/>
+        </scene>
         <!--Create Project View Controller-->
         <scene sceneID="ag1-06-70e">
             <objects>
@@ -71,41 +86,38 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XHp-TX-QxI">
                                 <rect key="frame" x="0.0" y="113" width="393" height="705"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JMO-u6-D95">
+                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7S-XZ-5U3">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Select Video"/>
                                         <connections>
-                                            <action selector="selectVideoButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="vTC-c9-btc"/>
+                                            <action selector="selectVideoButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="5mE-NO-Jqr"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7dJ-rB-7xf">
-                                        <rect key="frame" x="0.0" y="34.333333333333343" width="393" height="400"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="400" id="HvK-sE-gH0"/>
-                                        </constraints>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c68-AJ-1N6">
+                                        <rect key="frame" x="0.0" y="34.333333333333314" width="393" height="582.33333333333348"/>
+                                        <color key="backgroundColor" systemColor="systemGray3Color"/>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Project name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZS-xa-kzM">
-                                        <rect key="frame" x="0.0" y="434.33333333333337" width="393" height="20.333333333333314"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter Project Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAp-PC-QeS">
+                                        <rect key="frame" x="0.0" y="616.66666666666663" width="393" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AZu-Ky-hrk">
-                                        <rect key="frame" x="0.0" y="454.66666666666663" width="393" height="35"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PdX-x9-zPw">
+                                        <rect key="frame" x="0.0" y="640.66666666666663" width="393" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="BBj-8P-zeI"/>
+                                            <constraint firstAttribute="height" constant="30" id="mPX-bx-5fa"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBu-Ns-yD4">
-                                        <rect key="frame" x="0.0" y="489.66666666666657" width="393" height="215.33333333333331"/>
+                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DoN-na-mnG">
+                                        <rect key="frame" x="0.0" y="670.66666666666663" width="393" height="34.333333333333371"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Save Project"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Create Project"/>
                                         <connections>
-                                            <action selector="createProjectButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="5BS-PH-0Kg"/>
+                                            <action selector="createProjectButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="Etw-p9-jMX"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -122,15 +134,15 @@
                     </view>
                     <navigationItem key="navigationItem" id="Xjd-Wi-PXX"/>
                     <connections>
-                        <outlet property="projectNameTextField" destination="AZu-Ky-hrk" id="W5m-8o-f37"/>
-                        <outlet property="saveProjectButton" destination="YBu-Ns-yD4" id="AWv-yC-yC7"/>
-                        <outlet property="selectVideoButton" destination="JMO-u6-D95" id="bad-32-nbd"/>
-                        <outlet property="videoPreviewView" destination="7dJ-rB-7xf" id="hPP-QS-rsE"/>
+                        <outlet property="projectNameTextField" destination="PdX-x9-zPw" id="QN7-G2-5AM"/>
+                        <outlet property="saveProjectButton" destination="DoN-na-mnG" id="SWl-Yy-PfY"/>
+                        <outlet property="selectVideoButton" destination="L7S-XZ-5U3" id="bTW-hU-aHW"/>
+                        <outlet property="videoPreviewView" destination="c68-AJ-1N6" id="eg1-Dj-9WS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ba-fH-dNG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1510" y="9"/>
+            <point key="canvasLocation" x="1509.1603053435115" y="8.4507042253521139"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k56-Ub-EUV">
@@ -152,6 +164,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

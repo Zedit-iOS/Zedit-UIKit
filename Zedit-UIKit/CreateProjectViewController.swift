@@ -8,6 +8,7 @@
 import UIKit
 import AVKit
 import MobileCoreServices
+import UniformTypeIdentifiers
 
 class CreateProjectViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate {
 
@@ -66,7 +67,7 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = sourceType
-        picker.mediaTypes = [kUTTypeMovie as String]
+        picker.mediaTypes = [UTType.movie.identifier]
         present(picker, animated: true, completion: nil)
     }
     
