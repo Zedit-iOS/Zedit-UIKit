@@ -16,6 +16,7 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
     @IBOutlet weak var videoPreviewView: UIView!
     @IBOutlet weak var projectNameTextField: UITextField!
     @IBOutlet weak var saveProjectButton: UIButton!
+    @IBOutlet weak var nameExistsLabel: UILabel!  // New label to show "name already exists" message
     
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -26,6 +27,7 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
         super.viewDidLoad()
         setupVideoPreviewView()
         saveProjectButton.isEnabled = false  // Disable button initially
+        nameExistsLabel.isHidden = true  // Hide the label initially
         projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
@@ -182,5 +184,13 @@ extension CreateProjectViewController {
         let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
         
         saveProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
+        
+        // Update the nameExistsLabel visibility and text
+        if projectNameExists {
+            nameExistsLabel.isHidden = false
+            nameExistsLabel.text = "Name already exists."
+        } else {
+            nameExistsLabel.isHidden = true
+        }
     }
 }
