@@ -93,4 +93,12 @@ class ProjectsTableViewController: UITableViewController {
             print("Failed to delete project: \(error)")
         }
     }
+    let mainSegueIdentifier = "MainView"
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == mainSegueIdentifier,
+           let destination = segue.destination as? MainPageViewController,
+           let mainIndex = tableView.indexPathForSelectedRow?.row{
+            destination.projectname = projects[mainIndex].name
+        }
+    }
 }

@@ -16,6 +16,7 @@
 		E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */; };
 		E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32CB2CCF841A0026C60F /* Project.swift */; };
 		E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */; };
+		E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		E1BC32CB2CCF841A0026C60F /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
+		E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
 				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
+				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
 				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
 				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
 				E1BC32CB2CCF841A0026C60F /* Project.swift */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */,
+				E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */,
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
 				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,

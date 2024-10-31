@@ -18,14 +18,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit_UIKit" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43"/>
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="71M-M2-Fer" id="Kpv-LC-8tS">
-                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHv-zq-cQ6">
-                                            <rect key="frame" x="20" y="11" width="313" height="21"/>
+                                            <rect key="frame" x="20" y="10.999999999999998" width="313" height="21.333333333333329"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -40,6 +40,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="nameLabel" destination="bHv-zq-cQ6" id="VuT-aU-WfB"/>
+                                    <segue destination="9Lp-0K-qM7" kind="show" identifier="MainView" id="Pil-qu-QoM"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -60,20 +61,43 @@
             </objects>
             <point key="canvasLocation" x="328" y="-33"/>
         </scene>
-        <!--View Controller-->
+        <!--Main Page View Controller-->
         <scene sceneID="JPz-D5-oUQ">
             <objects>
-                <viewController id="9Lp-0K-qM7" sceneMemberID="viewController">
+                <viewController id="9Lp-0K-qM7" customClass="MainPageViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pvm-kM-bS5">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="aw8-qe-mWp">
+                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3qM-9h-HLV">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="715"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ReJ-UC-R89"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="aw8-qe-mWp" firstAttribute="top" secondItem="ReJ-UC-R89" secondAttribute="top" id="2WR-95-xxd"/>
+                            <constraint firstItem="ReJ-UC-R89" firstAttribute="bottom" secondItem="aw8-qe-mWp" secondAttribute="bottom" id="f5d-Zo-G8v"/>
+                            <constraint firstItem="aw8-qe-mWp" firstAttribute="leading" secondItem="ReJ-UC-R89" secondAttribute="leading" id="qy0-TT-BxI"/>
+                            <constraint firstItem="ReJ-UC-R89" firstAttribute="trailing" secondItem="aw8-qe-mWp" secondAttribute="trailing" id="wLe-Yr-qfz"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="ec0-uk-nFi"/>
+                    <connections>
+                        <outlet property="nameLabel" destination="3qM-9h-HLV" id="Qx2-SW-EcB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M2Y-va-npI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="745" y="740"/>
+            <point key="canvasLocation" x="1876" y="707"/>
         </scene>
         <!--Create Project View Controller-->
         <scene sceneID="ag1-06-70e">
@@ -142,7 +166,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ba-fH-dNG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1509.1603053435115" y="8.4507042253521139"/>
+            <point key="canvasLocation" x="2435.8778625954196" y="8.4507042253521139"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k56-Ub-EUV">
