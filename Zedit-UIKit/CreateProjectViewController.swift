@@ -20,10 +20,13 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     var selectedVideoURL: URL?
-
+    let mainSegueIdentifier = "MainViewCreate"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVideoPreviewView()
+        saveProjectButton.isEnabled = false  // Disable button initially
+        projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
     private func setupVideoPreviewView() {
@@ -38,7 +41,7 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
     
     // Action for the create project button
     @IBAction func createProjectButtonTapped(_ sender: UIButton) {
-        saveProject()
+        saveProject() // Call saveProject; if successful, segue will happen automatically
     }
     
     // Show action sheet for video source options
@@ -77,71 +80,59 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
         documentPicker.delegate = self
         present(documentPicker, animated: true, completion: nil)
     }
+    
+    // Prepare for segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == mainSegueIdentifier,
+           let destination = segue.destination as? MainPageViewController,
+           let projectName = projectNameTextField.text {
+            destination.projectname = projectName
+        }
+    }
 }
 
+// Extension for saving project
 extension CreateProjectViewController {
     private func saveProject() {
-        // Ensure the project has a name
         guard let projectName = projectNameTextField.text, !projectName.isEmpty else {
-            showAlert(title: "Error", message: "Please enter a project name.")
+            // Do not proceed if the project name is empty
             return
         }
         
-        // Ensure a video has been selected
         guard let videoURL = selectedVideoURL else {
-            showAlert(title: "Error", message: "Please select a video.")
+            // Do not proceed if no video is selected
             return
         }
         
-        // Define the project directory path based on the project name
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            showAlert(title: "Error", message: "Unable to access the documents directory.")
             return
         }
         
         let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
         
-        // Check if a directory with the same project name already exists
         if fileManager.fileExists(atPath: projectDirectory.path) {
-            showAlert(title: "Error", message: "A project with this name already exists. Please choose a different name.")
+            // Do not proceed if a project with this name already exists
             return
         }
         
-        // Create the project directory
         do {
             try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            showAlert(title: "Error", message: "Unable to create project directory.")
-            return
-        }
-        
-        // Copy the video to the project directory
-        let videoFileName = videoURL.lastPathComponent
-        let destinationURL = projectDirectory.appendingPathComponent(videoFileName)
-        
-        do {
+            let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
             try fileManager.copyItem(at: videoURL, to: destinationURL)
+            
+            let project = ["name": projectName, "videoURL": destinationURL.path]
+            var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+            projects.append(project)
+            UserDefaults.standard.setValue(projects, forKey: "projects")
         } catch {
-            showAlert(title: "Error", message: "Unable to save the video in the project directory.")
-            return
+            // Handle errors as needed
+            print("Error creating project: \(error.localizedDescription)")
         }
-        
-        // Save project details in UserDefaults with the directory path
-        let project = ["name": projectName, "videoURL": destinationURL.path]
-        var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-        projects.append(project)
-        UserDefaults.standard.setValue(projects, forKey: "projects")
-        
-        showAlert(title: "Success", message: "Project saved successfully.")
-    }
-    
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
 }
+
+// Extension for handling video selection
 extension CreateProjectViewController {
     // Handle video selection from UIImagePickerController
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -167,10 +158,8 @@ extension CreateProjectViewController {
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
 
-        // Remove any previous subviews
         videoPreviewView.subviews.forEach { $0.removeFromSuperview() }
 
-        // Embed the AVPlayerViewController's view inside videoPreviewView
         if let playerVC = playerViewController {
             addChild(playerVC)
             playerVC.view.frame = videoPreviewView.bounds
@@ -178,7 +167,20 @@ extension CreateProjectViewController {
             playerVC.didMove(toParent: self)
         }
 
-        // Start playing the video
         player?.play()
+    }
+}
+
+// MARK: - UITextField Delegate Methods
+extension CreateProjectViewController {
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        // Check if the project name is not empty and a video is selected
+        let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
+        
+        // Check if the project name already exists
+        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
+        
+        saveProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
     }
 }

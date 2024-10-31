@@ -97,7 +97,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M2Y-va-npI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1876" y="707"/>
+            <point key="canvasLocation" x="1253" y="642"/>
         </scene>
         <!--Create Project View Controller-->
         <scene sceneID="ag1-06-70e">
@@ -142,6 +142,7 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Create Project"/>
                                         <connections>
                                             <action selector="createProjectButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="Etw-p9-jMX"/>
+                                            <segue destination="9Lp-0K-qM7" kind="show" identifier="MainViewCreate" id="GJp-4Z-s2h"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -185,6 +186,9 @@
             <point key="canvasLocation" x="-574" y="-33"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="GJp-4Z-s2h"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
