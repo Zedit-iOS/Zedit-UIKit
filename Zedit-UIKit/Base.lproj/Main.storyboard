@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -72,12 +73,26 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="aw8-qe-mWp">
                                 <rect key="frame" x="0.0" y="103" width="393" height="715"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3qM-9h-HLV">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="715"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3qM-9h-HLV">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="20.333333333333332"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JdV-El-Sxq">
+                                        <rect key="frame" x="0.0" y="20.333333333333332" width="393" height="34.333333333333343"/>
+                                        <menu key="menu" id="zDE-Va-QyO">
+                                            <children>
+                                                <command title="Item 1" id="MTn-IK-thI"/>
+                                                <command title="Item 2" id="S5b-1o-3bw"/>
+                                            </children>
+                                        </menu>
+                                        <buttonConfiguration key="configuration" style="tinted"/>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kgf-CK-Ttu">
+                                        <rect key="frame" x="0.0" y="54.666666666666686" width="393" height="660.33333333333326"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -93,6 +108,8 @@
                     <navigationItem key="navigationItem" id="ec0-uk-nFi"/>
                     <connections>
                         <outlet property="nameLabel" destination="3qM-9h-HLV" id="Qx2-SW-EcB"/>
+                        <outlet property="videoPreviewView" destination="Kgf-CK-Ttu" id="sAW-vr-Sqa"/>
+                        <outlet property="videoSelector" destination="JdV-El-Sxq" id="PGD-GU-BbO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M2Y-va-npI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
