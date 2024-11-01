@@ -6,16 +6,21 @@
 //
 
 import UIKit
+import AVKit
 
 class MainPageViewController: UIViewController {
     
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var videoSelector: UIButton!
-    var projectname = String()
-    var videoList:[URL]=[]
+    
     
     @IBOutlet weak var videoPreviewView: UIView!
+    
+    var projectname = String()
+    var videoList:[URL]=[]
+    var player: AVPlayer?
+    var playerViewController: AVPlayerViewController?
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,13 +77,34 @@ class MainPageViewController: UIViewController {
     
     func setUpButton (){
         let actionClosure = {(action: UIAction) in
-            print(action.title)
+            self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
         }
         var menuChilderen:[UIMenuElement]=[]
         for videoName in videoList {
             menuChilderen.append(UIAction(title: videoName.lastPathComponent, handler: actionClosure))
         }
         videoSelector.menu = UIMenu(options: .displayInline, children: menuChilderen)
+        videoSelector.showsMenuAsPrimaryAction = true
+    }
+    
+    private func playVideo(url: URL){
+        player = AVPlayer(url: url)
+        playerViewController = AVPlayerViewController()
+        playerViewController?.player = player
+        playerViewController?.showsPlaybackControls = true
+        
+        videoPreviewView.subviews.forEach {
+            $0.removeFromSuperview()
+        }
+        
+        if let playerVC = playerViewController {
+                    addChild(playerVC)
+                    playerVC.view.frame = videoPreviewView.bounds
+                    videoPreviewView.addSubview(playerVC.view)
+                    playerVC.didMove(toParent: self)
+        }
+                
+        player?.play()
     }
     
 
