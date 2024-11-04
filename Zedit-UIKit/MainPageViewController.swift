@@ -21,6 +21,8 @@ class MainPageViewController: UIViewController {
     var videoList:[URL]=[]
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
+    let trimSegueIdentifier = "Trim"
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +78,12 @@ class MainPageViewController: UIViewController {
     }
     
     func setUpButton (){
+        guard !videoList.isEmpty else {
+                videoSelector.isEnabled = false
+                return
+            }
+            
+            videoSelector.isEnabled = true
         let actionClosure = {(action: UIAction) in
             self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
         }
@@ -107,6 +115,17 @@ class MainPageViewController: UIViewController {
         player?.play()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == trimSegueIdentifier,
+           let destination = segue.destination as? TrimViewController{
+            
+            destination.projectNameTrim = projectname
+        }
+        
+           
+        }
+    }
+    
 
     /*
     // MARK: - Navigation
@@ -118,4 +137,4 @@ class MainPageViewController: UIViewController {
     }
     */
 
-}
+
