@@ -9,10 +9,12 @@ import UIKit
 
 class TrimViewController: UIViewController {
     
+    @IBOutlet weak var nameLabel: UILabel!
     var projectNameTrim = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        nameLabel.text = projectNameTrim
 
         // Do any additional setup after loading the view.
     }

@@ -93,18 +93,18 @@
                                         <rect key="frame" x="0.0" y="54.666666666666686" width="393" height="550.33333333333326"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="wP6-cX-dja">
+                                    <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" distribution="fillEqually" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="wP6-cX-dja">
                                         <rect key="frame" x="0.0" y="605" width="393" height="110"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8TF-a7-UDQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="110"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="181.66666666666666" height="110"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="Colour Grade"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SW6-bM-0KG">
-                                                <rect key="frame" x="196.66666666666663" y="0.0" width="196.33333333333337" height="110"/>
+                                                <rect key="frame" x="211.66666666666663" y="0.0" width="181.33333333333337" height="110"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="Generate Clips"/>
                                                 <connections>
                                                     <segue destination="6bo-lV-Rv6" kind="presentation" identifier="Trim" id="HQ6-8U-Jno"/>
                                                 </connections>
@@ -230,10 +230,30 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Cancel"/>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NbI-ju-0EB">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dwe-iN-pkd">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5kz-YZ-QGS"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="5kz-YZ-QGS" firstAttribute="bottom" secondItem="NbI-ju-0EB" secondAttribute="bottom" id="4Zq-6Y-MM5"/>
+                            <constraint firstItem="NbI-ju-0EB" firstAttribute="leading" secondItem="5kz-YZ-QGS" secondAttribute="leading" id="JTm-Oa-lyT"/>
+                            <constraint firstItem="NbI-ju-0EB" firstAttribute="top" secondItem="5kz-YZ-QGS" secondAttribute="top" id="dBd-R6-gr5"/>
+                            <constraint firstItem="5kz-YZ-QGS" firstAttribute="trailing" secondItem="NbI-ju-0EB" secondAttribute="trailing" id="yXO-ic-qax"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="nameLabel" destination="dwe-iN-pkd" id="N8o-hl-WCI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eN6-pD-BJe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
