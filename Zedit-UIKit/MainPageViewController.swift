@@ -129,6 +129,22 @@ class MainPageViewController: UIViewController {
             
         }
     }
+    
+    @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
+        guard unwindSegue.identifier == "generateUnwind",
+              let sourceVC = unwindSegue.source as? TrimViewController else {
+            print("Cancelled without changes.")
+            return
+        }
+        
+        // Use the project name to re-fetch videos in the main page
+        projectname = sourceVC.projectNameTrim
+        if let videos = fetchVideos() {
+            videoList = videos
+            setUpButton() // Refresh the UI with the new videos
+            print("Data updated:", videoList)
+        }
+    }
 }
 
     
