@@ -73,17 +73,17 @@ class MainPageViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
     
     func setUpButton (){
         guard !videoList.isEmpty else {
-                videoSelector.isEnabled = false
-                return
-            }
-            
-            videoSelector.isEnabled = true
+            videoSelector.isEnabled = false
+            return
+        }
+        
+        videoSelector.isEnabled = true
         let actionClosure = {(action: UIAction) in
             self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
         }
@@ -106,12 +106,12 @@ class MainPageViewController: UIViewController {
         }
         
         if let playerVC = playerViewController {
-                    addChild(playerVC)
-                    playerVC.view.frame = videoPreviewView.bounds
-                    videoPreviewView.addSubview(playerVC.view)
-                    playerVC.didMove(toParent: self)
+            addChild(playerVC)
+            playerVC.view.frame = videoPreviewView.bounds
+            videoPreviewView.addSubview(playerVC.view)
+            playerVC.didMove(toParent: self)
         }
-                
+        
         player?.play()
     }
     
@@ -122,9 +122,15 @@ class MainPageViewController: UIViewController {
             destination.projectNameTrim = projectname
         }
         
-           
+        if segue.identifier == "Export",
+           let destination = segue.destination as? ExportViewController{
+            destination.projectname = projectname
+            
+            
         }
     }
+}
+
     
 
     /*
