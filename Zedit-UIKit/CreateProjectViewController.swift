@@ -48,11 +48,8 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
             self.presentVideoPicker(sourceType: .camera)
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Photo Library (UIImagePickerController)", style: .default, handler: { _ in
-            self.presentVideoPicker(sourceType: .savedPhotosAlbum)
-        }))
         
-        actionSheet.addAction(UIAlertAction(title: "Photo Library (PHPicker)", style: .default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
             self.presentPHPicker()
         }))
         
