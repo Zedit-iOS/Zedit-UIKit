@@ -1,17 +1,11 @@
-//
-//  CreateProjectViewController.swift
-//  Zedit-UIKit
-//
-//  Created by Avinash on 29/10/24.
-//
-
 import UIKit
 import AVKit
 import MobileCoreServices
 import UniformTypeIdentifiers
+import PhotosUI
 
-class CreateProjectViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate {
-
+class CreateProjectViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
+    
     @IBOutlet weak var selectVideoButton: UIButton!
     @IBOutlet weak var videoPreviewView: UIView!
     @IBOutlet weak var projectNameTextField: UITextField!
@@ -54,8 +48,12 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
             self.presentVideoPicker(sourceType: .camera)
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Photo Library (UIImagePickerController)", style: .default, handler: { _ in
             self.presentVideoPicker(sourceType: .savedPhotosAlbum)
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Photo Library (PHPicker)", style: .default, handler: { _ in
+            self.presentPHPicker()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Documents", style: .default, handler: { _ in
@@ -73,6 +71,16 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
         picker.delegate = self
         picker.sourceType = sourceType
         picker.mediaTypes = [UTType.movie.identifier]
+        present(picker, animated: true, completion: nil)
+    }
+    
+    // Helper function to present PHPickerViewController
+    private func presentPHPicker() {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .videos
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
         present(picker, animated: true, completion: nil)
     }
     
@@ -152,6 +160,40 @@ extension CreateProjectViewController {
             playVideo(url: videoURL)
         }
     }
+    
+    // Handle video selection from PHPickerViewController
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let result = results.first else { return }
+
+        if result.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+            result.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
+                guard let self = self, let tempURL = url else { return }
+                
+                // Generate a unique file name in the document directory
+                let fileManager = FileManager.default
+                guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                
+                let destinationURL = documentsDirectory.appendingPathComponent(tempURL.lastPathComponent)
+                
+                do {
+                    // Copy the video file data to a new URL in the app’s document directory
+                    if fileManager.fileExists(atPath: destinationURL.path) {
+                        try fileManager.removeItem(at: destinationURL) // Clean up any existing file with the same name
+                    }
+                    try fileManager.copyItem(at: tempURL, to: destinationURL)
+                    
+                    DispatchQueue.main.async {
+                        self.selectedVideoURL = destinationURL
+                        self.playVideo(url: destinationURL)
+                    }
+                } catch {
+                    print("Error saving video: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
 
     // Use AVPlayerViewController to play video with controls
     private func playVideo(url: URL) {
