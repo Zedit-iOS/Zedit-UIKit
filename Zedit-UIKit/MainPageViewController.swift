@@ -25,6 +25,7 @@ class MainPageViewController: UIViewController {
     
     
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         nameLabel.text = projectname
@@ -32,6 +33,7 @@ class MainPageViewController: UIViewController {
             videoList = videos
             print("videos sucessfully loaded")
             setUpButton()
+            playVideo(url: videoList[0])
         }
     }
     
@@ -73,7 +75,6 @@ class MainPageViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view.
     }
     

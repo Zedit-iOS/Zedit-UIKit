@@ -15,6 +15,7 @@ class ExportViewController: UIViewController{
     
     var projectname: String?
 
+
         
     override func viewDidLoad() {
         collectionView.allowsMultipleSelection = true
@@ -22,7 +23,6 @@ class ExportViewController: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
             super.viewWillAppear(animated)
-            
             if let videos = fetchVideos() {
                 collectionView.videoList = videos
                 print("Videos successfully loaded")
@@ -32,7 +32,6 @@ class ExportViewController: UIViewController{
             collectionView.setupCollectionView(in: view)
         }
         
-        // MARK: - Helper Methods
         
         func getProjects(ProjectName: String) -> Project? {
             let fileManager = FileManager.default
@@ -70,4 +69,19 @@ class ExportViewController: UIViewController{
                 return nil
             }
         }
+    
+    
+    @IBAction func ExportButton(_ sender: UIButton) {
+        let selectedVideos = collectionView.getSelectedVideos()
+        if selectedVideos.count > 0 {
+            let activityController = UIActivityViewController(activityItems: selectedVideos, applicationActivities: nil)
+            activityController.popoverPresentationController?.sourceView = sender
+            present(activityController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: "No Videos Selected", message: "Select videos to export", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
     }
+}

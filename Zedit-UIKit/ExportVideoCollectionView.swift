@@ -7,9 +7,11 @@
 
 import UIKit
 
+
 class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource {
     
     public var videoList: [URL] = []
+    public var selectedVideo: [URL] = []
     
     
     func setupCollectionView(in view: UIView) {
@@ -55,16 +57,24 @@ class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UIC
     // MARK: - UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected video at index: \(indexPath.item)")
+        selectedVideo.append(videoList[indexPath.item])
+        //        print(selectedVideo)
+        //        print("Selected video at index: \(indexPath.item)")
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("Deselected video at index: \(indexPath.item)")
+        selectedVideo.removeAll { $0 == videoList[indexPath.item] }
+        //        print(selectedVideo)
+        //        print("Deselected video at index: \(indexPath.item)")
     }
     
     func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
         let selectedItems = collectionView.indexPathsForSelectedItems
         print("Selected videos: \(selectedItems?.map { $0.item } ?? [])")
     }
-        
+    
+    func getSelectedVideos() -> [URL] {
+        return selectedVideo
+    }
 }
+
