@@ -11,6 +11,8 @@
 		370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */; };
 		370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */; };
 		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
+		E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */; };
+		E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -31,7 +33,9 @@
 		370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cv2Wrapper.cpp; sourceTree = "<group>"; };
 		370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
 		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
-		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
+		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
+		E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zedit-UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -68,7 +72,7 @@
 		E1BC32B12CCF78BE0026C60F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1BC32B02CCF78BE0026C60F /* Zedit.app */,
+				E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,6 +83,8 @@
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
+				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
+				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
 				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
 				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
 				370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */,
@@ -115,7 +121,7 @@
 			);
 			name = "Zedit-UIKit";
 			productName = "Zedit-UIKit";
-			productReference = E1BC32B02CCF78BE0026C60F /* Zedit.app */;
+			productReference = E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -177,7 +183,9 @@
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
 				370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */,
+				E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */,
 				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
+				E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */,
 				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
 				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
 				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
@@ -332,14 +340,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS7X249735;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Zedit;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -350,9 +355,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
-				PRODUCT_NAME = Zedit;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Zedit-UIKit";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -367,14 +371,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS7X249735;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Zedit;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -385,9 +386,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
-				PRODUCT_NAME = Zedit;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Zedit-UIKit";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
