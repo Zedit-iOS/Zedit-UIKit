@@ -33,9 +33,12 @@ class MainPageViewController: UIViewController {
             videoList = videos
             print("videos sucessfully loaded")
             setUpButton()
-            playVideo(url: videoList[0])
+//            playVideo(url: videoList[0])  // TODO: Fix this - later
         }
     }
+    
+    
+    
     
     func getProjects(ProjectName: String)->Project?{
         let filemanager = FileManager.default

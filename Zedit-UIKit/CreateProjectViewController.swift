@@ -12,10 +12,15 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
     @IBOutlet weak var saveProjectButton: UIButton!
     @IBOutlet weak var nameExistsLabel: UILabel!  // New label to show "name already exists" message
     
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var sendbuttonView: UIView!
+    
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     var selectedVideoURL: URL?
     let mainSegueIdentifier = "MainViewCreate"
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +28,12 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
         saveProjectButton.isEnabled = false  // Disable button initially
         nameExistsLabel.isHidden = true  // Hide the label initially
         projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
+
     private func setupVideoPreviewView() {
         videoPreviewView.layer.borderWidth = 1
         videoPreviewView.layer.borderColor = UIColor.lightGray.cgColor
@@ -213,18 +222,29 @@ extension CreateProjectViewController {
 }
 
 // MARK: - UITextField Delegate Methods
+
+
 extension CreateProjectViewController {
+    @objc func keyboard(notification:Notification) {
+            guard let keyboardReact = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{
+                return
+            }
+
+            if notification.name == UIResponder.keyboardWillShowNotification ||  notification.name == UIResponder.keyboardWillChangeFrameNotification {
+                self.view.frame.origin.y = -keyboardReact.height
+            } else{
+                self.view.frame.origin.y = 0
+            }
+        }
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
-        // Check if the project name is not empty and a video is selected
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
         
-        // Check if the project name already exists
         let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
         let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
         
         saveProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
         
-        // Update the nameExistsLabel visibility and text
         if projectNameExists {
             nameExistsLabel.isHidden = false
             nameExistsLabel.text = "Name already exists."
@@ -233,3 +253,4 @@ extension CreateProjectViewController {
         }
     }
 }
+

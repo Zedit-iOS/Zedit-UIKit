@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import AVKit
 
+
 class TrimViewController: UIViewController {
     
     var videoList: [URL] = []
@@ -32,6 +33,10 @@ class TrimViewController: UIViewController {
             videoList = videos
             setUpButton()
         }
+        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     func fetchVideos() -> [URL]? {
@@ -148,3 +153,37 @@ class TrimViewController: UIViewController {
         }
     }
 }
+
+
+
+extension TrimViewController {
+    @objc func keyboard(notification:Notification) {
+            guard let keyboardReact = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{
+                return
+            }
+
+            if notification.name == UIResponder.keyboardWillShowNotification ||  notification.name == UIResponder.keyboardWillChangeFrameNotification {
+                self.view.frame.origin.y = -keyboardReact.height
+            }else{
+                self.view.frame.origin.y = 0
+            }
+
+        }
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        
+        let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
+        
+        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        let projectNameExists = existingProjects.contains { $0["name"] == promptTextField.text }
+        
+        generateButton.isEnabled = isProjectNameValid && !projectNameExists
+        
+        if projectNameExists {
+            nameLabel.isHidden = false
+            nameLabel.text = "Name already exists."
+        } else {
+            nameLabel.isHidden = true
+        }
+    }
+}
+
