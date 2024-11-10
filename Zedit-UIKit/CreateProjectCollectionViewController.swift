@@ -4,132 +4,135 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 import PhotosUI
 
-class CreateProjectViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
+class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
     
-    @IBOutlet weak var selectVideoButton: UIButton!
-    @IBOutlet weak var videoPreviewView: UIView!
+    @IBOutlet weak var selectProjectButton: UIButton!
+    @IBOutlet weak var videoPlayerView: UIView!
     @IBOutlet weak var projectNameTextField: UITextField!
-    @IBOutlet weak var saveProjectButton: UIButton!
-    @IBOutlet weak var nameExistsLabel: UILabel!  // New label to show "name already exists" message
-    
+    @IBOutlet weak var nameExistsLabel: UILabel!
+    @IBOutlet weak var createProjectButton: UIButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var sendbuttonView: UIView!
     
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     var selectedVideoURL: URL?
-    let mainSegueIdentifier = "MainViewCreate"
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupNotifications()
+    }
+    
+    private func setupUI() {
         setupVideoPreviewView()
-        saveProjectButton.isEnabled = false  // Disable button initially
-        nameExistsLabel.isHidden = true  // Hide the label initially
+        createProjectButton.isEnabled = false
+        nameExistsLabel.isHidden = true
         projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
-
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboard(notification:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboard(notification:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboard(notification:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil)
+    }
+    
     private func setupVideoPreviewView() {
-        videoPreviewView.layer.borderWidth = 1
-        videoPreviewView.layer.borderColor = UIColor.lightGray.cgColor
+        videoPlayerView.layer.borderWidth = 1
+        videoPlayerView.layer.borderColor = UIColor.lightGray.cgColor
     }
     
-    // Action for the select video button
     @IBAction func selectVideoButtonTapped(_ sender: UIButton) {
         presentVideoSourceOptions()
     }
     
-    // Action for the create project button
     @IBAction func createProjectButtonTapped(_ sender: UIButton) {
-        saveProject() // Call saveProject; if successful, segue will happen automatically
+        if saveProject() {
+            performSegue(withIdentifier: "Create", sender: self)
+        }
     }
     
-    // Show action sheet for video source options
+    @IBAction func cancelButtonTapped(_ sender: UIButton) {
+        performSegue(withIdentifier: "cancel", sender: self)
+    }
+    
+    // MARK: - Unwind Segue Methods
+    
+    @IBSegueAction func unwindToMainView(coder: NSCoder, sender: Any?) -> UIViewController? {
+        return nil // Let the storyboard handle the unwind
+    }
+    
     private func presentVideoSourceOptions() {
-        let actionSheet = UIAlertController(title: "Select Video", message: "Choose a video source", preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "Select Video",
+                                          message: "Choose a video source",
+                                          preferredStyle: .actionSheet)
         
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default) { _ in
             self.presentVideoPicker(sourceType: .camera)
-        }))
+        })
         
-        
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default) { _ in
             self.presentPHPicker()
-        }))
+        })
         
-        actionSheet.addAction(UIAlertAction(title: "Documents", style: .default, handler: { _ in
+        actionSheet.addAction(UIAlertAction(title: "Documents", style: .default) { _ in
             self.presentDocumentPicker()
-        }))
+        })
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
-        present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true)
     }
     
-    // Helper function to present UIImagePickerController
     private func presentVideoPicker(sourceType: UIImagePickerController.SourceType) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = sourceType
         picker.mediaTypes = [UTType.movie.identifier]
-        present(picker, animated: true, completion: nil)
+        present(picker, animated: true)
     }
     
-    // Helper function to present PHPickerViewController
     private func presentPHPicker() {
         var configuration = PHPickerConfiguration()
         configuration.filter = .videos
         configuration.selectionLimit = 1
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
-        present(picker, animated: true, completion: nil)
+        present(picker, animated: true)
     }
     
-    // Helper function to present UIDocumentPicker
     private func presentDocumentPicker() {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.movie])
         documentPicker.delegate = self
-        present(documentPicker, animated: true, completion: nil)
+        present(documentPicker, animated: true)
     }
     
-    // Prepare for segue
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == mainSegueIdentifier,
-           let destination = segue.destination as? MainPageViewController,
-           let projectName = projectNameTextField.text {
-            destination.projectname = projectName
-        }
-    }
-}
-
-// Extension for saving project
-extension CreateProjectViewController {
-    private func saveProject() {
+    private func saveProject() -> Bool {
         guard let projectName = projectNameTextField.text, !projectName.isEmpty else {
-            // Do not proceed if the project name is empty
-            return
+            return false
         }
         
         guard let videoURL = selectedVideoURL else {
-            // Do not proceed if no video is selected
-            return
+            return false
         }
         
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return
+            return false
         }
         
         let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
         
         if fileManager.fileExists(atPath: projectDirectory.path) {
-            // Do not proceed if a project with this name already exists
-            return
+            return false
         }
         
         do {
@@ -141,25 +144,25 @@ extension CreateProjectViewController {
             var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
             projects.append(project)
             UserDefaults.standard.setValue(projects, forKey: "projects")
+            return true
         } catch {
-            // Handle errors as needed
             print("Error creating project: \(error.localizedDescription)")
+            return false
         }
     }
 }
 
-// Extension for handling video selection
-extension CreateProjectViewController {
-    // Handle video selection from UIImagePickerController
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// MARK: - Video Selection Delegates
+extension CreateProjectCollectionViewController {
+    func imagePickerController(_ picker: UIImagePickerController,
+                             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let videoURL = info[.mediaURL] as? URL {
             selectedVideoURL = videoURL
             playVideo(url: videoURL)
         }
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
     }
-
-    // Handle video selection from UIDocumentPicker
+    
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let videoURL = urls.first {
             selectedVideoURL = videoURL
@@ -167,25 +170,22 @@ extension CreateProjectViewController {
         }
     }
     
-    // Handle video selection from PHPickerViewController
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true)
         guard let result = results.first else { return }
-
+        
         if result.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
             result.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
                 guard let self = self, let tempURL = url else { return }
                 
-                // Generate a unique file name in the document directory
                 let fileManager = FileManager.default
                 guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
                 
                 let destinationURL = documentsDirectory.appendingPathComponent(tempURL.lastPathComponent)
                 
                 do {
-                    // Copy the video file data to a new URL in the app’s document directory
                     if fileManager.fileExists(atPath: destinationURL.path) {
-                        try fileManager.removeItem(at: destinationURL) // Clean up any existing file with the same name
+                        try fileManager.removeItem(at: destinationURL)
                     }
                     try fileManager.copyItem(at: tempURL, to: destinationURL)
                     
@@ -199,43 +199,40 @@ extension CreateProjectViewController {
             }
         }
     }
-
-
-    // Use AVPlayerViewController to play video with controls
+    
     private func playVideo(url: URL) {
         player = AVPlayer(url: url)
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
-
-        videoPreviewView.subviews.forEach { $0.removeFromSuperview() }
-
+        
+        videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
+        
         if let playerVC = playerViewController {
             addChild(playerVC)
-            playerVC.view.frame = videoPreviewView.bounds
-            videoPreviewView.addSubview(playerVC.view)
+            playerVC.view.frame = videoPlayerView.bounds
+            videoPlayerView.addSubview(playerVC.view)
             playerVC.didMove(toParent: self)
         }
-
+        
         player?.play()
     }
 }
 
-// MARK: - UITextField Delegate Methods
-
-
-extension CreateProjectViewController {
-    @objc func keyboard(notification:Notification) {
-            guard let keyboardReact = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{
-                return
-            }
-
-            if notification.name == UIResponder.keyboardWillShowNotification ||  notification.name == UIResponder.keyboardWillChangeFrameNotification {
-                self.view.frame.origin.y = -keyboardReact.height
-            } else{
-                self.view.frame.origin.y = 0
-            }
+// MARK: - TextField and Keyboard Handling
+extension CreateProjectCollectionViewController {
+    @objc func keyboard(notification: Notification) {
+        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
         }
+        
+        if notification.name == UIResponder.keyboardWillShowNotification ||
+            notification.name == UIResponder.keyboardWillChangeFrameNotification {
+            view.frame.origin.y = -keyboardRect.height
+        } else {
+            view.frame.origin.y = 0
+        }
+    }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
@@ -243,15 +240,9 @@ extension CreateProjectViewController {
         let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
         let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
         
-        saveProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
+        createProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
         
-        if projectNameExists {
-            nameExistsLabel.isHidden = false
-            nameExistsLabel.text = "Name already exists."
-        } else {
-            nameExistsLabel.isHidden = true
-        }
+        nameExistsLabel.isHidden = !projectNameExists
+        nameExistsLabel.text = projectNameExists ? "Name already exists." : nil
     }
 }
-
-

@@ -13,6 +13,7 @@
 		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
 		E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */; };
 		E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */; };
+		E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -35,6 +36,7 @@
 		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
 		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
 		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
+		E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
 		E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zedit-UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
+				E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */,
 				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
 				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
 				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
@@ -189,6 +192,7 @@
 				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
 				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
 				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
+				E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */,
 				E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

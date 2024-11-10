@@ -17,6 +17,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidLoad()
 
         navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "My Projects"
         navigationItem.leftBarButtonItem = editButtonItem
         
         projectsCollectionView.dataSource = self
@@ -93,5 +94,14 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         
         // Update the data source and reload the collection view
         projectsCollectionView.reloadData() // Optionally, you can use more specific updates like `insertItems(at:)` and `deleteItems(at:)` for better performance.
+    }
+    
+    @IBAction func unwindToMainView(_ segue: UIStoryboardSegue) {
+        if segue.identifier == "Create" {
+            projectsCollectionView.reloadData()
+            print("Data updated: Projects collection view reloaded")
+        } else if segue.identifier == "cancel" {
+            print("Cancelled without changes.")
+        }
     }
 }
