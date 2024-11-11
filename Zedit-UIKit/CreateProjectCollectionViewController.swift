@@ -54,21 +54,27 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         presentVideoSourceOptions()
     }
     
-    @IBAction func createProjectButtonTapped(_ sender: UIButton) {
-        if saveProject() {
-            performSegue(withIdentifier: "Create", sender: self)
-        }
-    }
     
-    @IBAction func cancelButtonTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "cancel", sender: self)
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Create" {
+            if !saveProject() {
+                // If save fails, prevent the segue from occurring
+                segue.destination.presentationController?.presentedViewController.dismiss(animated: true)
+                
+                let alert = UIAlertController(
+                    title: "Save Failed",
+                    message: "Unable to save project. Please ensure all fields are filled out correctly.",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(alert, animated: true)
+            }
+        }
     }
     
     // MARK: - Unwind Segue Methods
     
-    @IBSegueAction func unwindToMainView(coder: NSCoder, sender: Any?) -> UIViewController? {
-        return nil // Let the storyboard handle the unwind
-    }
     
     private func presentVideoSourceOptions() {
         let actionSheet = UIAlertController(title: "Select Video",

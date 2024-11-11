@@ -96,12 +96,16 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         projectsCollectionView.reloadData() // Optionally, you can use more specific updates like `insertItems(at:)` and `deleteItems(at:)` for better performance.
     }
     
-    @IBAction func unwindToMainView(_ segue: UIStoryboardSegue) {
-        if segue.identifier == "Create" {
-            projectsCollectionView.reloadData()
-            print("Data updated: Projects collection view reloaded")
-        } else if segue.identifier == "cancel" {
-            print("Cancelled without changes.")
+    @IBAction func unwindToMyProjects(_ unwindSegue: UIStoryboardSegue) {
+        print("Unwind segue triggered")  // Debug print
+        guard unwindSegue.identifier == "Create" else {
+            print("Wrong identifier or cancelled")  // Debug print
+            return
         }
+        
+        print("Before loading projects")  // Debug print
+        loadProjects()
+        print("After loading projects: \(projects)")  // Debug print
     }
+    
 }
