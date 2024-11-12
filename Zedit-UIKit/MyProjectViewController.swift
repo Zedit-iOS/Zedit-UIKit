@@ -40,7 +40,16 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
     }
 
     private func loadProjects() {
+        // Clear the existing data in the collection view to avoid duplicates
+        if !projects.isEmpty {
+            // Clear the collection view before reloading
+            filteredProjects.removeAll()
+            projectsCollectionView.reloadData()
+        }
+        
+        // Retrieve new projects from storage or source
         projects = retrieveProjects()
+        filteredProjects = projects  // Initially, show all projects
         projectsCollectionView.reloadData()
     }
     
@@ -115,17 +124,41 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         // Remove the project from the local storage directory (delete the folder)
         deleteProjectFromDirectory(projectToDelete.name)
         
-        // Remove from both projects and filteredProjects arrays
+        // Remove the project from both projects and filteredProjects arrays before reloading the collection view
         if let index = projects.firstIndex(where: { $0.name == projectToDelete.name }) {
             projects.remove(at: index)  // Remove from the full project list
         }
-        
         filteredProjects.remove(at: indexPath.item)  // Remove from the filtered list
 
+        // Also remove the project from UserDefaults
+        removeProjectFromUserDefaults(projectToDelete.name)
+        
         // Delete the item in the collection view
         projectsCollectionView.performBatchUpdates({
             projectsCollectionView.deleteItems(at: [indexPath])
-        }, completion: nil)
+        }, completion: { _ in
+            // After deletion, reload data
+            self.projectsCollectionView.reloadData()
+        })
+        print(projects)
+    }
+    
+    private func clearProjectCache(for projectName: String) {
+        // If you're using NSCache or some other cache storage, clear it.
+        // For example, if you use NSCache, you can do something like this:
+        // Cache.removeObject(forKey: projectName)
+        // If you store images or other files in cache, you might also want to clear them.
+        
+        let cache = URLCache.shared
+        let url = URL(string: "cacheURL/\(projectName)") // Replace with your actual cache URL
+        
+        if let url = url {
+            cache.removeCachedResponse(for: URLRequest(url: url))
+            print("Cache cleared for project: \(projectName)")
+        }
+        
+        // If you use a custom cache:
+        // CustomCacheManager.shared.clearCache(for: projectName)
     }
 
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
@@ -150,9 +183,20 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             try fileManager.removeItem(at: projectPath)
             print("Deleted project folder: \(projectName)")
         } catch {
-            print("Failed to delete project folder: \(error)")
+            print("Failed to delete project folder: \(error.localizedDescription)")
         }
     }
+    
+    private func removeProjectFromUserDefaults(_ projectName: String) {
+        var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        
+        // Remove project from the array
+        projects.removeAll { $0["name"] == projectName }
+        
+        // Save the updated array back to UserDefaults
+        UserDefaults.standard.setValue(projects, forKey: "projects")
+    }
+
 
     // MARK: - Search Bar Handling
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

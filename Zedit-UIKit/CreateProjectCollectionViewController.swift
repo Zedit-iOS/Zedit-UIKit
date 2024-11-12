@@ -248,6 +248,8 @@ extension CreateProjectCollectionViewController {
         
         // Load the most recent projects from UserDefaults
         let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        
+        // Check if the current project name exists in the list
         let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
         
         createProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
