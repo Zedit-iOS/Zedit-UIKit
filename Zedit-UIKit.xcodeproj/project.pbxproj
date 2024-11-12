@@ -37,7 +37,7 @@
 		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
 		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
 		E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
-		E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zedit-UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 		E1BC32B12CCF78BE0026C60F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */,
+				E1BC32B02CCF78BE0026C60F /* Zedit.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -124,7 +124,7 @@
 			);
 			name = "Zedit-UIKit";
 			productName = "Zedit-UIKit";
-			productReference = E1BC32B02CCF78BE0026C60F /* Zedit-UIKit.app */;
+			productReference = E1BC32B02CCF78BE0026C60F /* Zedit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -346,9 +346,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G7G9Q58G56;
+				DEVELOPMENT_TEAM = ZS7X249735;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -359,8 +362,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Zedit-UIKit";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
+				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -377,9 +380,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G7G9Q58G56;
+				DEVELOPMENT_TEAM = ZS7X249735;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -390,8 +396,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Zedit-UIKit";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
+				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
