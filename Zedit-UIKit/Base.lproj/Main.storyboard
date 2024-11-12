@@ -42,7 +42,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="nameLabel" destination="bHv-zq-cQ6" id="VuT-aU-WfB"/>
-                                    <segue destination="9Lp-0K-qM7" kind="show" identifier="MainView" id="v21-be-TDy"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -88,6 +87,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
+                                        <connections>
+                                            <segue destination="9Lp-0K-qM7" kind="show" identifier="Main" id="bAC-QI-ard"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -477,7 +479,6 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Create Project"/>
                                         <connections>
                                             <action selector="createProjectButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="Etw-p9-jMX"/>
-                                            <segue destination="9Lp-0K-qM7" kind="show" identifier="MainViewCreate" id="hOP-xE-Jth"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -644,9 +645,6 @@
             <point key="canvasLocation" x="1700" y="-1044.3661971830986"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="hOP-xE-Jth"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

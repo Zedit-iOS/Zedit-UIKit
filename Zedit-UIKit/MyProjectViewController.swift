@@ -79,9 +79,21 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
 
     // Handle project deletion
     private func deleteProject(at indexPath: IndexPath) {
-        projects.remove(at: indexPath.item)  // Update data source
-        projectsCollectionView.deleteItems(at: [indexPath])  // Delete item in collection view
+        // Get the project to delete using the current index
+        let projectToDelete = projects[indexPath.item]
+        
+        // Remove the project from the local storage directory
+        deleteProjectFromDirectory(projectToDelete.name)
+        
+        // Update the data source and delete the project from the array
+        projects.remove(at: indexPath.item)
+        
+        // Delete the item in the collection view
+        projectsCollectionView.performBatchUpdates({
+            projectsCollectionView.deleteItems(at: [indexPath])
+        }, completion: nil)
     }
+
 
     // Enable reordering (requires setting `isEditing` to true)
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
@@ -96,6 +108,19 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         projectsCollectionView.reloadData() // Optionally, you can use more specific updates like `insertItems(at:)` and `deleteItems(at:)` for better performance.
     }
     
+    private func deleteProjectFromDirectory(_ projectName: String) {
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let projectPath = documentsDirectory.appendingPathComponent(projectName)
+        
+        do {
+            try fileManager.removeItem(at: projectPath)
+            print("Deleted project: \(projectName)")
+        } catch {
+            print("Failed to delete project: \(error)")
+        }
+    }
+    
     @IBAction func unwindToMyProjects(_ unwindSegue: UIStoryboardSegue) {
         print("Unwind segue triggered")  // Debug print
         guard unwindSegue.identifier == "Create" else {
@@ -108,4 +133,14 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         print("After loading projects: \(projects)")  // Debug print
     }
     
+    let mainSegueIdentifier = "Main"
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == mainSegueIdentifier,
+           let destination = segue.destination as? MainPageViewController,
+           let indexPath = projectsCollectionView.indexPathsForSelectedItems?.first {
+            
+            // Set the destination's projectname with the selected project's name
+            destination.projectname = projects[indexPath.item].name
+        }
+    }
 }
