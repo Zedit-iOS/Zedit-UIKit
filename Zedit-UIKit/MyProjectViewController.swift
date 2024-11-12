@@ -7,11 +7,15 @@
 
 import UIKit
 
-class MyProjectViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class MyProjectViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
 
     @IBOutlet weak var projectsCollectionView: UICollectionView!
-    var projects: [Project] = []
-    var isEditingMode = false  // Track if edit mode is enabled
+    @IBOutlet weak var projectsSearchBar: UISearchBar!
+    
+    var projects: [Project] = []  // Array holding all projects
+    var filteredProjects: [Project] = []  // Array to hold filtered projects based on search
+    
+    var isEditingMode = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +36,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         projectsCollectionView.isEditing = true
         
         loadProjects()
+        filteredProjects = projects  // Initially, show all projects
     }
 
     private func loadProjects() {
@@ -52,7 +57,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return projects.count
+        return filteredProjects.count  // Return the count of filtered projects
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -66,7 +71,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         cell.layer.shadowOffset = CGSize(width: 1.0, height: 4.0)
         cell.layer.masksToBounds = false
 
-        let project = projects[indexPath.item]
+        let project = filteredProjects[indexPath.item]  // Get project from filtered array
         cell.update(with: project)
 
         // Add delete button if in edit mode
@@ -77,16 +82,19 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         return cell
     }
 
-    // Handle project deletion
     private func deleteProject(at indexPath: IndexPath) {
-        // Get the project to delete using the current index
-        let projectToDelete = projects[indexPath.item]
+        let projectToDelete = filteredProjects[indexPath.item]  // Get the project from filtered array
         
         // Remove the project from the local storage directory
         deleteProjectFromDirectory(projectToDelete.name)
         
         // Update the data source and delete the project from the array
-        projects.remove(at: indexPath.item)
+        if let index = projects.firstIndex(where: { $0.name == projectToDelete.name }) {
+            projects.remove(at: index)
+        }
+        
+        // Remove from filteredProjects as well
+        filteredProjects.remove(at: indexPath.item)
         
         // Delete the item in the collection view
         projectsCollectionView.performBatchUpdates({
@@ -94,43 +102,57 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         }, completion: nil)
     }
 
-
-    // Enable reordering (requires setting `isEditing` to true)
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         return true
     }
 
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedProject = projects.remove(at: sourceIndexPath.item)
-        projects.insert(movedProject, at: destinationIndexPath.item)
+        let movedProject = filteredProjects.remove(at: sourceIndexPath.item)
+        filteredProjects.insert(movedProject, at: destinationIndexPath.item)
         
         // Update the data source and reload the collection view
-        projectsCollectionView.reloadData() // Optionally, you can use more specific updates like `insertItems(at:)` and `deleteItems(at:)` for better performance.
+        projectsCollectionView.reloadData()
     }
     
     private func deleteProjectFromDirectory(_ projectName: String) {
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         let projectPath = documentsDirectory.appendingPathComponent(projectName)
-        
+
         do {
+            // Remove the project folder and its contents
             try fileManager.removeItem(at: projectPath)
-            print("Deleted project: \(projectName)")
+            print("Deleted project folder: \(projectName)")
         } catch {
-            print("Failed to delete project: \(error)")
+            print("Failed to delete project folder: \(error)")
         }
     }
-    
+
+    // MARK: - Search Bar Handling
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filteredProjects = projects  // If search bar is empty, show all projects
+        } else {
+            filteredProjects = projects.filter { project in
+                project.name.lowercased().contains(searchText.lowercased())  // Filter projects by name
+            }
+        }
+        projectsCollectionView.reloadData()  // Reload collection view with filtered projects
+    }
+
+    // Unwind Segue for updating collection view
     @IBAction func unwindToMyProjects(_ unwindSegue: UIStoryboardSegue) {
-        print("Unwind segue triggered")  // Debug print
+        print("Unwind segue triggered")
         guard unwindSegue.identifier == "Create" else {
-            print("Wrong identifier or cancelled")  // Debug print
+            print("Wrong identifier or cancelled")
             return
         }
         
-        print("Before loading projects")  // Debug print
+        print("Before loading projects")
         loadProjects()
-        print("After loading projects: \(projects)")  // Debug print
+        filteredProjects = projects  // Reset filtered projects to all after unwinding
+        projectsCollectionView.reloadData()
+        print("After loading projects: \(projects)")
     }
     
     let mainSegueIdentifier = "Main"
@@ -140,7 +162,8 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
            let indexPath = projectsCollectionView.indexPathsForSelectedItems?.first {
             
             // Set the destination's projectname with the selected project's name
-            destination.projectname = projects[indexPath.item].name
+            destination.projectname = filteredProjects[indexPath.item].name
         }
     }
 }
+
