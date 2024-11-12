@@ -32,17 +32,17 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     
     private func setupNotifications() {
         NotificationCenter.default.addObserver(self,
-            selector: #selector(keyboard(notification:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil)
+                                               selector: #selector(keyboard(notification:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
         NotificationCenter.default.addObserver(self,
-            selector: #selector(keyboard(notification:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil)
+                                               selector: #selector(keyboard(notification:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
         NotificationCenter.default.addObserver(self,
-            selector: #selector(keyboard(notification:)),
-            name: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil)
+                                               selector: #selector(keyboard(notification:)),
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
+                                               object: nil)
     }
     
     private func setupVideoPreviewView() {
@@ -53,8 +53,6 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     @IBAction func selectVideoButtonTapped(_ sender: UIButton) {
         presentVideoSourceOptions()
     }
-    
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Create" {
@@ -74,7 +72,6 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     // MARK: - Unwind Segue Methods
-    
     
     private func presentVideoSourceOptions() {
         let actionSheet = UIAlertController(title: "Select Video",
@@ -137,19 +134,25 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         
         let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
         
+        // Check if the project directory already exists
         if fileManager.fileExists(atPath: projectDirectory.path) {
             return false
         }
         
         do {
+            // Create the directory for the new project
             try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
+            
+            // Copy the selected video into the project directory
             let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
             try fileManager.copyItem(at: videoURL, to: destinationURL)
             
+            // Save project metadata in UserDefaults
             let project = ["name": projectName, "videoURL": destinationURL.path]
             var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
             projects.append(project)
             UserDefaults.standard.setValue(projects, forKey: "projects")
+            
             return true
         } catch {
             print("Error creating project: \(error.localizedDescription)")
@@ -243,6 +246,7 @@ extension CreateProjectCollectionViewController {
     @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
         
+        // Load the most recent projects from UserDefaults
         let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
         let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
         

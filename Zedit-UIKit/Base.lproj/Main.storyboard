@@ -13,21 +13,21 @@
         <!--My Projects-->
         <scene sceneID="bza-Y6-8j9">
             <objects>
-                <tableViewController title="My Projects" id="Z2S-dj-jqK" customClass="ProjectsTableViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="My Projects" id="Z2S-dj-jqK" customClass="ProjectsTableViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="A2x-3d-oo2">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit_UIKit" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="42.666667938232422"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit" customModuleProvider="target">
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="71M-M2-Fer" id="Kpv-LC-8tS">
-                                    <rect key="frame" x="0.0" y="0.0" width="353" height="42.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHv-zq-cQ6">
-                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="20.666666666666671"/>
+                                            <rect key="frame" x="20" y="11" width="313" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -65,7 +65,7 @@
         <!--MyProjectsViewController-->
         <scene sceneID="mFA-hL-ri2">
             <objects>
-                <viewController title="MyProjectsViewController" id="AQg-U7-vKA" customClass="MyProjectViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="MyProjectsViewController" id="AQg-U7-vKA" customClass="MyProjectViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2q4-Ry-aDU">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -90,7 +90,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProjectCell" id="eed-Iu-WAU" customClass="MyProjectViewControllerCell" customModule="Zedit_UIKit" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProjectCell" id="eed-Iu-WAU" customClass="MyProjectViewControllerCell" customModule="Zedit" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Itt-Xj-ueq">
@@ -135,7 +135,7 @@
         <!--Create Project Collection View Controller-->
         <scene sceneID="U4s-W1-Cgm">
             <objects>
-                <viewController id="yWS-xt-nX1" customClass="CreateProjectCollectionViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="yWS-xt-nX1" customClass="CreateProjectCollectionViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ceu-HX-njB">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -221,7 +221,7 @@
         <!--Export View Controller-->
         <scene sceneID="ILe-pV-iYq">
             <objects>
-                <viewController id="M4Y-Rc-Hsr" customClass="ExportViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="M4Y-Rc-Hsr" customClass="ExportViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="b06-rJ-hfU">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -241,7 +241,7 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NZA-0k-DKf">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="486.66666666666669"/>
                                                 <subviews>
-                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="iSz-Z5-uVJ" customClass="ExportVideoCollectionView" customModule="Zedit_UIKit" customModuleProvider="target">
+                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="iSz-Z5-uVJ" customClass="ExportVideoCollectionView" customModule="Zedit" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="393" height="486.66666666666669"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ser-rc-cEj">
                                                             <size key="itemSize" width="128" height="128"/>
@@ -365,7 +365,7 @@
         <!--Main Page View Controller-->
         <scene sceneID="JPz-D5-oUQ">
             <objects>
-                <viewController title="Main Page View Controller" id="9Lp-0K-qM7" customClass="MainPageViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Main Page View Controller" id="9Lp-0K-qM7" customClass="MainPageViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pvm-kM-bS5">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -447,7 +447,7 @@
         <!--Create Project View Controller-->
         <scene sceneID="ag1-06-70e">
             <objects>
-                <viewController id="p1X-mA-ZK7" customClass="CreateProjectViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="p1X-mA-ZK7" customClass="CreateProjectViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OYI-2j-Jup">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -523,7 +523,7 @@
         <!--Trim View Controller-->
         <scene sceneID="kdH-tn-iWf">
             <objects>
-                <viewController title="Trim View Controller" id="6bo-lV-Rv6" customClass="TrimViewController" customModule="Zedit_UIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Trim View Controller" id="6bo-lV-Rv6" customClass="TrimViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6NR-aI-xgJ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

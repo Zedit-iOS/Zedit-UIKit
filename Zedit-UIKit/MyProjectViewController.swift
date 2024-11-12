@@ -112,17 +112,16 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
     private func deleteProject(at indexPath: IndexPath) {
         let projectToDelete = filteredProjects[indexPath.item]  // Get the project from filtered array
         
-        // Remove the project from the local storage directory
+        // Remove the project from the local storage directory (delete the folder)
         deleteProjectFromDirectory(projectToDelete.name)
         
-        // Update the data source and delete the project from the array
+        // Remove from both projects and filteredProjects arrays
         if let index = projects.firstIndex(where: { $0.name == projectToDelete.name }) {
-            projects.remove(at: index)
+            projects.remove(at: index)  // Remove from the full project list
         }
         
-        // Remove from filteredProjects as well
-        filteredProjects.remove(at: indexPath.item)
-        
+        filteredProjects.remove(at: indexPath.item)  // Remove from the filtered list
+
         // Delete the item in the collection view
         projectsCollectionView.performBatchUpdates({
             projectsCollectionView.deleteItems(at: [indexPath])
