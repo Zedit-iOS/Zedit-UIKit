@@ -105,7 +105,7 @@
                             </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="VlY-60-N81"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="VlY-60-N81" firstAttribute="trailing" secondItem="vFO-JR-S6s" secondAttribute="trailing" id="93O-Sy-aK9"/>
                             <constraint firstItem="VlY-60-N81" firstAttribute="bottom" secondItem="vFO-JR-S6s" secondAttribute="bottom" id="LAX-2u-gOd"/>

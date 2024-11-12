@@ -27,13 +27,13 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         projectsCollectionView.dataSource = self
         projectsCollectionView.delegate = self
         
-        if let flowLayout = projectsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowLayout.estimatedItemSize = CGSize.zero
-        }
+        projectsCollectionView.collectionViewLayout = generateLayout()
+        projectsCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
 
         // Enable reordering support
         projectsCollectionView.allowsMultipleSelection = true
         projectsCollectionView.isEditing = true
+        //projectsCollectionView.backgroundColor = .black
         
         loadProjects()
         filteredProjects = projects  // Initially, show all projects
@@ -43,6 +43,33 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         projects = retrieveProjects()
         projectsCollectionView.reloadData()
     }
+    
+    func generateLayout() -> UICollectionViewLayout {
+        // Size of each item
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        
+        // Create the layout item
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        // Create a group size
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(200))
+        
+        // Create a horizontal group
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        group.interItemSpacing = .fixed(20)  // Horizontal spacing between items
+        
+        // Create a section with vertical spacing between groups
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 20  // Vertical spacing between groups
+        
+        // Add padding to the left and right ends
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)  // Adjust leading and trailing for padding
+        
+        // Create a collection view compositional layout
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        return layout
+    }
+
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
@@ -65,7 +92,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             return UICollectionViewCell()
         }
 
-        cell.layer.borderColor = UIColor.yellow.cgColor
+        cell.layer.borderColor = UIColor.white.cgColor
         cell.layer.borderWidth = 1
         cell.layer.shadowColor = UIColor.black.cgColor
         cell.layer.shadowOffset = CGSize(width: 1.0, height: 4.0)
