@@ -28,13 +28,15 @@ class MainPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        nameLabel.text = projectname
+      
         if let videos = fetchVideos() {
             videoList = videos
             print("videos sucessfully loaded")
             setUpButton()
-//            playVideo(url: videoList[0])  // TODO: Fix this - later
+            // playVideo(url: videoList[0])
+            
         }
+        navigationItem.title = projectname
     }
     
     
@@ -131,6 +133,10 @@ class MainPageViewController: UIViewController {
             destination.projectname = projectname
             
             
+        }
+        if segue.identifier == "colorGrade",
+           let destination = segue.destination as? ColorViewController{
+            destination.projectNameColorGrade = projectname
         }
     }
     

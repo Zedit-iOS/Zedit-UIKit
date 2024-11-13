@@ -110,7 +110,6 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         let project = filteredProjects[indexPath.item]  // Get project from filtered array
         cell.update(with: project)
 
-        // Add delete button if in edit mode
         cell.showDeleteButton(isEditingMode) { [weak self] in
             self?.deleteProject(at: indexPath)
         }
