@@ -106,7 +106,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         }
 
         cell.layer.borderColor = UIColor.white.cgColor
-        cell.layer.borderWidth = 1
+        cell.layer.borderWidth = 3
         cell.layer.shadowColor = UIColor.black.cgColor
         cell.layer.shadowOffset = CGSize(width: 1.0, height: 4.0)
         cell.layer.masksToBounds = false
@@ -208,10 +208,11 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         self.searchController.obscuresBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = true
         self.searchController.searchBar.placeholder = "Search Projects"
-        
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = false
         self.navigationItem.hidesSearchBarWhenScrolling = false
+        
+        
     }
     
     
