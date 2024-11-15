@@ -7,10 +7,12 @@
 
 import UIKit
 
-class MyProjectViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+class MyProjectViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, UISearchResultsUpdating {
 
     @IBOutlet weak var projectsCollectionView: UICollectionView!
-    @IBOutlet weak var projectsSearchBar: UISearchBar!
+    
+    
+    private let searchController = UISearchController(searchResultsController: nil)
     
     var projects: [Project] = []  // Array holding all projects
     var filteredProjects: [Project] = []  // Array to hold filtered projects based on search
@@ -19,7 +21,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.setupSearchController()
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "My Projects"
         navigationItem.leftBarButtonItem = editButtonItem
@@ -38,7 +40,9 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         loadProjects()
         filteredProjects = projects  // Initially, show all projects
     }
+    
 
+    
     private func loadProjects() {
         // Clear the existing data in the collection view to avoid duplicates
         if !projects.isEmpty {
@@ -197,19 +201,35 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
     }
 
 
-    // MARK: - Search Bar Handling
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            filteredProjects = projects  // If search bar is empty, show all projects
+
+     
+    private func setupSearchController(){
+        self.searchController.searchResultsUpdater = self
+        self.searchController.obscuresBackgroundDuringPresentation = false
+        self.searchController.hidesNavigationBarDuringPresentation = true
+        self.searchController.searchBar.placeholder = "Search Projects"
+        
+        self.navigationItem.searchController = searchController
+        self.definesPresentationContext = false
+        self.navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchText = searchController.searchBar.text
+        if searchText!.isEmpty{
+            filteredProjects = projects
         } else {
-            filteredProjects = projects.filter { project in
-                project.name.lowercased().contains(searchText.lowercased())  // Filter projects by name
+            filteredProjects = projects.filter {
+                project in project.name.lowercased().contains((searchText!.lowercased()))
             }
         }
-        projectsCollectionView.reloadData()  // Reload collection view with filtered projects
+        projectsCollectionView.reloadData()
     }
 
-    // Unwind Segue for updating collection view
+
+
+    // Unwind Segue for updating collection viewi
     @IBAction func unwindToMyProjects(_ unwindSegue: UIStoryboardSegue) {
         print("Unwind segue triggered")
         guard unwindSegue.identifier == "Create" else {

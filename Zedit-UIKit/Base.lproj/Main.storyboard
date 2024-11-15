@@ -20,14 +20,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.666667938232422"/>
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="42.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="71M-M2-Fer" id="Kpv-LC-8tS">
-                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="42.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHv-zq-cQ6">
-                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="21.666666666666671"/>
+                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="20.666666666666671"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -70,18 +70,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="OiD-iH-gOg">
-                                <rect key="frame" x="0.0" y="103" width="393" height="35"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="P2W-Wy-SwQ"/>
-                                </constraints>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="AQg-U7-vKA" id="yIb-Bc-ZKk"/>
-                                </connections>
-                            </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vFO-JR-S6s">
-                                <rect key="frame" x="0.0" y="143" width="393" height="675"/>
+                                <rect key="frame" x="0.0" y="111" width="393" height="707"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="t02-TV-9n1">
                                     <size key="itemSize" width="128" height="128"/>
@@ -105,15 +95,11 @@
                             </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="VlY-60-N81"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="VlY-60-N81" firstAttribute="trailing" secondItem="vFO-JR-S6s" secondAttribute="trailing" id="93O-Sy-aK9"/>
                             <constraint firstItem="VlY-60-N81" firstAttribute="bottom" secondItem="vFO-JR-S6s" secondAttribute="bottom" id="LAX-2u-gOd"/>
-                            <constraint firstItem="vFO-JR-S6s" firstAttribute="top" secondItem="VlY-60-N81" secondAttribute="top" constant="40" id="VWv-Iv-wXY"/>
-                            <constraint firstItem="OiD-iH-gOg" firstAttribute="leading" secondItem="vFO-JR-S6s" secondAttribute="leading" id="dMu-oY-c1y"/>
-                            <constraint firstItem="OiD-iH-gOg" firstAttribute="trailing" secondItem="vFO-JR-S6s" secondAttribute="trailing" id="fph-Ly-z7s"/>
+                            <constraint firstItem="vFO-JR-S6s" firstAttribute="top" secondItem="VlY-60-N81" secondAttribute="top" constant="8" id="VWv-Iv-wXY"/>
                             <constraint firstItem="vFO-JR-S6s" firstAttribute="leading" secondItem="VlY-60-N81" secondAttribute="leading" id="j5p-ga-BQ5"/>
-                            <constraint firstItem="OiD-iH-gOg" firstAttribute="top" secondItem="VlY-60-N81" secondAttribute="top" id="wLc-W8-zim"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="XZH-BY-trp">
@@ -125,12 +111,11 @@
                     </navigationItem>
                     <connections>
                         <outlet property="projectsCollectionView" destination="vFO-JR-S6s" id="bzH-8G-j6i"/>
-                        <outlet property="projectsSearchBar" destination="OiD-iH-gOg" id="TFo-D9-n77"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J3M-uc-j2C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2178" y="-674"/>
+            <point key="canvasLocation" x="2177.8625954198474" y="-674.64788732394368"/>
         </scene>
         <!--Create Project Collection View Controller-->
         <scene sceneID="U4s-W1-Cgm">
