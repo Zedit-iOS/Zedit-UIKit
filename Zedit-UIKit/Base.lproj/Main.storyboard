@@ -323,14 +323,25 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="50s-Ry-mqi">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ad7-YG-Gml">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="0.0"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Cancel"/>
+                                        <connections>
+                                            <segue destination="xQ2-qc-8ne" kind="unwind" identifier="ExportCancel" unwindAction="myUnwindActionWithUnwindSegue:" id="Bk3-BK-9YJ"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Export" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O2z-Df-8hk">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="38.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="30.000000000000004" width="393" height="36.333333333333343"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36.333333333333343" id="ZvP-rY-5UQ"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KLn-Uy-WR5">
-                                        <rect key="frame" x="0.0" y="68.333333333333343" width="393" height="486.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="96.333333333333343" width="393" height="486.66666666666663"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NZA-0k-DKf">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="486.66666666666669"/>
@@ -380,7 +391,7 @@
                                                     </collectionView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="486.66666666666669" id="XJN-g6-bkg"/>
+                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="486.66666666666669" id="XJN-g6-bkg"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -396,7 +407,7 @@
                                         <viewLayoutGuide key="frameLayoutGuide" id="a6B-Us-sDL"/>
                                     </scrollView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="mgG-Un-q1R">
-                                        <rect key="frame" x="0.0" y="585" width="393" height="95.333333333333371"/>
+                                        <rect key="frame" x="0.0" y="613" width="393" height="67.333333333333371"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rU-BQ-Q0G">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="20.333333333333332"/>
@@ -405,7 +416,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="q5P-wW-fUr">
-                                                <rect key="frame" x="0.0" y="36.333333333333371" width="393" height="60"/>
+                                                <rect key="frame" x="0.0" y="36.333333333333371" width="393" height="32"/>
                                                 <segments>
                                                     <segment title="m4a"/>
                                                     <segment title="mp4"/>
@@ -458,6 +469,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hZP-xH-NW9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="xQ2-qc-8ne" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="137" y="873"/>
         </scene>

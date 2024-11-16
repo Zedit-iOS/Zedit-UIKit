@@ -71,6 +71,8 @@ class ExportViewController: UIViewController{
         }
     
     
+    
+    
     @IBAction func ExportButton(_ sender: UIButton) {
         let selectedVideos = collectionView.getSelectedVideos()
         if selectedVideos.count > 0 {
