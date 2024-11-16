@@ -10,6 +10,7 @@
 		370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */; };
 		370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */; };
 		372256782CE8E06300D57285 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 372256772CE8E06300D57285 /* CVFunctions.cpp */; };
+		3722567E2CE8F08300D57285 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3722567D2CE8F08300D57285 /* opencv2.xcframework */; };
 		372A50212CE4515C0086340A /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A50202CE4515C0086340A /* ColorViewController.swift */; };
 		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
 		37ED5CE82CE89D990025505F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ED5CE72CE89D990025505F /* Accelerate.framework */; };
@@ -38,6 +39,8 @@
 		370C6BA82CD9CF63008A7E84 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
 		372256772CE8E06300D57285 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
+		3722567B2CE8EF9A00D57285 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		3722567D2CE8F08300D57285 /* opencv2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = opencv2.xcframework; sourceTree = "<group>"; };
 		372A50202CE4515C0086340A /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
 		378FFA5E2CE8A53700A91493 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3722567E2CE8F08300D57285 /* opencv2.xcframework in Frameworks */,
 				37ED5CEE2CE89DB20025505F /* CoreGraphics.framework in Frameworks */,
 				37ED5CEC2CE89DAA0025505F /* CoreMedia.framework in Frameworks */,
 				37ED5CEA2CE89DA20025505F /* CoreFoundation.framework in Frameworks */,
@@ -84,6 +88,7 @@
 		37ED5CE52CE89D8B0025505F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3722567D2CE8F08300D57285 /* opencv2.xcframework */,
 				37ED5CED2CE89DB20025505F /* CoreGraphics.framework */,
 				37ED5CEB2CE89DAA0025505F /* CoreMedia.framework */,
 				37ED5CE92CE89DA20025505F /* CoreFoundation.framework */,
@@ -95,6 +100,7 @@
 		E1BC32A72CCF78BE0026C60F = {
 			isa = PBXGroup;
 			children = (
+				3722567B2CE8EF9A00D57285 /* opencv2.framework */,
 				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
 				37ED5CE52CE89D8B0025505F /* Frameworks */,
 				E1BC32B12CCF78BE0026C60F /* Products */,
@@ -377,6 +383,7 @@
 		E1BC32C52CCF78C10026C60F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -420,6 +427,7 @@
 		E1BC32C62CCF78C10026C60F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
