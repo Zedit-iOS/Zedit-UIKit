@@ -9,7 +9,6 @@ import UIKit
 import AVFoundation
 import AVKit
 
-
 class TrimViewController: UIViewController {
     
     var videoList: [URL] = []
@@ -19,27 +18,60 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var videoSelectorView: UIView!
     @IBOutlet weak var videoSelectorButton: UIButton!
     @IBOutlet weak var promptTextField: UITextField!
-    @IBOutlet weak var numberOfClipsTextField: UITextField!
     
     @IBOutlet weak var generateButton: UIButton!
+    @IBOutlet weak var numberOfClipsStepper: UIStepper!
+    @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
+    @IBOutlet weak var maximumDurationOfClipsStepper: UIStepper!
+    @IBOutlet weak var maximumDurationOfClipsStepperLabel: UILabel!
+    @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
     let trimSeguePreviewIdentifier = "preview"
-    
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
+        setupSteppers()
+        
         if let videos = fetchVideos() {
             videoList = videos
             setUpButton()
         }
         
-        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+//        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    func setupSteppers() {
+        // Configure number of clips stepper
+        numberOfClipsStepper.minimumValue = 1
+        numberOfClipsStepper.maximumValue = 10
+        numberOfClipsStepper.stepValue = 1
+        numberOfClipsStepper.value = 1
+        numberOfClipsStepperLabel.text = "Number of Clips: \(Int(numberOfClipsStepper.value))"
+        
+        // Configure maximum duration stepper
+        maximumDurationOfClipsStepper.minimumValue = 30
+        maximumDurationOfClipsStepper.maximumValue = 300
+        maximumDurationOfClipsStepper.stepValue = 30
+        maximumDurationOfClipsStepper.value = 30
+        maximumDurationOfClipsStepperLabel.text = "Maximum Duration: \(Int(maximumDurationOfClipsStepper.value))s"
+        
+        // Add target actions for steppers
+        numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
+        maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
+        numberOfClipsStepperLabel.text = "Number of Clips: \(Int(sender.value))"
+    }
+    
+    @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
+        maximumDurationOfClipsStepperLabel.text = "Maximum Duration: \(Int(sender.value))s"
     }
     
     func fetchVideos() -> [URL]? {
@@ -104,27 +136,28 @@ class TrimViewController: UIViewController {
     }
     
     func generateClips() {
-        guard let videoURL = videoList.first,
-              let numberOfClips = Int(numberOfClipsTextField.text ?? "0"), numberOfClips > 0 else {
-            print("Invalid input for video or number of clips")
+        guard let videoURL = videoList.first else {
+            print("Invalid input for video")
             return
         }
         
+        let numberOfClips = Int(numberOfClipsStepper.value)
+        let maximumDuration = Int(maximumDurationOfClipsStepper.value)
         let asset = AVAsset(url: videoURL)
         let totalDuration = CMTimeGetSeconds(asset.duration)
-        let clipDuration = totalDuration / Double(numberOfClips)
+        
+        let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
         
         for i in 0..<numberOfClips {
             let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
-            let endTime = CMTime(seconds: clipDuration * Double(i + 1), preferredTimescale: asset.duration.timescale)
+            let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
             exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == trimSeguePreviewIdentifier{
-            if let destinationVC = segue.destination as? TrimVideoPreviewViewController{
+        if segue.identifier == trimSeguePreviewIdentifier {
+            if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
                 generateClips()
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
@@ -155,23 +188,18 @@ class TrimViewController: UIViewController {
     }
 }
 
-
-
 extension TrimViewController {
-    @objc func keyboard(notification:Notification) {
-            guard let keyboardReact = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else{
-                return
-            }
-
-            if notification.name == UIResponder.keyboardWillShowNotification ||  notification.name == UIResponder.keyboardWillChangeFrameNotification {
-                self.view.frame.origin.y = -keyboardReact.height
-            }else{
-                self.view.frame.origin.y = 0
-            }
-
-        }
-    @objc func textFieldDidChange(_ textField: UITextField) {
+    @objc func keyboard(notification: Notification) {
+        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
+        if notification.name == UIResponder.keyboardWillShowNotification || notification.name == UIResponder.keyboardWillChangeFrameNotification {
+            self.view.frame.origin.y = -keyboardRect.height
+        } else {
+            self.view.frame.origin.y = 0
+        }
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
         
         let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
@@ -187,4 +215,3 @@ extension TrimViewController {
         }
     }
 }
-
