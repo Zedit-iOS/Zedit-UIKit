@@ -8,10 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */; };
-		370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */; };
 		370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */; };
+		372256782CE8E06300D57285 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 372256772CE8E06300D57285 /* CVFunctions.cpp */; };
 		372A50212CE4515C0086340A /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A50202CE4515C0086340A /* ColorViewController.swift */; };
 		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
+		37ED5CE82CE89D990025505F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ED5CE72CE89D990025505F /* Accelerate.framework */; };
+		37ED5CEA2CE89DA20025505F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ED5CE92CE89DA20025505F /* CoreFoundation.framework */; };
+		37ED5CEC2CE89DAA0025505F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ED5CEB2CE89DAA0025505F /* CoreMedia.framework */; };
+		37ED5CEE2CE89DB20025505F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37ED5CED2CE89DB20025505F /* CoreGraphics.framework */; };
+		37ED5CF12CE89E2C0025505F /* Wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37ED5CF02CE89E2C0025505F /* Wrapper.mm */; };
 		E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */; };
 		E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */; };
 		E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */; };
@@ -31,11 +36,18 @@
 /* Begin PBXFileReference section */
 		370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		370C6BA82CD9CF63008A7E84 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
-		370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cv2Wrapper.hpp; sourceTree = "<group>"; };
-		370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cv2Wrapper.cpp; sourceTree = "<group>"; };
 		370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
+		372256772CE8E06300D57285 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
 		372A50202CE4515C0086340A /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
+		378FFA5E2CE8A53700A91493 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		378FFA622CE8E02E00A91493 /* CVFunctions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFunctions.hpp; sourceTree = "<group>"; };
+		37ED5CE72CE89D990025505F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		37ED5CE92CE89DA20025505F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		37ED5CEB2CE89DAA0025505F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		37ED5CED2CE89DB20025505F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		37ED5CEF2CE89E180025505F /* Wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Wrapper.h; sourceTree = "<group>"; };
+		37ED5CF02CE89E2C0025505F /* Wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Wrapper.mm; sourceTree = "<group>"; };
 		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
 		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
 		E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
@@ -59,16 +71,32 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37ED5CEE2CE89DB20025505F /* CoreGraphics.framework in Frameworks */,
+				37ED5CEC2CE89DAA0025505F /* CoreMedia.framework in Frameworks */,
+				37ED5CEA2CE89DA20025505F /* CoreFoundation.framework in Frameworks */,
+				37ED5CE82CE89D990025505F /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37ED5CE52CE89D8B0025505F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37ED5CED2CE89DB20025505F /* CoreGraphics.framework */,
+				37ED5CEB2CE89DAA0025505F /* CoreMedia.framework */,
+				37ED5CE92CE89DA20025505F /* CoreFoundation.framework */,
+				37ED5CE72CE89D990025505F /* Accelerate.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E1BC32A72CCF78BE0026C60F = {
 			isa = PBXGroup;
 			children = (
 				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
+				37ED5CE52CE89D8B0025505F /* Frameworks */,
 				E1BC32B12CCF78BE0026C60F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,8 +121,6 @@
 				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
 				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
 				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
-				370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */,
-				370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */,
 				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
 				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
 				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
@@ -106,6 +132,11 @@
 				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
 				E1BC32C12CCF78C10026C60F /* Info.plist */,
 				370C6BA82CD9CF63008A7E84 /* Zedit-UIKit-Bridging-Header.h */,
+				378FFA622CE8E02E00A91493 /* CVFunctions.hpp */,
+				372256772CE8E06300D57285 /* CVFunctions.cpp */,
+				37ED5CEF2CE89E180025505F /* Wrapper.h */,
+				37ED5CF02CE89E2C0025505F /* Wrapper.mm */,
+				378FFA5E2CE8A53700A91493 /* PrefixHeader.pch */,
 			);
 			path = "Zedit-UIKit";
 			sourceTree = "<group>";
@@ -185,6 +216,7 @@
 				370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */,
 				E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */,
 				372A50212CE4515C0086340A /* ColorViewController.swift in Sources */,
+				372256782CE8E06300D57285 /* CVFunctions.cpp in Sources */,
 				E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */,
 				375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */,
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
@@ -194,10 +226,10 @@
 				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
 				E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */,
 				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
-				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
 				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
 				E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */,
 				E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */,
+				37ED5CF12CE89E2C0025505F /* Wrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,8 +382,17 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ZS7X249735;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/**",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/opencv2.framework/Headers",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
@@ -384,8 +425,17 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ZS7X249735;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/**",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/opencv2.framework/Headers",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";

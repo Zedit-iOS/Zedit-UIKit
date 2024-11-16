@@ -361,7 +361,7 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
     exportSession.outputFileType = .mp4
     exportSession.videoComposition = videoComposition
     
-    let alert = UIAlertController(title: "Exporting Video",
+    let alert = UIAlertController(title: "Applying color grading",
                                   message: "Please wait...",
                                   preferredStyle: .alert)
     present(alert, animated: true)

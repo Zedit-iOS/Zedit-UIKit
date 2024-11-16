@@ -27,8 +27,8 @@ class MainPageViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        
         super.viewWillAppear(animated)
-      
         if let videos = fetchVideos() {
             videoList = videos
             print("videos sucessfully loaded")
@@ -37,6 +37,16 @@ class MainPageViewController: UIViewController {
             
         }
         navigationItem.title = projectname
+        do {
+            if let scenes = CV.detectSceneChanges(try String(contentsOf: videoList[0])) {
+                for scene in scenes {
+                    print("Scene: \(scene.start) - \(scene.end)")
+                }
+            }
+        } catch {
+            print("Error reading video file: \(error)")
+        }
+       
     }
     
     
