@@ -23,6 +23,8 @@ class TrimViewController: UIViewController {
     
     @IBOutlet weak var generateButton: UIButton!
     
+    let trimSeguePreviewIdentifier = "preview"
+    
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     
@@ -120,13 +122,11 @@ class TrimViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "update" {
-            // Call generateClips before performing the segue
-            generateClips()
-            
-            // Pass the projectNameTrim back to MainPageViewController if needed
-            if let destinationVC = segue.destination as? MainPageViewController {
-                destinationVC.projectname = projectNameTrim
+        
+        if segue.identifier == trimSeguePreviewIdentifier{
+            if let destinationVC = segue.destination as? TrimVideoPreviewViewController{
+                generateClips()
+                destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
     }
