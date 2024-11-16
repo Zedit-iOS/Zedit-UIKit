@@ -33,7 +33,7 @@ class MainPageViewController: UIViewController {
             videoList = videos
             print("videos sucessfully loaded")
             setUpButton()
-           // playVideo(url: videoList[0])
+            playVideo(url: videoList[0])
             
         }
         navigationItem.title = projectname
