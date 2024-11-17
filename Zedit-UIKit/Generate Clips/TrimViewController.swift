@@ -169,20 +169,25 @@ class TrimViewController: UIViewController {
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         
         exportSession?.outputFileType = .mp4
-        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index).mp4")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd_HHmm"
+        let currentTimeString = dateFormatter.string(from: Date())
+        
+        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index)_\(currentTimeString).mp4")
         exportSession?.outputURL = outputURL
         exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
         
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Generate", message: "Generating clips \(index)...", preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+        }
+        
         exportSession?.exportAsynchronously {
-            switch exportSession?.status {
-            case .completed:
-                print("Clip \(index) saved at \(outputURL)")
-            case .failed:
-                print("Failed to save clip \(index): \(String(describing: exportSession?.error))")
-            case .cancelled:
-                print("Export cancelled for clip \(index)")
-            default:
-                break
+            DispatchQueue.main.async {
+                if let presentedVC = self.presentedViewController, presentedVC is UIAlertController {
+                    presentedVC.dismiss(animated: true)
+                }
             }
         }
     }
