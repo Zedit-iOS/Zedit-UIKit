@@ -24,7 +24,7 @@ class TrimVideoPreviewCollectionView: UICollectionView, UICollectionViewDelegate
             layout.minimumInteritemSpacing = spacing
             layout.minimumLineSpacing = spacing
             
-            // Calculate cell size (2 cells per row with spacing)
+            // Calculate cell size (2 cells per row with equal spacing)
             let width = (view.bounds.width - spacing * 3) / 2
             layout.itemSize = CGSize(width: width, height: width * 1.2)
             layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)

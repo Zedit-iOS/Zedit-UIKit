@@ -20,14 +20,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43"/>
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="71M-M2-Fer" id="Kpv-LC-8tS">
-                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHv-zq-cQ6">
-                                            <rect key="frame" x="20" y="11" width="313" height="21"/>
+                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="21.666666666666671"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -504,10 +504,9 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" distribution="fillEqually" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="wP6-cX-dja">
                                         <rect key="frame" x="0.0" y="660" width="393" height="55"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8TF-a7-UDQ">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8TF-a7-UDQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="181.66666666666666" height="55"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="tinted" title="Colour Grade"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="camera.filters" catalog="system" title="Colour Grade"/>
                                                 <connections>
                                                     <segue destination="aud-P5-i9c" kind="show" identifier="colorGrade" id="PXf-Jm-CAu"/>
                                                 </connections>
@@ -515,7 +514,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SW6-bM-0KG">
                                                 <rect key="frame" x="211.66666666666663" y="0.0" width="181.33333333333337" height="55"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="tinted" title="Generate Clips"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="diamond.circle" catalog="system" title="Generate Clips"/>
                                                 <connections>
                                                     <segue destination="6bo-lV-Rv6" kind="presentation" identifier="Trim" id="HQ6-8U-Jno"/>
                                                 </connections>
@@ -928,6 +927,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="camera.filters" catalog="system" width="128" height="119"/>
+        <image name="diamond.circle" catalog="system" width="128" height="123"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
