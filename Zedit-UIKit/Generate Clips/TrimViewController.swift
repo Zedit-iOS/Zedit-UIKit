@@ -17,7 +17,6 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
     @IBOutlet weak var videoSelectorButton: UIButton!
-    @IBOutlet weak var promptTextField: UITextField!
     
     @IBOutlet weak var generateButton: UIButton!
     @IBOutlet weak var numberOfClipsStepper: UIStepper!
@@ -41,25 +40,25 @@ class TrimViewController: UIViewController {
         }
         
 //        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     func setupSteppers() {
-        // Configure number of clips stepper
+        
         numberOfClipsStepper.minimumValue = 1
         numberOfClipsStepper.maximumValue = 10
         numberOfClipsStepper.stepValue = 1
         numberOfClipsStepper.value = 1
-        numberOfClipsStepperLabel.text = "Number of Clips: \(Int(numberOfClipsStepper.value))"
+        numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
         
         // Configure maximum duration stepper
         maximumDurationOfClipsStepper.minimumValue = 30
         maximumDurationOfClipsStepper.maximumValue = 300
         maximumDurationOfClipsStepper.stepValue = 30
         maximumDurationOfClipsStepper.value = 30
-        maximumDurationOfClipsStepperLabel.text = "Maximum Duration: \(Int(maximumDurationOfClipsStepper.value))s"
+        maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
         
         // Add target actions for steppers
         numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
@@ -67,11 +66,11 @@ class TrimViewController: UIViewController {
     }
     
     @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
-        numberOfClipsStepperLabel.text = "Number of Clips: \(Int(sender.value))"
+        numberOfClipsStepperLabel.text = "\(Int(sender.value))"
     }
     
     @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
-        maximumDurationOfClipsStepperLabel.text = "Maximum Duration: \(Int(sender.value))s"
+        maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
     }
     
     func fetchVideos() -> [URL]? {
@@ -146,6 +145,7 @@ class TrimViewController: UIViewController {
         let asset = AVAsset(url: videoURL)
         let totalDuration = CMTimeGetSeconds(asset.duration)
         
+        
         let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
         
         for i in 0..<numberOfClips {
@@ -199,19 +199,19 @@ extension TrimViewController {
         }
     }
     
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
+//    @objc func textFieldDidChange(_ textField: UITextField) {
+//        let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
+//        
+//        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+//        let projectNameExists = existingProjects.contains { $0["name"] == promptTextField.text }
         
-        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-        let projectNameExists = existingProjects.contains { $0["name"] == promptTextField.text }
-        
-        generateButton.isEnabled = isProjectNameValid && !projectNameExists
-        
-        if projectNameExists {
-            nameLabel.isHidden = false
-            nameLabel.text = "Name already exists."
-        } else {
-            nameLabel.isHidden = true
-        }
-    }
+//        generateButton.isEnabled = isProjectNameValid && !projectNameExists
+//        
+//        if projectNameExists {
+//            nameLabel.isHidden = false
+//            nameLabel.text = "Name already exists."
+//        } else {
+//            nameLabel.isHidden = true
+//        }
+//    }
 }
