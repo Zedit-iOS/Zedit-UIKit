@@ -51,10 +51,14 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(tickMarkView)
         
         NSLayoutConstraint.activate([
+            contentView.widthAnchor.constraint(equalToConstant: 150),
+            contentView.heightAnchor.constraint(equalToConstant: 200),
+            
             thumbnailImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             thumbnailImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             thumbnailImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.8),
+            thumbnailImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             
             titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor, constant: 4),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
