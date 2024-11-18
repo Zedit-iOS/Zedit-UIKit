@@ -28,12 +28,13 @@ class MainPageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-      
+        
         if let videos = fetchVideos() {
             videoList = videos
             print("videos sucessfully loaded")
             setUpButton()
             playVideo(url: videoList[0])
+
             
         }
         navigationItem.title = projectname
@@ -141,32 +142,34 @@ class MainPageViewController: UIViewController {
     }
     
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
-        guard unwindSegue.identifier == "generateUnwind",
-              let sourceVC = unwindSegue.source as? TrimViewController else {
+        if unwindSegue.identifier == "generateUnwind",
+           let sourceVC = unwindSegue.source as? TrimViewController {
+            // Handle updates from TrimViewController
+            projectname = sourceVC.projectNameTrim
+            if let videos = fetchVideos() {
+                videoList = videos
+                setUpButton() // Refresh the UI with the new videos
+                print("Data updated:", videoList)
+            }
+        } else if unwindSegue.identifier == "ExportCancel",
+                  let sourceVC = unwindSegue.source as? ExportViewController {
+            // Handle cancel action from ExportViewController
+            print("Returned from ExportViewController without making changes.")
+        } else {
             print("Cancelled without changes.")
-            return
-        }
-        
-        // Use the project name to re-fetch videos in the main page
-        projectname = sourceVC.projectNameTrim
-        if let videos = fetchVideos() {
-            videoList = videos
-            setUpButton() // Refresh the UI with the new videos
-            print("Data updated:", videoList)
         }
     }
-}
-
     
-
+    
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
+}

@@ -14,6 +14,10 @@
 		E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */; };
 		E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */; };
 		E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */; };
+		E15E96412CE796D90069DA66 /* TrimVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */; };
+		E15E96452CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */; };
+		E15E96472CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */; };
+		E15E96492CE8B1E80069DA66 /* safe+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96482CE8B1E80069DA66 /* safe+extension.swift */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -35,6 +39,10 @@
 		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
 		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
 		E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
+		E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewViewController.swift; sourceTree = "<group>"; };
+		E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionView.swift; sourceTree = "<group>"; };
+		E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionViewCell.swift; sourceTree = "<group>"; };
+		E15E96482CE8B1E80069DA66 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
 		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +69,72 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E15E964A2CE8B8950069DA66 /* Generate Clips */ = {
+			isa = PBXGroup;
+			children = (
+				E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */,
+				E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */,
+				E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */,
+				E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */,
+			);
+			path = "Generate Clips";
+			sourceTree = "<group>";
+		};
+		E15E964B2CE8B8CE0069DA66 /* Colour Grading */ = {
+			isa = PBXGroup;
+			children = (
+				372A50202CE4515C0086340A /* ColorViewController.swift */,
+			);
+			path = "Colour Grading";
+			sourceTree = "<group>";
+		};
+		E15E964C2CE8B9010069DA66 /* Projects Page */ = {
+			isa = PBXGroup;
+			children = (
+				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
+				E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */,
+				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
+			);
+			path = "Projects Page";
+			sourceTree = "<group>";
+		};
+		E15E964D2CE8B9330069DA66 /* Export Videos */ = {
+			isa = PBXGroup;
+			children = (
+				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
+				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
+				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
+			);
+			path = "Export Videos";
+			sourceTree = "<group>";
+		};
+		E15E964E2CE8B9810069DA66 /* Data Model and Common Functions */ = {
+			isa = PBXGroup;
+			children = (
+				E15E96482CE8B1E80069DA66 /* safe+extension.swift */,
+				E1BC32CB2CCF841A0026C60F /* Project.swift */,
+			);
+			path = "Data Model and Common Functions";
+			sourceTree = "<group>";
+		};
+		E15E964F2CE8B9CD0069DA66 /* Main Page */ = {
+			isa = PBXGroup;
+			children = (
+				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
+			);
+			path = "Main Page";
+			sourceTree = "<group>";
+		};
+		E15E96502CE8B9EA0069DA66 /* Table View Projects */ = {
+			isa = PBXGroup;
+			children = (
+				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
+				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
+				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
+			);
+			path = "Table View Projects";
+			sourceTree = "<group>";
+		};
 		E1BC32A72CCF78BE0026C60F = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +163,8 @@
 				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
 				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
 				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
+				370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */,
+				370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */,
 				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
 				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
 				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
@@ -177,16 +253,20 @@
 			files = (
 				370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */,
 				E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */,
+				E15E96492CE8B1E80069DA66 /* safe+extension.swift in Sources */,
 				372A50212CE4515C0086340A /* ColorViewController.swift in Sources */,
 				E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */,
+				E15E96412CE796D90069DA66 /* TrimVideoPreviewViewController.swift in Sources */,
 				375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */,
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
 				370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */,
+				E15E96472CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift in Sources */,
 				E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */,
 				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
 				E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */,
 				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
+				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
 				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
 				E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */,
 				E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */,
