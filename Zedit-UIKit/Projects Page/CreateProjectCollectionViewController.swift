@@ -119,46 +119,46 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     private func saveProject() -> Bool {
-        guard let projectName = projectNameTextField.text, !projectName.isEmpty else {
-            return false
-        }
-        
-        guard let videoURL = selectedVideoURL else {
-            return false
-        }
-        
-        let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return false
-        }
-        
-        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
-        
-        // Check if the project directory already exists
-        if fileManager.fileExists(atPath: projectDirectory.path) {
-            return false
-        }
-        
-        do {
-            // Create the directory for the new project
-            try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
-            
-            // Copy the selected video into the project directory
-            let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
-            try fileManager.copyItem(at: videoURL, to: destinationURL)
-            
-            // Save project metadata in UserDefaults
-            let project = ["name": projectName, "videoURL": destinationURL.path]
-            var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-            projects.append(project)
-            UserDefaults.standard.setValue(projects, forKey: "projects")
-            
-            return true
-        } catch {
-            print("Error creating project: \(error.localizedDescription)")
-            return false
-        }
+    guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
+        return false
     }
+    
+    guard let videoURL = selectedVideoURL else {
+        return false
+    }
+    
+    let fileManager = FileManager.default
+    guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        return false
+    }
+    
+    let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+    
+    // Check if the project directory already exists
+    if fileManager.fileExists(atPath: projectDirectory.path) {
+        return false
+    }
+    
+    do {
+        // Create the directory for the new project
+        try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
+        
+        // Copy the selected video into the project directory
+        let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
+        try fileManager.copyItem(at: videoURL, to: destinationURL)
+        
+        // Save project metadata in UserDefaults
+        let project = ["name": projectName, "videoURL": destinationURL.path]
+        var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        projects.append(project)
+        UserDefaults.standard.setValue(projects, forKey: "projects")
+        
+        return true
+    } catch {
+        print("Error creating project: \(error.localizedDescription)")
+        return false
+    }
+}
 }
 
 // MARK: - Video Selection Delegates
