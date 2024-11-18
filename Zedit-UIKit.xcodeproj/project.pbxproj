@@ -7,55 +7,55 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */; };
-		370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */; };
-		372A50212CE4515C0086340A /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A50202CE4515C0086340A /* ColorViewController.swift */; };
-		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
-		E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */; };
-		E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */; };
-		E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */; };
-		E15E96412CE796D90069DA66 /* TrimVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */; };
-		E15E96452CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */; };
-		E15E96472CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */; };
-		E15E96492CE8B1E80069DA66 /* safe+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15E96482CE8B1E80069DA66 /* safe+extension.swift */; };
+		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
+		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
+		3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605682CEB203900C11189 /* ProjectsTableViewController.swift */; };
+		3796056D2CEB203900C11189 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */; };
+		3796056E2CEB203900C11189 /* TrimVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */; };
+		3796056F2CEB203900C11189 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605542CEB203900C11189 /* Project.swift */; };
+		379605702CEB203900C11189 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605602CEB203900C11189 /* MainPageViewController.swift */; };
+		379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605672CEB203900C11189 /* ProjectsTableViewCell.swift */; };
+		379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */; };
+		379605732CEB203900C11189 /* safe+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605552CEB203900C11189 /* safe+extension.swift */; };
+		379605742CEB203900C11189 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605592CEB203900C11189 /* ExportViewController.swift */; };
+		379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */; };
+		379605762CEB203900C11189 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605522CEB203900C11189 /* ColorViewController.swift */; };
+		379605772CEB203900C11189 /* TrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055E2CEB203900C11189 /* TrimViewController.swift */; };
+		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
+		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
+		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
-		E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */; };
-		E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */; };
-		E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32CB2CCF841A0026C60F /* Project.swift */; };
-		E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */; };
-		E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */; };
-		E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionViewCell.swift; sourceTree = "<group>"; };
-		370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
-		372A50202CE4515C0086340A /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
-		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
-		E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
-		E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
-		E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
-		E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewViewController.swift; sourceTree = "<group>"; };
-		E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionView.swift; sourceTree = "<group>"; };
-		E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionViewCell.swift; sourceTree = "<group>"; };
-		E15E96482CE8B1E80069DA66 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
-		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
+		379605542CEB203900C11189 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		379605552CEB203900C11189 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
+		379605572CEB203900C11189 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
+		379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionViewCell.swift; sourceTree = "<group>"; };
+		379605592CEB203900C11189 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
+		3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionView.swift; sourceTree = "<group>"; };
+		3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionViewCell.swift; sourceTree = "<group>"; };
+		3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewViewController.swift; sourceTree = "<group>"; };
+		3796055E2CEB203900C11189 /* TrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimViewController.swift; sourceTree = "<group>"; };
+		379605602CEB203900C11189 /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
+		379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
+		379605632CEB203900C11189 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
+		379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
+		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
+		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
+		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
+		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Zedit.app; path = "/Users/vr/Development/Zedit/Zedit-UIKit/build/Debug-iphoneos/Zedit.app"; sourceTree = "<absolute>"; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E1BC32BC2CCF78C10026C60F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1BC32BF2CCF78C10026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
-		E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
-		E1BC32CB2CCF841A0026C60F /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
-		E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
-		E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
-		E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,68 +69,68 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E15E964A2CE8B8950069DA66 /* Generate Clips */ = {
+		379605532CEB203900C11189 /* Colour Grading */ = {
 			isa = PBXGroup;
 			children = (
-				E15E96402CE796D80069DA66 /* TrimVideoPreviewViewController.swift */,
-				E15E96442CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift */,
-				E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */,
-				E15E96462CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift */,
-			);
-			path = "Generate Clips";
-			sourceTree = "<group>";
-		};
-		E15E964B2CE8B8CE0069DA66 /* Colour Grading */ = {
-			isa = PBXGroup;
-			children = (
-				372A50202CE4515C0086340A /* ColorViewController.swift */,
+				379605522CEB203900C11189 /* ColorViewController.swift */,
 			);
 			path = "Colour Grading";
 			sourceTree = "<group>";
 		};
-		E15E964C2CE8B9010069DA66 /* Projects Page */ = {
+		379605562CEB203900C11189 /* Data Model and Common Functions */ = {
 			isa = PBXGroup;
 			children = (
-				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
-				E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */,
-				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
-			);
-			path = "Projects Page";
-			sourceTree = "<group>";
-		};
-		E15E964D2CE8B9330069DA66 /* Export Videos */ = {
-			isa = PBXGroup;
-			children = (
-				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
-				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
-				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
-			);
-			path = "Export Videos";
-			sourceTree = "<group>";
-		};
-		E15E964E2CE8B9810069DA66 /* Data Model and Common Functions */ = {
-			isa = PBXGroup;
-			children = (
-				E15E96482CE8B1E80069DA66 /* safe+extension.swift */,
-				E1BC32CB2CCF841A0026C60F /* Project.swift */,
+				379605542CEB203900C11189 /* Project.swift */,
+				379605552CEB203900C11189 /* safe+extension.swift */,
 			);
 			path = "Data Model and Common Functions";
 			sourceTree = "<group>";
 		};
-		E15E964F2CE8B9CD0069DA66 /* Main Page */ = {
+		3796055A2CEB203900C11189 /* Export Videos */ = {
 			isa = PBXGroup;
 			children = (
-				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
+				379605572CEB203900C11189 /* ExportVideoCollectionView.swift */,
+				379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */,
+				379605592CEB203900C11189 /* ExportViewController.swift */,
+			);
+			path = "Export Videos";
+			sourceTree = "<group>";
+		};
+		3796055F2CEB203900C11189 /* Generate Clips */ = {
+			isa = PBXGroup;
+			children = (
+				3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */,
+				3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */,
+				3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */,
+				3796055E2CEB203900C11189 /* TrimViewController.swift */,
+			);
+			path = "Generate Clips";
+			sourceTree = "<group>";
+		};
+		379605612CEB203900C11189 /* Main Page */ = {
+			isa = PBXGroup;
+			children = (
+				379605602CEB203900C11189 /* MainPageViewController.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
 		};
-		E15E96502CE8B9EA0069DA66 /* Table View Projects */ = {
+		379605652CEB203900C11189 /* Projects Page */ = {
 			isa = PBXGroup;
 			children = (
-				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
-				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
-				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
+				379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */,
+				379605632CEB203900C11189 /* MyProjectViewController.swift */,
+				379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */,
+			);
+			path = "Projects Page";
+			sourceTree = "<group>";
+		};
+		379605692CEB203900C11189 /* Table View Projects */ = {
+			isa = PBXGroup;
+			children = (
+				379605662CEB203900C11189 /* CreateProjectViewController.swift */,
+				379605672CEB203900C11189 /* ProjectsTableViewCell.swift */,
+				379605682CEB203900C11189 /* ProjectsTableViewController.swift */,
 			);
 			path = "Table View Projects";
 			sourceTree = "<group>";
@@ -139,39 +139,22 @@
 			isa = PBXGroup;
 			children = (
 				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
-				E1BC32B12CCF78BE0026C60F /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		E1BC32B12CCF78BE0026C60F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E1BC32B02CCF78BE0026C60F /* Zedit.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				379605532CEB203900C11189 /* Colour Grading */,
+				379605562CEB203900C11189 /* Data Model and Common Functions */,
+				3796055A2CEB203900C11189 /* Export Videos */,
+				3796055F2CEB203900C11189 /* Generate Clips */,
+				379605612CEB203900C11189 /* Main Page */,
+				379605652CEB203900C11189 /* Projects Page */,
+				379605692CEB203900C11189 /* Table View Projects */,
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
-				372A50202CE4515C0086340A /* ColorViewController.swift */,
-				E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */,
-				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
-				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
-				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
-				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
-				370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */,
-				370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */,
-				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
-				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
-				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
-				E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */,
-				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
-				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
-				E1BC32CB2CCF841A0026C60F /* Project.swift */,
 				E1BC32BC2CCF78C10026C60F /* Assets.xcassets */,
 				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
 				E1BC32C12CCF78C10026C60F /* Info.plist */,
@@ -224,7 +207,7 @@
 				Base,
 			);
 			mainGroup = E1BC32A72CCF78BE0026C60F;
-			productRefGroup = E1BC32B12CCF78BE0026C60F /* Products */;
+			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -251,25 +234,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */,
-				E1BC32D42CD08F170026C60F /* CreateProjectViewController.swift in Sources */,
-				E15E96492CE8B1E80069DA66 /* safe+extension.swift in Sources */,
-				372A50212CE4515C0086340A /* ColorViewController.swift in Sources */,
-				E1BC32D62CD368AE0026C60F /* MainPageViewController.swift in Sources */,
-				E15E96412CE796D90069DA66 /* TrimVideoPreviewViewController.swift in Sources */,
-				375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */,
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
-				370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */,
-				E15E96472CE87ABE0069DA66 /* TrimVideoPreviewCollectionViewCell.swift in Sources */,
-				E15E960D2CDF8F920069DA66 /* MyProjectViewControllerCell.swift in Sources */,
-				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
-				E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */,
-				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
-				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
-				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
-				E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */,
-				E1BC32CA2CCF7DC10026C60F /* ProjectsTableViewCell.swift in Sources */,
+				3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */,
+				3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */,
+				3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */,
+				3796056D2CEB203900C11189 /* ExportVideoCollectionViewCell.swift in Sources */,
+				3796056E2CEB203900C11189 /* TrimVideoPreviewViewController.swift in Sources */,
+				3796056F2CEB203900C11189 /* Project.swift in Sources */,
+				379605702CEB203900C11189 /* MainPageViewController.swift in Sources */,
+				379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */,
+				379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */,
+				379605732CEB203900C11189 /* safe+extension.swift in Sources */,
+				379605742CEB203900C11189 /* ExportViewController.swift in Sources */,
+				379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */,
+				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
+				379605772CEB203900C11189 /* TrimViewController.swift in Sources */,
+				379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */,
+				379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */,
+				3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
