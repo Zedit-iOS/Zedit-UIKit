@@ -10,7 +10,7 @@ import AVFoundation
 import AVKit
 import CoreImage
 
-class ColorViewController: UIViewController {
+class ColorViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var videoPlayer: UIView!
     @IBOutlet weak var colorVideoPlayer: UIView!
     
@@ -34,12 +34,19 @@ class ColorViewController: UIViewController {
     private var videoList: [URL] = []
     
     private var timeObserverToken: (observer: Any, player: AVPlayer)?
+    private var isNavigatingBack = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVideoPlayers()
         context = CIContext(options: nil)
         setupSliders()
+        
+        navigationController?.delegate = self
+        
+        self.navigationItem.hidesBackButton = true // Hide the default back button
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
         
         if let videos = fetchVideos() {
             videoList = videos
@@ -49,6 +56,58 @@ class ColorViewController: UIViewController {
             }
         }
     }
+    
+    @objc func backButtonTapped() {
+            // Show the confirmation alert
+            let alert = UIAlertController(
+                title: "Confirm Navigation",
+                message: "Are you sure you want to go back? Unsaved changes may be lost.",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+                self.isNavigatingBack = true
+                self.navigationController?.popViewController(animated: true) // Proceed with back navigation
+            }))
+            
+            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                // Do nothing, navigation is cancelled
+            }))
+            
+            present(alert, animated: true)
+        }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+            if viewController is MainPageViewController, !isNavigatingBack {
+                // Prevent navigation until confirmation
+                navigationController.setViewControllers(navigationController.viewControllers.filter { $0 !== self }, animated: false)
+                
+                // Show the alert (this will be triggered if the back navigation is initiated)
+                let alert = UIAlertController(
+                    title: "Confirm Navigation",
+                    message: "Are you sure you want to go back? Unsaved changes may be lost.",
+                    preferredStyle: .alert
+                )
+                
+                alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+                    self.isNavigatingBack = true
+                    navigationController.popViewController(animated: true) // Proceed with navigation
+                }))
+                
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
+                    // Do nothing, navigation is cancelled
+                }))
+                
+                present(alert, animated: true)
+            }
+        }
+
+        
+        deinit {
+            if let token = timeObserverToken {
+                token.player.removeTimeObserver(token.observer)
+            }
+        }
     
     private func setupSliders() {
         redSlider.minimumValue = 0
@@ -217,12 +276,12 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
     }
     
     
-    deinit {
-        if let token = timeObserverToken {
-            token.player.removeTimeObserver(token.observer)
-        }
-
-    }
+//    deinit {
+//        if let token = timeObserverToken {
+//            token.player.removeTimeObserver(token.observer)
+//        }
+//
+//    }
     
     private func fetchVideos() -> [URL]? {
         guard let project = getProjects(ProjectName: projectNameColorGrade) else {
