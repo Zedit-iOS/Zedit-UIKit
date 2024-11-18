@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		370C6BA72CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */; };
-		370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */; };
 		370C6BAD2CD9D206008A7E84 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */; };
 		372A50212CE4515C0086340A /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372A50202CE4515C0086340A /* ColorViewController.swift */; };
 		375D4EA52CD9C45E00EE7D04 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */; };
@@ -34,9 +33,6 @@
 
 /* Begin PBXFileReference section */
 		370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionViewCell.swift; sourceTree = "<group>"; };
-		370C6BA82CD9CF63008A7E84 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
-		370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cv2Wrapper.hpp; sourceTree = "<group>"; };
-		370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cv2Wrapper.cpp; sourceTree = "<group>"; };
 		370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
 		372A50202CE4515C0086340A /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
@@ -161,19 +157,24 @@
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
 				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
 				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
-				E15E964A2CE8B8950069DA66 /* Generate Clips */,
-				E15E964E2CE8B9810069DA66 /* Data Model and Common Functions */,
-				E15E964B2CE8B8CE0069DA66 /* Colour Grading */,
-				E15E964C2CE8B9010069DA66 /* Projects Page */,
-				E15E964D2CE8B9330069DA66 /* Export Videos */,
-				E15E964F2CE8B9CD0069DA66 /* Main Page */,
+				372A50202CE4515C0086340A /* ColorViewController.swift */,
+				E15E96102CE1007F0069DA66 /* CreateProjectCollectionViewController.swift */,
+				E15E960C2CDF8F920069DA66 /* MyProjectViewControllerCell.swift */,
+				E15E960A2CDF8EE20069DA66 /* MyProjectViewController.swift */,
+				375D4EA42CD9C45E00EE7D04 /* ExportViewController.swift */,
+				370C6BAC2CD9D206008A7E84 /* ExportVideoCollectionView.swift */,
 				370C6BA92CD9CF63008A7E84 /* cv2Wrapper.hpp */,
 				370C6BAA2CD9CF63008A7E84 /* cv2Wrapper.cpp */,
-				E15E96502CE8B9EA0069DA66 /* Table View Projects */,
+				370C6BA62CD9CD9B008A7E84 /* ExportVideoCollectionViewCell.swift */,
+				E1BC32D32CD08F170026C60F /* CreateProjectViewController.swift */,
+				E1BC32D52CD368AE0026C60F /* MainPageViewController.swift */,
+				E1F32A632CD8CF3200CB1E74 /* TrimViewController.swift */,
+				E1BC32C92CCF7DC10026C60F /* ProjectsTableViewCell.swift */,
+				E1BC32C72CCF7A750026C60F /* ProjectsTableViewController.swift */,
+				E1BC32CB2CCF841A0026C60F /* Project.swift */,
 				E1BC32BC2CCF78C10026C60F /* Assets.xcassets */,
 				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
 				E1BC32C12CCF78C10026C60F /* Info.plist */,
-				370C6BA82CD9CF63008A7E84 /* Zedit-UIKit-Bridging-Header.h */,
 			);
 			path = "Zedit-UIKit";
 			sourceTree = "<group>";
@@ -265,7 +266,6 @@
 				E1BC32C82CCF7A750026C60F /* ProjectsTableViewController.swift in Sources */,
 				E15E960B2CDF8EE20069DA66 /* MyProjectViewController.swift in Sources */,
 				E1BC32CC2CCF841A0026C60F /* Project.swift in Sources */,
-				E15E96452CE879D20069DA66 /* TrimVideoPreviewCollectionView.swift in Sources */,
 				370C6BAB2CD9CF63008A7E84 /* cv2Wrapper.cpp in Sources */,
 				E1F32A642CD8CF3200CB1E74 /* TrimViewController.swift in Sources */,
 				E15E96112CE1007F0069DA66 /* CreateProjectCollectionViewController.swift in Sources */,
@@ -441,7 +441,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -475,7 +475,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
