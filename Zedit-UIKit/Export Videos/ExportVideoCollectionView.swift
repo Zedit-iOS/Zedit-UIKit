@@ -13,7 +13,6 @@ class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UIC
     public var videoList: [URL] = []
     public var selectedVideo: [URL] = []
     
-    
     func setupCollectionView(in view: UIView) {
         self.delegate = self
         self.dataSource = self
@@ -57,15 +56,21 @@ class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UIC
     // MARK: - UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedVideo.append(videoList[indexPath.item])
-        //        print(selectedVideo)
-        //        print("Selected video at index: \(indexPath.item)")
+        let video = videoList[indexPath.item]
+        if !selectedVideo.contains(video) {
+            selectedVideo.append(video)
+        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? ExportVideoCollectionViewCell {
+            cell.isSelected = true // Update UI to show tick mark
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        selectedVideo.removeAll { $0 == videoList[indexPath.item] }
-        //        print(selectedVideo)
-        //        print("Deselected video at index: \(indexPath.item)")
+        let video = videoList[indexPath.item]
+        selectedVideo.removeAll { $0 == video }
+        if let cell = collectionView.cellForItem(at: indexPath) as? ExportVideoCollectionViewCell {
+            cell.isSelected = false // Update UI to hide tick mark
+        }
     }
     
     func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
@@ -77,4 +82,3 @@ class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UIC
         return selectedVideo
     }
 }
-
