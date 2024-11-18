@@ -164,6 +164,25 @@ class TrimViewController: UIViewController {
         }
     }
     
+    @IBAction func cancelButtonTapped(_ sender: UIButton) {
+        let alertController = UIAlertController(
+            title: "Confirm Exit",
+            message: "Are you sure you want to cancel and go back?",
+            preferredStyle: .alert
+        )
+        
+        // "Yes" action: Perform the unwind segue programmatically
+        alertController.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+            self.performSegue(withIdentifier: "cancel", sender: nil)
+        })
+        
+        // "No" action: Dismiss the alert
+        alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
+    
     func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
         let asset = AVAsset(url: videoURL)
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
