@@ -22,32 +22,19 @@ class MainPageViewController: UIViewController {
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     let trimSegueIdentifier = "Trim"
+    let scenes = [SceneRange]()
     
     
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-        super.viewWillAppear(animated)
-        if let videos = fetchVideos() {
-            videoList = videos
-            print("videos sucessfully loaded")
-            setUpButton()
-           // playVideo(url: videoList[0])
-            
-        }
-        navigationItem.title = projectname
-        do {
-            if let scenes = CV.detectSceneChanges(try String(contentsOf: videoList[0])) {
-                for scene in scenes {
-                    print("Scene: \(scene.start) - \(scene.end)")
-                }
-            }
-        } catch {
-            print("Error reading video file: \(error)")
-        }
-       
+   override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if let videos = fetchVideos() {
+        videoList = videos
+        print("videos successfully loaded")
+        setUpButton()
     }
+    navigationItem.title = projectname
+}
     
     
     

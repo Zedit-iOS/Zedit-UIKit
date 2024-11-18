@@ -25,6 +25,8 @@ class TrimViewController: UIViewController {
     
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
+
+    private var scenes: [SceneRange] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,15 +123,33 @@ class TrimViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "update" {
-            // Call generateClips before performing the segue
             generateClips()
             
-            // Pass the projectNameTrim back to MainPageViewController if needed
             if let destinationVC = segue.destination as? MainPageViewController {
                 destinationVC.projectname = projectNameTrim
             }
         }
     }
+
+    func processVideoForScenes(videoPath: String) {
+        let scenesArray = NSMutableArray()
+        
+        if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: 3.0) {
+            if error.hasError {
+                print("Error detecting scenes: \(error.message ?? "")")
+                return
+            }
+            print("Total scenes detected: \(scenesArray.count)")
+            
+            let scenes = scenesArray.compactMap { $0 as? SceneRange }
+            scenes.forEach { scene in
+                print("Scene Range: \(scene.start) - \(scene.end)")
+            }
+            
+            self.scenes = scenes
+        }
+    }
+    
     
     func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
         let asset = AVAsset(url: videoURL)
@@ -139,7 +159,10 @@ class TrimViewController: UIViewController {
         let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index).mp4")
         exportSession?.outputURL = outputURL
         exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
-        
+        processVideoForScenes(videoPath: videoURL.path)
+        scenes.forEach{scene in
+            print(scene)
+        }
         exportSession?.exportAsynchronously {
             switch exportSession?.status {
             case .completed:

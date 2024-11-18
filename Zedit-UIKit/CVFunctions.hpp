@@ -15,13 +15,18 @@
 
 namespace CVFuncs
 {
+    struct ProcessingError
+    {
+        bool hasError;
+        std::string message;
+    };
+
     struct SceneRange
     {
         double start;
         double end;
     };
 
-    std::string getVersion();
-    void detect_scene_changes(const std::string &video_path, std::vector<SceneRange> &scene_ranges);
+    ProcessingError detect_scene_changes(const std::string &video_path, std::vector<SceneRange> &scene_ranges, double max_duration);
 }
 #endif
