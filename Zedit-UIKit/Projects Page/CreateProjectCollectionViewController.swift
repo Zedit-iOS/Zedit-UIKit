@@ -11,7 +11,6 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     @IBOutlet weak var projectNameTextField: UITextField!
     @IBOutlet weak var nameExistsLabel: UILabel!
     @IBOutlet weak var createProjectButton: UIButton!
-    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -255,6 +254,6 @@ extension CreateProjectCollectionViewController {
         createProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
         
         nameExistsLabel.isHidden = !projectNameExists
-        nameExistsLabel.text = projectNameExists ? "Name already exists." : nil
+        nameExistsLabel.text = projectNameExists ? "Name already exists!" : nil
     }
 }
