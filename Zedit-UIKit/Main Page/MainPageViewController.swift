@@ -10,7 +10,6 @@ import AVKit
 
 class MainPageViewController: UIViewController {
     
-    @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var videoSelector: UIButton!
     
@@ -142,22 +141,22 @@ class MainPageViewController: UIViewController {
     }
     
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
-//        if unwindSegue.identifier == "generateUnwind",
-//           let sourceVC = unwindSegue.source as? TrimViewController {
-//            // Handle updates from TrimViewController
-//            projectname = sourceVC.projectNameTrim
-//            if let videos = fetchVideos() {
-//                videoList = videos
-//                setUpButton() // Refresh the UI with the new videos
-//                print("Data updated:", videoList)
-//            }
-//        } else if unwindSegue.identifier == "ExportCancel",
-//                  let sourceVC = unwindSegue.source as? ExportViewController {
-//            // Handle cancel action from ExportViewController
-//            print("Returned from ExportViewController without making changes.")
-//        } else {
-//            print("Cancelled without changes.")
-//        }
+        if unwindSegue.identifier == "generateUnwind",
+           let sourceVC = unwindSegue.source as? TrimViewController {
+            // Handle updates from TrimViewController
+            projectname = sourceVC.projectNameTrim
+            if let videos = fetchVideos() {
+                videoList = videos
+                setUpButton() // Refresh the UI with the new videos
+                print("Data updated:", videoList)
+            }
+        } else if unwindSegue.identifier == "ExportCancel",
+                  let sourceVC = unwindSegue.source as? ExportViewController {
+            // Handle cancel action from ExportViewController
+            print("Returned from ExportViewController without making changes.")
+        } else {
+            print("Cancelled without changes.")
+        }
     }
     
     
