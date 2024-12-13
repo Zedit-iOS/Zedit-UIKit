@@ -51,7 +51,6 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(tickMarkView)
 
         NSLayoutConstraint.activate([
-
             contentView.widthAnchor.constraint(equalToConstant: 150),
             contentView.heightAnchor.constraint(equalToConstant: 200),
 

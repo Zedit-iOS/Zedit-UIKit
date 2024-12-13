@@ -22,6 +22,7 @@ class TrimVideoPreviewViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Fetch videos from all subfolders of the project
         if let videos = fetchVideos() {
             videoList = videos
             vidoListCollectionView.videoList = videos
@@ -29,7 +30,7 @@ class TrimVideoPreviewViewController: UIViewController {
             vidoListCollectionView.reloadData()
         }
         
-        print("Project name is \(String(describing: trimPreviewProjectName))")
+        print("Project name is \(trimPreviewProjectName)")
         vidoListCollectionView.setupCollectionView(in: view)
         
         // Set the delegate to handle video selection
@@ -41,14 +42,19 @@ class TrimVideoPreviewViewController: UIViewController {
     }
     
     func fetchVideos() -> [URL]? {
-        if let project = getProjects(ProjectName: trimPreviewProjectName) {
-            let videos = project.videos
-            print("Success: Found \(videos.count) videos")
-            return videos
-        } else {
+        guard let project = getProjects(ProjectName: trimPreviewProjectName) else {
             print("Failure: Could not get project")
             return nil
         }
+
+        // Fetch videos only from the "clips" folder
+        if let clipsFolder = project.subfolders.first(where: { $0.name == "clips" }) {
+            print("Found \(clipsFolder.videoURLS.count) videos in the clips folder")
+            return clipsFolder.videoURLS
+        }
+
+        print("No clips folder found")
+        return []
     }
     
     func getProjects(ProjectName: String) -> Project? {
@@ -67,12 +73,22 @@ class TrimVideoPreviewViewController: UIViewController {
         }
         
         do {
-            let videoFiles = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: [])
-                .filter { $0.pathExtension == "mp4" || $0.pathExtension == "mov" }
+            // Initialize the project object
+            var subfolders: [Subfolder] = []
             
-            return Project(name: ProjectName, videos: videoFiles)
+            // Iterate through subfolders
+            let subfolderURLs = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            for subfolderURL in subfolderURLs where subfolderURL.hasDirectoryPath {
+                let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: [])
+                    .filter { $0.pathExtension == "mp4" || $0.pathExtension == "mov" }
+                
+                // Append to subfolders array
+                subfolders.append(Subfolder(name: subfolderURL.lastPathComponent, videos: videoFiles))
+            }
+            
+            return Project(name: ProjectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch files")
+            print("Failed to fetch subfolders or files")
             return nil
         }
     }
