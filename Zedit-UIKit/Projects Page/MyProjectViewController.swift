@@ -252,6 +252,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
            let indexPath = projectsCollectionView.indexPathsForSelectedItems?.first {
             
             // Set the destination's projectname with the selected project's name
+            filteredProjects[indexPath.item].timesVisited += 1
             destination.projectname = filteredProjects[indexPath.item].name
         }
     }
