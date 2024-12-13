@@ -1,3 +1,4 @@
+
 //
 //  MainPageViewController.swift
 //  Zedit-UIKit
@@ -10,98 +11,97 @@ import AVKit
 
 class MainPageViewController: UIViewController {
     
-    
     @IBOutlet weak var videoSelector: UIButton!
-    
-    
     @IBOutlet weak var videoPreviewView: UIView!
     
     var projectname = String()
-    var videoList:[URL]=[]
+    var videoList: [URL] = []
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     let trimSegueIdentifier = "Trim"
     
-    
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let videos = fetchVideos() {
-            videoList = videos
-            print("videos sucessfully loaded")
+        if let project = getProject(projectName: projectname) {
+            videoList = project.subfolders.flatMap { $0.videoURLS }
+            print("Videos successfully loaded: \(videoList.count) videos found.")
             setUpButton()
-            playVideo(url: videoList[0])
-
-            
+            if let firstVideo = videoList.first {
+                playVideo(url: firstVideo)
+            }
+        } else {
+            print("Failed to load project.")
         }
+        
         navigationItem.title = projectname
     }
     
-    
-    
-    
-    func getProjects(ProjectName: String)->Project?{
-        let filemanager = FileManager.default
+    func getProject(projectName: String) -> Project? {
+        let fileManager = FileManager.default
         
-        guard let documentsDirectory = filemanager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("unable to acess directory")
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access documents directory.")
             return nil
         }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
         
-        guard filemanager.fileExists(atPath: projectsDirectory.path)else{
-            print("folder does not exist")
-            return nil
-        }
-        do{
-            let videoFiles = try filemanager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: []).filter{$0.pathExtension == "mp4"||$0.pathExtension == "mov"}
-            return Project(name: ProjectName, videos: videoFiles)
-        } catch{
-            print("failed to fetch files")
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist.")
             return nil
         }
         
+        do {
+            var subfolders: [Subfolder] = []
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
+                
+                if fileManager.fileExists(atPath: subfolderURL.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
+            }
+            
+            return Project(name: projectName, subfolders: subfolders)
+        } catch {
+            print("Error reading project folder: \(error.localizedDescription)")
+            return nil
+        }
     }
     
-    
-    func fetchVideos()->[URL]?{
-        if let project = getProjects(ProjectName: projectname){
-            let videos = project.videos
-            print("sucess")
-            return videos
-        }
-        else{
-            print("failure")
-            return nil
-        }
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
     
-    func setUpButton (){
+    func setUpButton() {
         guard !videoList.isEmpty else {
             videoSelector.isEnabled = false
             return
         }
         
         videoSelector.isEnabled = true
-        let actionClosure = {(action: UIAction) in
-            self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
+        let actionClosure = { (action: UIAction) in
+            if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
+                self.playVideo(url: selectedVideo)
+            }
         }
-        var menuChilderen:[UIMenuElement]=[]
-        for videoName in videoList {
-            menuChilderen.append(UIAction(title: videoName.lastPathComponent, handler: actionClosure))
+        
+        var menuChildren: [UIMenuElement] = []
+        for videoURL in videoList {
+            menuChildren.append(UIAction(title: videoURL.lastPathComponent, handler: actionClosure))
         }
-        videoSelector.menu = UIMenu(options: .displayInline, children: menuChilderen)
+        
+        videoSelector.menu = UIMenu(options: .displayInline, children: menuChildren)
         videoSelector.showsMenuAsPrimaryAction = true
     }
     
-    private func playVideo(url: URL){
+    private func playVideo(url: URL) {
         player = AVPlayer(url: url)
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
@@ -123,19 +123,13 @@ class MainPageViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSegueIdentifier,
-           let destination = segue.destination as? TrimViewController{
-            
+           let destination = segue.destination as? TrimViewController {
             destination.projectNameTrim = projectname
-        }
-        
-        if segue.identifier == "Export",
-           let destination = segue.destination as? ExportViewController{
+        } else if segue.identifier == "Export",
+                  let destination = segue.destination as? ExportViewController {
             destination.projectname = projectname
-            
-            
-        }
-        if segue.identifier == "colorGrade",
-           let destination = segue.destination as? ColorViewController{
+        } else if segue.identifier == "colorGrade",
+                  let destination = segue.destination as? ColorViewController {
             destination.projectNameColorGrade = projectname
         }
     }
@@ -143,32 +137,17 @@ class MainPageViewController: UIViewController {
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
         if unwindSegue.identifier == "generateUnwind",
            let sourceVC = unwindSegue.source as? TrimViewController {
-            // Handle updates from TrimViewController
             projectname = sourceVC.projectNameTrim
-            if let videos = fetchVideos() {
-                videoList = videos
-                setUpButton() // Refresh the UI with the new videos
+            if let project = getProject(projectName: projectname) {
+                videoList = project.subfolders.flatMap { $0.videoURLS }
+                setUpButton()
                 print("Data updated:", videoList)
             }
         } else if unwindSegue.identifier == "ExportCancel",
                   let sourceVC = unwindSegue.source as? ExportViewController {
-            // Handle cancel action from ExportViewController
             print("Returned from ExportViewController without making changes.")
         } else {
             print("Cancelled without changes.")
         }
     }
-    
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
