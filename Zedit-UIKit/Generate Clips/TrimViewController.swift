@@ -34,33 +34,30 @@ class TrimViewController: UIViewController {
         nameLabel.text = projectNameTrim
         setupSteppers()
         
-        if let videos = fetchVideos() {
-            videoList = videos
+        if let project = getProject(projectName: projectNameTrim) {
+            // Aggregate videos from all subfolders
+            videoList = project.subfolders.flatMap { $0.videoURLS }
             setUpButton()
         }
         
-//        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     func setupSteppers() {
-        
         numberOfClipsStepper.minimumValue = 1
         numberOfClipsStepper.maximumValue = 10
         numberOfClipsStepper.stepValue = 1
         numberOfClipsStepper.value = 1
         numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
         
-        // Configure maximum duration stepper
         maximumDurationOfClipsStepper.minimumValue = 30
         maximumDurationOfClipsStepper.maximumValue = 300
         maximumDurationOfClipsStepper.stepValue = 30
         maximumDurationOfClipsStepper.value = 30
         maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
         
-        // Add target actions for steppers
         numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
         maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
     }
@@ -73,29 +70,45 @@ class TrimViewController: UIViewController {
         maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
     }
     
-    func fetchVideos() -> [URL]? {
-        guard let project = getProjects(ProjectName: projectNameTrim) else { return nil }
-        return project.videos
-    }
-    
-    func getProjects(ProjectName: String) -> Project? {
+    /// Fetches the project and its subfolders based on the project name.
+    func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else { return nil }
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access documents directory.")
+            return nil
+        }
+        
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist.")
+            return nil
+        }
         
         do {
-            let videoFiles = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: []).filter {
-                $0.pathExtension == "mp4" || $0.pathExtension == "mov"
+            var subfolders: [Subfolder] = []
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
+                
+                if fileManager.fileExists(atPath: subfolderURL.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
             }
-            return Project(name: ProjectName, videos: videoFiles)
+            
+            return Project(name: projectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch files")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
     
+    /// Sets up the video selector button menu.
     func setUpButton() {
         guard !videoList.isEmpty else {
             videoSelectorButton.isEnabled = false
@@ -104,18 +117,21 @@ class TrimViewController: UIViewController {
         
         videoSelectorButton.isEnabled = true
         let actionClosure = { (action: UIAction) in
-            self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
+            if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
+                self.playVideo(url: selectedVideo)
+            }
         }
         
         var menuChildren: [UIMenuElement] = []
-        for videoName in videoList {
-            menuChildren.append(UIAction(title: videoName.lastPathComponent, handler: actionClosure))
+        for videoURL in videoList {
+            menuChildren.append(UIAction(title: videoURL.lastPathComponent, handler: actionClosure))
         }
         
         videoSelectorButton.menu = UIMenu(options: .displayInline, children: menuChildren)
         videoSelectorButton.showsMenuAsPrimaryAction = true
     }
     
+    /// Plays the selected video in the preview view.
     private func playVideo(url: URL) {
         player = AVPlayer(url: url)
         playerViewController = AVPlayerViewController()
@@ -145,7 +161,6 @@ class TrimViewController: UIViewController {
         let asset = AVAsset(url: videoURL)
         let totalDuration = CMTimeGetSeconds(asset.duration)
         
-        
         let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
         
         for i in 0..<numberOfClips {
@@ -171,42 +186,29 @@ class TrimViewController: UIViewController {
             preferredStyle: .alert
         )
         
-        // "Yes" action: Perform the unwind segue programmatically
         alertController.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
             self.performSegue(withIdentifier: "cancel", sender: nil)
         })
         
-        // "No" action: Dismiss the alert
         alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
-
     
     func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
         let asset = AVAsset(url: videoURL)
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        
         exportSession?.outputFileType = .mp4
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmm"
-        let currentTimeString = dateFormatter.string(from: Date())
-        
-        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index)_\(currentTimeString).mp4")
+        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index).mp4")
         exportSession?.outputURL = outputURL
         exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
         
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Generate", message: "Generating clips \(index)...", preferredStyle: .alert)
-            self.present(alert, animated: true, completion: nil)
-        }
-        
         exportSession?.exportAsynchronously {
-            DispatchQueue.main.async {
-                if let presentedVC = self.presentedViewController, presentedVC is UIAlertController {
-                    presentedVC.dismiss(animated: true)
-                }
+            if exportSession?.status == .completed {
+                print("Clip exported successfully: \(outputURL)")
+            } else {
+                print("Failed to export clip: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
@@ -222,20 +224,4 @@ extension TrimViewController {
             self.view.frame.origin.y = 0
         }
     }
-    
-//    @objc func textFieldDidChange(_ textField: UITextField) {
-//        let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
-//        
-//        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-//        let projectNameExists = existingProjects.contains { $0["name"] == promptTextField.text }
-        
-//        generateButton.isEnabled = isProjectNameValid && !projectNameExists
-//        
-//        if projectNameExists {
-//            nameLabel.isHidden = false
-//            nameLabel.text = "Name already exists."
-//        } else {
-//            nameLabel.isHidden = true
-//        }
-//    }
 }
