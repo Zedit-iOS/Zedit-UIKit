@@ -196,14 +196,31 @@ class TrimViewController: UIViewController {
     }
     
     func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
+        let fileManager = FileManager.default
+        
+        // Locate the "Clips" subfolder in the project directory
+        let clipsFolder = videoURL.deletingLastPathComponent().appendingPathComponent("Clips")
+        
+        // Create the "Clips" folder if it doesn't exist
+        if !fileManager.fileExists(atPath: clipsFolder.path) {
+            do {
+                try fileManager.createDirectory(at: clipsFolder, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("Failed to create 'Clips' folder: \(error.localizedDescription)")
+                return
+            }
+        }
+        
+        let outputURL = clipsFolder.appendingPathComponent("clip_\(index).mp4")
+        
+        // Prepare for export
         let asset = AVAsset(url: videoURL)
         let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         exportSession?.outputFileType = .mp4
-        
-        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index).mp4")
         exportSession?.outputURL = outputURL
         exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
         
+        // Perform the export
         exportSession?.exportAsynchronously {
             if exportSession?.status == .completed {
                 print("Clip exported successfully: \(outputURL)")

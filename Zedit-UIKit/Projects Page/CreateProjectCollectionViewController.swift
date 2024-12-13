@@ -6,8 +6,15 @@ import PhotosUI
 
 class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
     func encode(to encoder: any Encoder) throws {
-        <#code#>
-    }
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(projectNameTextField.text, forKey: .projectName)
+            try container.encode(selectedVideoURL?.absoluteString, forKey: .selectedVideoURL)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case projectName
+            case selectedVideoURL
+        }
     
     
     @IBOutlet weak var selectProjectButton: UIButton!
