@@ -4,7 +4,7 @@ import MobileCoreServices
 import UniformTypeIdentifiers
 import PhotosUI
 
-class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
+class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
     
     @IBOutlet weak var selectProjectButton: UIButton!
     @IBOutlet weak var videoPlayerView: UIView!
@@ -118,46 +118,71 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     private func saveProject() -> Bool {
-    guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
-        return false
-    }
-    
-    guard let videoURL = selectedVideoURL else {
-        return false
-    }
-    
-    let fileManager = FileManager.default
-    guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return false
-    }
-    
-    let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
-    
-    // Check if the project directory already exists
-    if fileManager.fileExists(atPath: projectDirectory.path) {
-        return false
-    }
-    
-    do {
-        // Create the directory for the new project
-        try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
+        guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
+            return false
+        }
         
-        // Copy the selected video into the project directory
-        let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
-        try fileManager.copyItem(at: videoURL, to: destinationURL)
+        guard let videoURL = selectedVideoURL else {
+            return false
+        }
         
-        // Save project metadata in UserDefaults
-        let project = ["name": projectName, "videoURL": destinationURL.path]
-        var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-        projects.append(project)
-        UserDefaults.standard.setValue(projects, forKey: "projects")
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return false
+        }
         
-        return true
-    } catch {
-        print("Error creating project: \(error.localizedDescription)")
-        return false
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        
+        // Check if the project directory already exists
+        if fileManager.fileExists(atPath: projectDirectory.path) {
+            return false
+        }
+        
+        do {
+            // Create the directory for the new project
+            try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
+            
+            // Create subfolders
+            let subfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            var subfolders: [Subfolder] = []
+            
+            for subfolderName in subfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                try fileManager.createDirectory(at: subfolderURL, withIntermediateDirectories: true, attributes: nil)
+                
+                if subfolderName == "Original Videos" {
+                    // Copy the selected video into the "Original Videos" subfolder
+                    let destinationURL = subfolderURL.appendingPathComponent(videoURL.lastPathComponent)
+                    try fileManager.copyItem(at: videoURL, to: destinationURL)
+                    // Add the video to the subfolder
+                    subfolders.append(Subfolder(name: subfolderName, videos: [destinationURL]))
+                } else {
+                    // Initialize other subfolders with empty video arrays
+                    subfolders.append(Subfolder(name: subfolderName, videos: []))
+                }
+            }
+            
+            // Initialize project with metadata
+            let project = Project(
+                name: projectName,
+                dateCreated: Date(),
+                timesVisited: 0,
+                subfolders: subfolders
+            )
+            
+            // Save project metadata to persistent storage
+            var projects = retrieveProjects()
+            projects.append(project)
+            
+            // Store updated project list in UserDefaults or elsewhere
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(projects), forKey: "projects")
+            
+            return true
+        } catch {
+            print("Error creating project: \(error.localizedDescription)")
+            return false
+        }
     }
-}
 }
 
 // MARK: - Video Selection Delegates
