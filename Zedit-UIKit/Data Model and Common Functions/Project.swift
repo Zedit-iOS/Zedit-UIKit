@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Subfolder {
+struct Subfolder: Codable {
     var name: String
     var videoURLS: [URL]
     
@@ -17,7 +17,7 @@ struct Subfolder {
     }
 }
 
-struct Project {
+struct Project: Codable {
     var name: String
     var dateCreated: Date
     var timesVisited: Int
