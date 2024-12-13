@@ -5,6 +5,10 @@ import UniformTypeIdentifiers
 import PhotosUI
 
 class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
+    func encode(to encoder: any Encoder) throws {
+        <#code#>
+    }
+    
     
     @IBOutlet weak var selectProjectButton: UIButton!
     @IBOutlet weak var videoPlayerView: UIView!
