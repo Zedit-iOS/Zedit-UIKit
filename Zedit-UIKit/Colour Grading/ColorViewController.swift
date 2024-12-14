@@ -53,9 +53,6 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             project = projectData
             videoList = fetchVideos()
             setUpVideoSelector()
-            if !videoList.isEmpty {
-                loadVideo(url: videoList[0])
-            }
         } else {
             print("Failed to load project.")
         }
@@ -300,8 +297,12 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func setUpVideoSelector() {
-        videoSelectorButton.isEnabled = !videoList.isEmpty
+        guard !videoList.isEmpty else {
+            videoSelectorButton.isEnabled = false
+            return
+        }
         
+        videoSelectorButton.isEnabled = true
         let actionClosure = { (action: UIAction) in
             if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
                 self.loadVideo(url: selectedVideo)

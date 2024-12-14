@@ -38,7 +38,8 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         //projectsCollectionView.backgroundColor = .black
         
         loadProjects()
-        filteredProjects = projects  // Initially, show all projects
+        filteredProjects = projects// Initially, show all projects
+        print(projects)
     }
     
 
