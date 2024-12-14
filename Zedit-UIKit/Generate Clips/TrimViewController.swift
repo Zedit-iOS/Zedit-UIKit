@@ -151,10 +151,13 @@ class TrimViewController: UIViewController {
     }
     
     func generateClips() {
-        guard let videoURL = videoList.first else {
-            print("Invalid input for video")
-            return
-        }
+        guard let selectedVideoURL = player?.currentItem?.asset as? AVURLAsset else {
+                print("No video is currently selected for playback.")
+                return
+            }
+            
+            let videoURL = selectedVideoURL.url
+
         
         let numberOfClips = Int(numberOfClipsStepper.value)
         let maximumDuration = Int(maximumDurationOfClipsStepper.value)
