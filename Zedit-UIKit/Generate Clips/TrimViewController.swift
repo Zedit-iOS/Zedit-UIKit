@@ -196,39 +196,52 @@ class TrimViewController: UIViewController {
     }
     
     func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
+        let asset = AVAsset(url: videoURL)
+        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+        exportSession?.outputFileType = .mp4
+
+        // Create the "Clips" subfolder path
         let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Failed to find the documents directory")
+            return
+        }
         
-        // Locate the "Clips" subfolder in the project directory
-        let clipsFolder = videoURL.deletingLastPathComponent().appendingPathComponent("Clips")
-        
-        // Create the "Clips" folder if it doesn't exist
-        if !fileManager.fileExists(atPath: clipsFolder.path) {
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectNameTrim)
+        let clipsDirectory = projectDirectory.appendingPathComponent("Clips")
+
+        // Ensure the "Clips" subfolder exists
+        if !fileManager.fileExists(atPath: clipsDirectory.path) {
             do {
-                try fileManager.createDirectory(at: clipsFolder, withIntermediateDirectories: true, attributes: nil)
+                try fileManager.createDirectory(at: clipsDirectory, withIntermediateDirectories: true, attributes: nil)
             } catch {
                 print("Failed to create 'Clips' folder: \(error.localizedDescription)")
                 return
             }
         }
-        
-        let outputURL = clipsFolder.appendingPathComponent("clip_\(index).mp4")
-        
-        // Prepare for export
-        let asset = AVAsset(url: videoURL)
-        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        exportSession?.outputFileType = .mp4
+
+        // Create the output file path for the clip
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd_HHmm"
+        let currentTimeString = dateFormatter.string(from: Date())
+        let outputURL = clipsDirectory.appendingPathComponent("clip_\(index)_\(currentTimeString).mp4")
         exportSession?.outputURL = outputURL
         exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
-        
-        // Perform the export
+
+        // Export the clip
         exportSession?.exportAsynchronously {
             if exportSession?.status == .completed {
-                print("Clip exported successfully: \(outputURL)")
+                DispatchQueue.main.async {
+                    print("Clip exported successfully to: \(outputURL)")
+                }
             } else {
-                print("Failed to export clip: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                DispatchQueue.main.async {
+                    print("Failed to export clip: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                }
             }
         }
     }
+
 }
 
 extension TrimViewController {
