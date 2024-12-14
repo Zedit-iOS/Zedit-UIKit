@@ -43,55 +43,63 @@ class TrimVideoPreviewViewController: UIViewController {
     
     func fetchVideos() -> [URL]? {
         guard let project = getProjects(ProjectName: trimPreviewProjectName) else {
-            print("Failure: Could not get project")
+            print("Failure: Could not retrieve project")
             return nil
         }
-
-        // Fetch videos only from the "clips" folder
-        if let clipsFolder = project.subfolders.first(where: { $0.name == "clips" }) {
-            print("Found \(clipsFolder.videoURLS.count) videos in the clips folder")
+        
+        // Filter videos from the "Clips" folder only
+        if let clipsFolder = project.subfolders.first(where: { $0.name.lowercased() == "clips" }) {
+            print("Found \(clipsFolder.videoURLS.count) videos in the 'Clips' folder")
             return clipsFolder.videoURLS
         }
-
-        print("No clips folder found")
+        
+        print("No 'Clips' folder found")
         return []
     }
+
     
     func getProjects(ProjectName: String) -> Project? {
         let fileManager = FileManager.default
         
+        // Access the documents directory
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to access directory")
+            print("Unable to access documents directory")
             return nil
         }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
-        
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else {
-            print("Folder does not exist")
+        // Navigate to the project directory using the project name
+        let projectDirectory = documentsDirectory.appendingPathComponent(ProjectName)
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist")
             return nil
         }
         
         do {
-            // Initialize the project object
+            // Initialize subfolders based on the expected folder structure
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
             var subfolders: [Subfolder] = []
             
-            // Iterate through subfolders
-            let subfolderURLs = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            for subfolderURL in subfolderURLs where subfolderURL.hasDirectoryPath {
-                let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: [])
-                    .filter { $0.pathExtension == "mp4" || $0.pathExtension == "mov" }
+            // Populate each subfolder with video files (if present)
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderPath = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
                 
-                // Append to subfolders array
-                subfolders.append(Subfolder(name: subfolderURL.lastPathComponent, videos: videoFiles))
+                if fileManager.fileExists(atPath: subfolderPath.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                // Append the subfolder with videos to the list
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
             }
             
             return Project(name: ProjectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch subfolders or files")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
+
     
     private func playVideo(url: URL) {
         player = AVPlayer(url: url)
