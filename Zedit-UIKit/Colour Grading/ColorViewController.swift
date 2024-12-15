@@ -414,7 +414,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         // Create a color-graded file name
         let originalFileName = url.deletingPathExtension().lastPathComponent
-        let colorGradedFileName = "\(originalFileName) - Colour Graded.mp4"
+        let colorGradedFileName = "\(originalFileName)_ColourGraded.mp4"
         let outputURL = outputFolder.appendingPathComponent(colorGradedFileName)
         
         // Check for existing file and remove if necessary
