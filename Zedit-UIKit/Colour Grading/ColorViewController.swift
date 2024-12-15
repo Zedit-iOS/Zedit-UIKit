@@ -49,12 +49,9 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
         
-        if let projectData = getProjects(ProjectName: projectNameColorGrade) {
-            project = projectData
-            videoList = fetchVideos()
+        if let videos = fetchVideos() {
+            videoList = videos
             setUpVideoSelector()
-        } else {
-            print("Failed to load project.")
         }
     }
     
@@ -231,8 +228,8 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    func fetchVideos() -> [URL] {
-        guard let project = getProjects(ProjectName: projectNameColorGrade) else {
+    func fetchVideos() -> [URL]? {
+        guard let project = getProject(projectName: projectNameColorGrade) else {
             print("Failure: Could not get project")
             return []
         }
@@ -240,13 +237,13 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         var allVideos: [URL] = []
         
         // Fetch videos from "clips" folder
-        if let clipsFolder = project.subfolders.first(where: { $0.name == "clips" }) {
+        if let clipsFolder = project.subfolders.first(where: { $0.name == "Clips" }) {
             print("Found \(clipsFolder.videoURLS.count) videos in the clips folder")
             allVideos.append(contentsOf: clipsFolder.videoURLS)
         }
         
         // Fetch videos from "original videos" folder
-        if let originalFolder = project.subfolders.first(where: { $0.name == "original videos" }) {
+        if let originalFolder = project.subfolders.first(where: { $0.name == "Original Videos" }) {
             print("Found \(originalFolder.videoURLS.count) videos in the original videos folder")
             allVideos.append(contentsOf: originalFolder.videoURLS)
         }
@@ -260,38 +257,40 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         return allVideos
     }
     
-    func getProjects(ProjectName: String) -> Project? {
+    func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
         
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to access directory")
+            print("Unable to access documents directory.")
             return nil
         }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
         
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else {
-            print("Folder does not exist")
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist.")
             return nil
         }
         
         do {
-            // Initialize the project object
             var subfolders: [Subfolder] = []
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
             
-            // Iterate through subfolders
-            let subfolderURLs = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            for subfolderURL in subfolderURLs where subfolderURL.hasDirectoryPath {
-                let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: [])
-                    .filter { $0.pathExtension == "mp4" || $0.pathExtension == "mov" }
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
                 
-                // Append to subfolders array
-                subfolders.append(Subfolder(name: subfolderURL.lastPathComponent, videos: videoFiles))
+                if fileManager.fileExists(atPath: subfolderURL.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
             }
             
-            return Project(name: ProjectName, subfolders: subfolders)
+            return Project(name: projectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch subfolders or files")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
@@ -323,7 +322,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         let composition = AVMutableComposition()
         
-        // Handle video and audio tracks
+        // Handle video tracks
         let videoTracks = asset.tracks(withMediaType: .video)
         for assetTrack in videoTracks {
             guard let compositionTrack = composition.addMutableTrack(
@@ -341,6 +340,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             }
         }
         
+        // Handle audio tracks
         let audioTracks = asset.tracks(withMediaType: .audio)
         for audioTrack in audioTracks {
             guard let compositionAudioTrack = composition.addMutableTrack(
@@ -357,6 +357,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             }
         }
         
+        // Define the color adjustment kernel
         let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] request in
             guard let self = self else { return }
             
@@ -396,31 +397,72 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             asset: composition,
             presetName: AVAssetExportPresetHighestQuality) else { return }
         
-        let outputFolder = url.deletingLastPathComponent().appendingPathComponent("Color Graded Videos")
+        // Determine the output URL
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let projectFolder = documentsDirectory.appendingPathComponent(projectNameColorGrade)
+        let outputFolder = projectFolder.appendingPathComponent("Colour Graded Videos")
+        
+        // Create the output folder if it doesn't exist
         if !FileManager.default.fileExists(atPath: outputFolder.path) {
-            try? FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
+            do {
+                try FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
+            } catch {
+                print("Error creating directory: \(error)")
+                return
+            }
         }
         
-        let outputURL = outputFolder.appendingPathComponent(url.lastPathComponent)
+        // Create a color-graded file name
+        let originalFileName = url.deletingPathExtension().lastPathComponent
+        let colorGradedFileName = "\(originalFileName) - Colour Graded.mp4"
+        let outputURL = outputFolder.appendingPathComponent(colorGradedFileName)
+        
+        // Check for existing file and remove if necessary
+        if FileManager.default.fileExists(atPath: outputURL.path) {
+            do {
+                try FileManager.default.removeItem(at: outputURL)
+            } catch {
+                print("Error removing existing file: \(error)")
+                return
+            }
+        }
+        
+        // Configure the export session
         exportSession.outputFileType = .mp4
         exportSession.outputURL = outputURL
         exportSession.videoComposition = videoComposition
         
+        // Display a progress alert
+        let alert = UIAlertController(title: "Exporting", message: "Color grading in progress...", preferredStyle: .alert)
+        present(alert, animated: true)
+        
         exportSession.exportAsynchronously { [weak self] in
-            guard let self = self else { return }
-            if exportSession.status == .completed {
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(
-                        title: "Export Successful",
-                        message: "File exported to: \(outputURL.lastPathComponent)",
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self.present(alert, animated: true)
+            DispatchQueue.main.async {
+                alert.dismiss(animated: true) {
+                    guard let self = self else { return }
+                    switch exportSession.status {
+                    case .completed:
+                        let successAlert = UIAlertController(
+                            title: "Export Successful",
+                            message: "File exported to: \(outputURL.lastPathComponent)",
+                            preferredStyle: .alert
+                        )
+                        successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(successAlert, animated: true)
+                    case .failed, .cancelled:
+                        let errorAlert = UIAlertController(
+                            title: "Export Failed",
+                            message: exportSession.error?.localizedDescription ?? "Unknown error occurred.",
+                            preferredStyle: .alert
+                        )
+                        errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(errorAlert, animated: true)
+                    default:
+                        break
+                    }
                 }
-            } else {
-                print("Export failed with error: \(String(describing: exportSession.error))")
             }
         }
     }
+
 }
