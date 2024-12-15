@@ -49,7 +49,7 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
-		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Zedit.app; path = "/Users/vr/Development/Zedit/Zedit-UIKit/build/Debug-iphoneos/Zedit.app"; sourceTree = "<absolute>"; };
+		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -135,10 +135,19 @@
 			path = "Table View Projects";
 			sourceTree = "<group>";
 		};
+		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E1BC32A72CCF78BE0026C60F = {
 			isa = PBXGroup;
 			children = (
 				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
+				E192DDBC2D0851B6006D8F6A /* Zedit.app */,
+				E192DDBD2D0EDA12006D8F6A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -179,7 +188,7 @@
 			);
 			name = "Zedit-UIKit";
 			productName = "Zedit-UIKit";
-			productReference = E1BC32B02CCF78BE0026C60F /* Zedit.app */;
+			productReference = E192DDBC2D0851B6006D8F6A /* Zedit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
