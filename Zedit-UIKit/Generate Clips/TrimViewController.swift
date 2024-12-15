@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import AVKit
+import Speech
 
 class TrimViewController: UIViewController {
     
@@ -34,6 +35,19 @@ class TrimViewController: UIViewController {
         nameLabel.text = projectNameTrim
         setupSteppers()
         
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+                switch authStatus {
+                case .authorized:
+                    print("Speech recognition authorized")
+                case .denied:
+                    print("Speech recognition denied")
+                case .restricted, .notDetermined:
+                    print("Speech recognition not available")
+                @unknown default:
+                    fatalError("Unknown authorization status")
+                }
+            }
+        
         if let project = getProject(projectName: projectNameTrim) {
             // Aggregate videos from all subfolders
             videoList = project.subfolders.flatMap { $0.videoURLS }
@@ -44,6 +58,63 @@ class TrimViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
+    
+    func extractAudioAndTranscribe(from videoURL: URL) {
+        let asset = AVAsset(url: videoURL)
+        let audioTrack = asset.tracks(withMediaType: .audio).first
+
+        // Check if the audio track exists
+        guard let track = audioTrack else {
+            print("No audio track found in video.")
+            return
+        }
+
+        // Create a composition
+        let composition = AVMutableComposition()
+        let audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+
+        do {
+            try audioCompositionTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: track, at: .zero)
+            
+            // Export the audio
+            let audioOutputURL = videoURL.deletingPathExtension().appendingPathExtension("m4a") // Change file extension to m4a
+            let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A)
+            exportSession?.outputURL = audioOutputURL
+            exportSession?.outputFileType = .m4a
+            
+            exportSession?.exportAsynchronously {
+                switch exportSession?.status {
+                case .completed:
+                    print("Audio extracted successfully to: \(audioOutputURL)")
+                    self.transcribeAudio(at: audioOutputURL)
+                case .failed:
+                    print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                case .cancelled:
+                    print("Audio export cancelled")
+                default:
+                    break
+                }
+            }
+        } catch {
+            print("Error extracting audio: \(error.localizedDescription)")
+        }
+    }
+    
+    func transcribeAudio(at audioURL: URL) {
+        let recognizer = SFSpeechRecognizer()
+        let request = SFSpeechURLRecognitionRequest(url: audioURL)
+
+        recognizer?.recognitionTask(with: request) { result, error in
+            if let result = result {
+                // Print the transcription result
+                let transcription = result.bestTranscription.formattedString
+                print("Transcription: \(transcription)")
+            } else if let error = error {
+                print("Transcription error: \(error.localizedDescription)")
+            }
+        }
+    }
+
     
     func setupSteppers() {
         numberOfClipsStepper.minimumValue = 1
@@ -170,6 +241,7 @@ class TrimViewController: UIViewController {
             let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
             let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
             exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
+            extractAudioAndTranscribe(from: videoURL)
         }
     }
     
