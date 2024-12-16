@@ -79,15 +79,22 @@ class ExportViewController: UIViewController {
             return nil
         }
         
-        // Filter videos from the "Clips" folder only
-        if let clipsFolder = project.subfolders.first(where: { $0.name.lowercased() == "clips" }) {
-            print("Found \(clipsFolder.videoURLS.count) videos in the 'Clips' folder")
-            return clipsFolder.videoURLS
+        // Initialize an array to hold all video URLs
+        var allVideoURLs: [URL] = []
+        
+        // Iterate through each subfolder and collect videos
+        for subfolder in project.subfolders {
+            print("Found \(subfolder.videoURLS.count) videos in the '\(subfolder.name)' folder")
+            allVideoURLs.append(contentsOf: subfolder.videoURLS)
         }
         
-        print("No 'Clips' folder found")
-        return []
+        if allVideoURLs.isEmpty {
+            print("No videos found in any subfolder")
+        }
+        
+        return allVideoURLs
     }
+
     
     @IBAction func ExportButton(_ sender: UIButton) {
         let selectedVideos = collectionView.getSelectedVideos()
