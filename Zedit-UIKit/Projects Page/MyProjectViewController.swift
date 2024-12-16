@@ -228,6 +228,51 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         }
         projectsCollectionView.reloadData()
     }
+    
+    func updateTimesVisited(for projectName: String) {
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access the documents directory.")
+            return
+        }
+
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        let metadataURL = projectDirectory.appendingPathComponent("metadata.plist")
+
+        // Check if the metadata file exists
+        guard fileManager.fileExists(atPath: metadataURL.path) else {
+            print("Metadata file does not exist for project: \(projectName)")
+            return
+        }
+
+        do {
+            // Load existing metadata
+            let metadataData = try Data(contentsOf: metadataURL)
+            guard var metadata = try PropertyListSerialization.propertyList(from: metadataData, options: [], format: nil) as? [String: Any] else {
+                print("Error reading metadata.")
+                return
+            }
+
+            // Update timesVisited
+            let currentTimesVisited = metadata["timesVisited"] as? Int ?? 0
+            metadata["timesVisited"] = currentTimesVisited + 1 // Increment the count
+
+            // Save updated metadata back to the plist file
+            let updatedMetadataData = try PropertyListSerialization.data(fromPropertyList: metadata, format: .xml, options: 0)
+            try updatedMetadataData.write(to: metadataURL)
+
+            print("Successfully updated timesVisited for project: \(projectName)")
+        } catch {
+            print("Error updating timesVisited: \(error.localizedDescription)")
+        }
+    }
+
+    private func saveProjectsToUserDefaults() {
+        // Convert your projects array to an array of dictionaries or a format suitable for saving
+        let projectsToSave = projects.map { ["name": $0.name, "timesVisited": $0.timesVisited] }
+        UserDefaults.standard.setValue(projectsToSave, forKey: "projects")
+    }
+
 
 
 
@@ -253,7 +298,10 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
            let indexPath = projectsCollectionView.indexPathsForSelectedItems?.first {
             
             // Set the destination's projectname with the selected project's name
-            filteredProjects[indexPath.item].timesVisited += 1
+            let selectedProjectName = filteredProjects[indexPath.item].name
+                    
+                    // Update the timesVisited count for the selected project
+            updateTimesVisited(for: selectedProjectName)
             destination.projectname = filteredProjects[indexPath.item].name
         }
     }
