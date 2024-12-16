@@ -146,35 +146,35 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
             return false
         }
-        
+
         guard let videoURL = selectedVideoURL else {
             return false
         }
-        
+
         let fileManager = FileManager.default
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return false
         }
-        
+
         let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
-        
+
         // Check if the project directory already exists
         if fileManager.fileExists(atPath: projectDirectory.path) {
             return false
         }
-        
+
         do {
             // Create the directory for the new project
             try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
-            
+
             // Create subfolders
             let subfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
             var subfolders: [Subfolder] = []
-            
+
             for subfolderName in subfolderNames {
                 let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
                 try fileManager.createDirectory(at: subfolderURL, withIntermediateDirectories: true, attributes: nil)
-                
+
                 if subfolderName == "Original Videos" {
                     // Copy the selected video into the "Original Videos" subfolder
                     let destinationURL = subfolderURL.appendingPathComponent(videoURL.lastPathComponent)
@@ -186,7 +186,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                     subfolders.append(Subfolder(name: subfolderName, videos: []))
                 }
             }
-            
+
             // Initialize project with metadata
             let project = Project(
                 name: projectName,
@@ -194,20 +194,26 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 timesVisited: 0,
                 subfolders: subfolders
             )
-            
+
             // Save project metadata to persistent storage
             var projects = retrieveProjects()
             projects.append(project)
-            
-            // Store updated project list in UserDefaults or elsewhere
+
+            // Store updated project list in UserDefaults
             UserDefaults.standard.set(try? PropertyListEncoder().encode(projects), forKey: "projects")
             
+            // Save additional metadata to a plist file
+            let metadataURL = projectDirectory.appendingPathComponent("metadata.plist")
+            let metadata: [String: Any] = ["timesVisited": project.timesVisited, "dateCreated": project.dateCreated]
+            try PropertyListSerialization.data(fromPropertyList: metadata, format: .xml, options: 0).write(to: metadataURL)
+
             return true
         } catch {
             print("Error creating project: \(error.localizedDescription)")
             return false
         }
     }
+
 }
 
 // MARK: - Video Selection Delegates

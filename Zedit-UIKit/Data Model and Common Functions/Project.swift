@@ -77,8 +77,18 @@ func retrieveProjects() -> [Project] {
                 }
             }
 
+            // Load metadata from the plist file
+            let metadataURL = directory.appendingPathComponent("metadata.plist")
+            var timesVisited = 0
+            var dateCreated = Date()
+            if let metadataData = try? Data(contentsOf: metadataURL),
+               let metadata = try? PropertyListSerialization.propertyList(from: metadataData, options: [], format: nil) as? [String: Any] {
+                timesVisited = metadata["timesVisited"] as? Int ?? 0
+                dateCreated = metadata["dateCreated"] as? Date ?? Date()
+            }
+
             // Create a Project object and add it to the array
-            let project = Project(name: projectName, subfolders: subfolders)
+            let project = Project(name: projectName, dateCreated: dateCreated, timesVisited: timesVisited, subfolders: subfolders)
             projects.append(project)
         }
         
