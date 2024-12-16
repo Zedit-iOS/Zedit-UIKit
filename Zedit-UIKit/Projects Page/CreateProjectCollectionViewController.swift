@@ -27,10 +27,24 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     var playerViewController: AVPlayerViewController?
     var selectedVideoURL: URL?
     
+    var projects: [Project] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadProjects()
         setupNotifications()
+    }
+    
+    private func loadProjects() {
+        // Clear the existing data in the collection view to avoid duplicates
+        if !projects.isEmpty {
+            // Clear the collection view before reloading
+            projects = []
+        }
+        
+        // Retrieve new projects from storage or source
+        projects = retrieveProjects()
     }
     
     private func setupUI() {
@@ -281,14 +295,15 @@ extension CreateProjectCollectionViewController {
     @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
         
-        // Load the most recent projects from UserDefaults
-        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        // Retrieve projects and get their names as a list of strings
+        let existingProjects = retrieveProjects()
+        let existingProjectNames = existingProjects.map { $0.name }
         
         // Check if the current project name exists in the list
-        let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
+        let projectNameExists = existingProjectNames.contains { $0 == projectNameTextField.text }
         
+        // Update UI based on project name validity and existence
         createProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
-        
         nameExistsLabel.isHidden = !projectNameExists
         nameExistsLabel.text = projectNameExists ? "Name already exists!" : nil
     }
