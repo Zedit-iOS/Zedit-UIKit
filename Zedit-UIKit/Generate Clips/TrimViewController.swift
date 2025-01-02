@@ -14,6 +14,7 @@ class TrimViewController: UIViewController {
     
     var videoList: [URL] = []
     var projectNameTrim = String()
+    private var scenes: [SceneRange] = []
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
@@ -222,15 +223,14 @@ class TrimViewController: UIViewController {
     }
     
     func generateClips() {
-        guard let selectedVideoURL = player?.currentItem?.asset as? AVURLAsset else {
-                print("No video is currently selected for playback.")
-                return
-            }
-            
-            let videoURL = selectedVideoURL.url
+        guard let videoURL = videoList.first,
+              let numberOfClips = Int(numberOfClipsStepperLabel.text ?? "0"), numberOfClips > 0 else {
+            print("Invalid input for video or number of clips")
+            return
+        }
 
         
-        let numberOfClips = Int(numberOfClipsStepper.value)
+//        let numberOfClips = Int(numberOfClipsStepper.value)
         let maximumDuration = Int(maximumDurationOfClipsStepper.value)
         let asset = AVAsset(url: videoURL)
         let totalDuration = CMTimeGetSeconds(asset.duration)
@@ -282,6 +282,7 @@ class TrimViewController: UIViewController {
             return
         }
         
+        processVideoForScenes(videoPath: videoURL.path)
         let projectDirectory = documentsDirectory.appendingPathComponent(projectNameTrim)
         let clipsDirectory = projectDirectory.appendingPathComponent("Clips")
 
@@ -316,8 +317,28 @@ class TrimViewController: UIViewController {
             }
         }
     }
-
+    
+    func processVideoForScenes(videoPath: String) {
+            let scenesArray = NSMutableArray()
+            
+            if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: 3.0) {
+                if error.hasError {
+                    print("Error detecting scenes: \(error.message ?? "")")
+                    return
+                }
+                print("Total scenes detected: \(scenesArray.count)")
+                
+                let scenes = scenesArray.compactMap { $0 as? SceneRange }
+                scenes.forEach { scene in
+                    print("Scene Range: \(scene.start) - \(scene.end)")
+                }
+                
+                self.scenes = scenes
+            }
+        }
 }
+
+
 
 extension TrimViewController {
     @objc func keyboard(notification: Notification) {
