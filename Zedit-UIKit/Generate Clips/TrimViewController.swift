@@ -101,21 +101,34 @@ class TrimViewController: UIViewController {
         }
     }
     
+    private var transcriptionTimestamps: [(String, TimeInterval)] = []
+
     func transcribeAudio(at audioURL: URL) {
         let recognizer = SFSpeechRecognizer()
         let request = SFSpeechURLRecognitionRequest(url: audioURL)
 
         recognizer?.recognitionTask(with: request) { result, error in
             if let result = result {
-                // Print the transcription result
-                let transcription = result.bestTranscription.formattedString
-                print("Transcription: \(transcription)")
+                // Clear any previous data
+                self.transcriptionTimestamps.removeAll()
+                
+                // Access the transcription and word-by-word timestamps
+                for segment in result.bestTranscription.segments {
+                    let word = segment.substring
+                    let timestamp = segment.timestamp
+                    self.transcriptionTimestamps.append((word, timestamp))
+                }
+                
+                // Print the transcription with timestamps
+                print("Transcription with Timestamps:")
+                for (word, timestamp) in self.transcriptionTimestamps {
+                    print("\(timestamp)s: \(word)")
+                }
             } else if let error = error {
                 print("Transcription error: \(error.localizedDescription)")
             }
         }
     }
-
     
     func setupSteppers() {
         numberOfClipsStepper.minimumValue = 1
