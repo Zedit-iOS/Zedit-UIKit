@@ -33,6 +33,12 @@ class MainPageViewController: UIViewController {
         } else {
             print("Failed to load project.")
         }
+        do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print("Error setting up AVAudioSession: \(error.localizedDescription)")
+            }
         
         navigationItem.title = projectname
     }
