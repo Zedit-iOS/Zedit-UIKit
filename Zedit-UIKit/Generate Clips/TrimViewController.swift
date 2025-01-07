@@ -241,6 +241,8 @@ class TrimViewController: UIViewController {
             print("Invalid input for video or number of clips")
             return
         }
+        
+        extractAudioAndTranscribe(from: videoURL)
 
         
 //        let numberOfClips = Int(numberOfClipsStepper.value)
@@ -254,7 +256,6 @@ class TrimViewController: UIViewController {
             let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
             let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
             exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
-            extractAudioAndTranscribe(from: videoURL)
         }
     }
     
