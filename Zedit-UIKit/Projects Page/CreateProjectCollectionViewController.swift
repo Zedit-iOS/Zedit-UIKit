@@ -3,6 +3,7 @@ import AVKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 import PhotosUI
+import AVFoundation
 
 class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
     func encode(to encoder: any Encoder) throws {
@@ -34,6 +35,12 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         setupUI()
         loadProjects()
         setupNotifications()
+        do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print("Error setting up AVAudioSession: \(error.localizedDescription)")
+            }
     }
     
     private func loadProjects() {

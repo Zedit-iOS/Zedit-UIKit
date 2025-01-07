@@ -15,6 +15,7 @@ class TrimViewController: UIViewController {
     var videoList: [URL] = []
     var projectNameTrim = String()
     private var scenes: [SceneRange] = []
+    private var transcriptionTimestamps: [TimeInterval: String] = [:]
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
@@ -100,23 +101,41 @@ class TrimViewController: UIViewController {
             print("Error extracting audio: \(error.localizedDescription)")
         }
     }
-    
-    func transcribeAudio(at audioURL: URL) {
-        let recognizer = SFSpeechRecognizer()
-        let request = SFSpeechURLRecognitionRequest(url: audioURL)
 
-        recognizer?.recognitionTask(with: request) { result, error in
-            if let result = result {
-                // Print the transcription result
-                let transcription = result.bestTranscription.formattedString
-                print("Transcription: \(transcription)")
-            } else if let error = error {
-                print("Transcription error: \(error.localizedDescription)")
-            }
-        }
-    }
+func transcribeAudio(at audioURL: URL) {
+       guard let recognizer = SFSpeechRecognizer() else {
+           print("Speech recognizer not available")
+           return
+       }
+       let request = SFSpeechURLRecognitionRequest(url: audioURL)
+       request.shouldReportPartialResults = false
 
-    
+       recognizer.recognitionTask(with: request) { [weak self] result, error in
+           guard let self = self else { return }
+           
+           if let error = error {
+               print("Transcription error: \(error.localizedDescription)")
+               return
+           }
+           
+           if let result = result, result.isFinal {
+               DispatchQueue.main.async {
+                   for segment in result.bestTranscription.segments {
+                       let word = segment.substring
+                       let timestamp = segment.timestamp
+                       self.transcriptionTimestamps[timestamp] = word
+                   }
+                   
+                   let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
+                   var formattedTimestamps: [String] = []
+                   for (key, value) in sortedTimestamps {
+                       formattedTimestamps.append("\(key):\(value)")
+                   }
+                   print(formattedTimestamps)
+               }
+           }
+       }
+   }
     func setupSteppers() {
         numberOfClipsStepper.minimumValue = 1
         numberOfClipsStepper.maximumValue = 10
@@ -228,6 +247,8 @@ class TrimViewController: UIViewController {
             print("Invalid input for video or number of clips")
             return
         }
+        
+        extractAudioAndTranscribe(from: videoURL)
 
         
 //        let numberOfClips = Int(numberOfClipsStepper.value)
@@ -241,7 +262,6 @@ class TrimViewController: UIViewController {
             let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
             let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
             exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
-            extractAudioAndTranscribe(from: videoURL)
         }
     }
     
@@ -319,23 +339,23 @@ class TrimViewController: UIViewController {
     }
     
     func processVideoForScenes(videoPath: String) {
-            let scenesArray = NSMutableArray()
-            
-            if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: 3.0) {
-                if error.hasError {
-                    print("Error detecting scenes: \(error.message ?? "")")
-                    return
-                }
-                print("Total scenes detected: \(scenesArray.count)")
-                
-                let scenes = scenesArray.compactMap { $0 as? SceneRange }
-                scenes.forEach { scene in
-                    print("Scene Range: \(scene.start) - \(scene.end)")
-                }
-                
-                self.scenes = scenes
-            }
+    let scenesArray = NSMutableArray()
+    
+    if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: 3.0) {
+        if error.hasError {
+            print("Error detecting scenes: \(error.message ?? "")")
+            return
         }
+        print("Total scenes detected: \(scenesArray.count)")
+        
+        let scenes = scenesArray.compactMap { $0 as? SceneRange }
+        scenes.forEach { scene in
+            print("Scene Range: \(scene.start) - \(scene.end)")
+        }
+        
+        self.scenes = scenes
+    }
+}
 }
 
 
