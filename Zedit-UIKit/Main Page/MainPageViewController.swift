@@ -153,12 +153,15 @@ class MainPageViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSegueIdentifier,
            let destination = segue.destination as? TrimViewController {
+            player?.pause()
             destination.projectNameTrim = projectname
         } else if segue.identifier == "Export",
                   let destination = segue.destination as? ExportViewController {
+            player?.pause()
             destination.projectname = projectname
         } else if segue.identifier == "colorGrade",
                   let destination = segue.destination as? ColorViewController {
+            player?.pause()
             destination.projectNameColorGrade = projectname
         }
     }
