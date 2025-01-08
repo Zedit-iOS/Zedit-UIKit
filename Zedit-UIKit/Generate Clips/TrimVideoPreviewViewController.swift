@@ -102,6 +102,10 @@ class TrimVideoPreviewViewController: UIViewController {
 
     
     private func playVideo(url: URL) {
+        if player != nil{
+            player?.replaceCurrentItem(with: nil)
+            player = nil
+        }
         player = AVPlayer(url: url)
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
