@@ -33,6 +33,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     private let minutesRange = Array(0...59)
     private let secondsRange = Array(0...59)
+    fileprivate var playerObserver: Any?
     
     private func setupPickers() {
         minutesPicker.delegate = self
@@ -87,6 +88,15 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+    }
+
     
     func extractAudioAndTranscribe(from videoURL: URL) {
         let asset = AVAsset(url: videoURL)
@@ -256,6 +266,11 @@ func transcribeAudio(at audioURL: URL) {
             player = nil
         }
         player = AVPlayer(url: url)
+        let resetPlayer                  = {
+            self.player?.seek(to: CMTime.zero)
+                    self.player?.play()
+                }
+        playerObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { notification in resetPlayer() }
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
