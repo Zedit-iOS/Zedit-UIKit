@@ -14,6 +14,8 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var videoSelector: UIButton!
     @IBOutlet weak var videoPreviewView: UIView!
     
+    fileprivate var playerObserver: Any?
+    
     var projectname = String()
     var videoList: [URL] = []
     var player: AVPlayer?
@@ -122,6 +124,11 @@ class MainPageViewController: UIViewController {
             player = nil
         }
         player = AVPlayer(url: url)
+        let resetPlayer                  = {
+            self.player?.seek(to: CMTime.zero)
+                    self.player?.play()
+                }
+        playerObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { notification in resetPlayer() }
         
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
