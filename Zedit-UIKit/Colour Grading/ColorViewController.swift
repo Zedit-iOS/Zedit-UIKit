@@ -36,6 +36,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     private var context: CIContext?
     private var timeObserverToken: (observer: Any, player: AVPlayer)?
     private var isNavigatingBack = false
+    fileprivate var playerObserver: Any?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,6 +114,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func loadVideo(url: URL) {
+        
         asset = AVAsset(url: url)
         let playerItem = AVPlayerItem(url: url)
         
