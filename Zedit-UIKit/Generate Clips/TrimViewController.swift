@@ -16,6 +16,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     var projectNameTrim = String()
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
+    private var clipTimestamps: [Double] = []
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
@@ -24,8 +25,6 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     @IBOutlet weak var generateButton: UIButton!
     @IBOutlet weak var numberOfClipsStepper: UIStepper!
     @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
-    @IBOutlet weak var maximumDurationOfClipsStepper: UIStepper!
-    @IBOutlet weak var maximumDurationOfClipsStepperLabel: UILabel!
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
     @IBOutlet weak var minutesPicker: UIPickerView!
@@ -33,9 +32,12 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     private let minutesRange = Array(0...59)
     private let secondsRange = Array(0...59)
+    private var flatSceneRanges: [[Double]] = []
+    private var finalSceneTimeStamps: Array<Double> = [];
+    
     fileprivate var playerObserver: Any?
     
-    private func setupPickers() {
+    private func setupPickers(  ) {
         minutesPicker.delegate = self
         minutesPicker.dataSource = self // Add dataSource
         secondsPicker.delegate = self 
@@ -102,20 +104,18 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         let asset = AVAsset(url: videoURL)
         let audioTrack = asset.tracks(withMediaType: .audio).first
 
-        // Check if the audio track exists
+    
         guard let track = audioTrack else {
             print("No audio track found in video.")
             return
         }
 
-        // Create a composition
         let composition = AVMutableComposition()
         let audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
 
         do {
             try audioCompositionTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: track, at: .zero)
             
-            // Export the audio
             let audioOutputURL = videoURL.deletingPathExtension().appendingPathExtension("m4a") // Change file extension to m4a
             let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A)
             exportSession?.outputURL = audioOutputURL
@@ -151,6 +151,7 @@ func transcribeAudio(at audioURL: URL) {
            guard let self = self else { return }
            
            if let error = error {
+               
                print("Transcription error: \(error.localizedDescription)")
                return
            }
@@ -162,13 +163,15 @@ func transcribeAudio(at audioURL: URL) {
                        let timestamp = segment.timestamp
                        self.transcriptionTimestamps[timestamp] = word
                    }
-                   
                    let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
-                   var formattedTimestamps: [String] = []
+                   var formattedTimestamps: [String: String] = [:]
                    for (key, value) in sortedTimestamps {
-                       formattedTimestamps.append("\(key):\(value)")
+                       let timestampString = String(format: "%02d:%02d:%02d", Int(key) / 3600, (Int(key) % 3600) / 60, Int(key) % 60)
+                       formattedTimestamps[timestampString] = value.replacingOccurrences(of: "\'", with: "")
                    }
                    print(formattedTimestamps)
+                   let timestamps = formattedTimestamps.map { $0.key }
+                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges)
                }
            }
        }
@@ -179,26 +182,14 @@ func transcribeAudio(at audioURL: URL) {
         numberOfClipsStepper.stepValue = 1
         numberOfClipsStepper.value = 1
         numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
-        
-//        maximumDurationOfClipsStepper.minimumValue = 30
-//        maximumDurationOfClipsStepper.maximumValue = 300
-//        maximumDurationOfClipsStepper.stepValue = 30
-//        maximumDurationOfClipsStepper.value = 30
-//        maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
-//        
+
         numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
-//        maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
     }
     
     @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
         numberOfClipsStepperLabel.text = "\(Int(sender.value))"
     }
     
-//    @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
-//        maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
-//    }
-    
-    /// Fetches the project and its subfolders based on the project name.
     func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
         
@@ -236,7 +227,7 @@ func transcribeAudio(at audioURL: URL) {
         }
     }
     
-    /// Sets up the video selector button menu.
+
     func setUpButton() {
         guard !videoList.isEmpty else {
             videoSelectorButton.isEnabled = false
@@ -259,7 +250,7 @@ func transcribeAudio(at audioURL: URL) {
         videoSelectorButton.showsMenuAsPrimaryAction = true
     }
     
-    /// Plays the selected video in the preview view.
+
     private func playVideo(url: URL) {
         if player != nil{
             player?.replaceCurrentItem(with: nil)
@@ -288,29 +279,69 @@ func transcribeAudio(at audioURL: URL) {
     }
     
     func generateClips() {
-        guard let videoURL = videoList.first,
-              let numberOfClips = Int(numberOfClipsStepperLabel.text ?? "0"), numberOfClips > 0 else {
-            print("Invalid input for video or number of clips")
+        guard let videoURL = videoList.first else {
+            print("No video selected")
             return
         }
         
         extractAudioAndTranscribe(from: videoURL)
 
-//        let maximumDuration = Int(maximumDurationOfClipsStepper.value)
+        let minimumClipDuration = minutesPicker.selectedRow(inComponent: 0)*60 + secondsPicker.selectedRow(inComponent: 0)
+        processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
+        
+        let finalSceneRanges = scenes.map { $0.start...$0.end }
+        flatSceneRanges = finalSceneRanges.map { range in
+            [range.lowerBound, range.upperBound]
+        }
+    }
+    
+    func exportClip(from videoURL: URL, timestamps: [Double]) {
         let asset = AVAsset(url: videoURL)
-        let totalDuration = CMTimeGetSeconds(asset.duration)
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Failed to find the documents directory")
+            return
+        }
         
-//        let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectNameTrim)
+        let clipsDirectory = projectDirectory.appendingPathComponent("Clips")
         
-//        for i in 0..<numberOfClips {
-//            let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
-//            let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
-//            exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
-//        }
+        if !FileManager.default.fileExists(atPath: clipsDirectory.path) {
+            do {
+                try FileManager.default.createDirectory(at: clipsDirectory, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("Failed to create 'Clips' folder: \(error.localizedDescription)")
+                return
+            }
+        }
         
-        print(minutesPicker.selectedRow(inComponent: 0))
-        print(secondsPicker.selectedRow(inComponent: 0))
-
+        for i in 0..<(timestamps.count - 1) {
+            let startTime = CMTime(seconds: timestamps[i], preferredTimescale: 600)
+            let endTime = CMTime(seconds: timestamps[i + 1], preferredTimescale: 600)
+            
+            let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+            exportSession?.outputFileType = .mp4
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMdd_HHmm"
+            let currentTimeString = dateFormatter.string(from: Date())
+            let outputURL = clipsDirectory.appendingPathComponent("clip_\(i)_\(currentTimeString).mp4")
+            
+            exportSession?.outputURL = outputURL
+            exportSession?.timeRange = CMTimeRange(start: startTime, end: endTime)
+            
+            exportSession?.exportAsynchronously {
+                switch exportSession?.status {
+                case .completed:
+                    print("Clip \(i) exported successfully to: \(outputURL)")
+                case .failed:
+                    print("Failed to export clip \(i): \(String(describing: exportSession?.error))")
+                case .cancelled:
+                    print("Export cancelled for clip \(i)")
+                default:
+                    break
+                }
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -338,72 +369,60 @@ func transcribeAudio(at audioURL: URL) {
         present(alertController, animated: true, completion: nil)
     }
     
-    func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
-        let asset = AVAsset(url: videoURL)
-        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        exportSession?.outputFileType = .mp4
-
-        // Create the "Clips" subfolder path
-        let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Failed to find the documents directory")
-            return
-        }
-        
-        processVideoForScenes(videoPath: videoURL.path)
-        let projectDirectory = documentsDirectory.appendingPathComponent(projectNameTrim)
-        let clipsDirectory = projectDirectory.appendingPathComponent("Clips")
-
-        // Ensure the "Clips" subfolder exists
-        if !fileManager.fileExists(atPath: clipsDirectory.path) {
-            do {
-                try fileManager.createDirectory(at: clipsDirectory, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                print("Failed to create 'Clips' folder: \(error.localizedDescription)")
-                return
-            }
-        }
-
-        // Create the output file path for the clip
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmm"
-        let currentTimeString = dateFormatter.string(from: Date())
-        let outputURL = clipsDirectory.appendingPathComponent("clip_\(index)_\(currentTimeString).mp4")
-        exportSession?.outputURL = outputURL
-        exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
-
-        // Export the clip
-        exportSession?.exportAsynchronously {
-            if exportSession?.status == .completed {
-                DispatchQueue.main.async {
-                    print("Clip exported successfully to: \(outputURL)")
-                }
-            } else {
-                DispatchQueue.main.async {
-                    print("Failed to export clip: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
-                }
-            }
-        }
-    }
-    
-    func processVideoForScenes(videoPath: String) {
+    func processVideoForScenes(videoPath: String, minimumClipDuration:Int) {
     let scenesArray = NSMutableArray()
     
-    if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: 3.0) {
+        if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: Double(minimumClipDuration)) {
         if error.hasError {
             print("Error detecting scenes: \(error.message ?? "")")
             return
         }
-        print("Total scenes detected: \(scenesArray.count)")
         
         let scenes = scenesArray.compactMap { $0 as? SceneRange }
-        scenes.forEach { scene in
-            print("Scene Range: \(scene.start) - \(scene.end)")
-        }
-        
         self.scenes = scenes
     }
-}
+    }
+    
+    func getResults(timestamps: [String], sceneRanges: [[Double]]) {
+        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
+        var request = URLRequest(url: apiURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let payload = [
+            "transcript": timestamps,
+            "sceneChanges": sceneRanges
+        ] as [String : Any]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            request.httpBody = jsonData
+            
+            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                if let error = error {
+                    print("API Error: \(error)")
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
+                           let videoURL = self?.videoList.first {
+                            DispatchQueue.main.async {
+                                self?.clipTimestamps = timestamps
+                                self?.exportClip(from: videoURL, timestamps: timestamps)
+                            }
+                        }
+                    } catch {
+                        print("JSON parsing error: \(error)")
+                    }
+                }
+            }
+            task.resume()
+        } catch {
+            print("JSON serialization error: \(error)")
+        }
+    }
 }
 
 
