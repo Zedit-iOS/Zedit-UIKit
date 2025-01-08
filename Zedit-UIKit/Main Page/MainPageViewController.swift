@@ -43,6 +43,15 @@ class MainPageViewController: UIViewController {
         navigationItem.title = projectname
     }
     
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+    }
+    
     func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
         
@@ -109,6 +118,7 @@ class MainPageViewController: UIViewController {
     
     private func playVideo(url: URL) {
         player = AVPlayer(url: url)
+        
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
