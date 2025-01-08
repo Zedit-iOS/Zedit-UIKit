@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
 		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
-		377215B92D26C74300F125B1 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
 		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
 		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
@@ -28,6 +27,7 @@
 		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
+		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -75,8 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
 				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
-				377215B92D26C74300F125B1 /* opencv2.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

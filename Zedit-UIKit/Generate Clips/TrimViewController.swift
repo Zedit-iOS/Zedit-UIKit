@@ -10,7 +10,7 @@ import AVFoundation
 import AVKit
 import Speech
 
-class TrimViewController: UIViewController {
+class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var videoList: [URL] = []
     var projectNameTrim = String()
@@ -28,6 +28,32 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var maximumDurationOfClipsStepperLabel: UILabel!
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
+    @IBOutlet weak var minutesPicker: UIPickerView!
+    @IBOutlet weak var secondsPicker: UIPickerView!
+    
+    private let minutesRange = Array(0...59)
+    private let secondsRange = Array(0...59)
+    
+    private func setupPickers() {
+        minutesPicker.delegate = self
+        minutesPicker.dataSource = self // Add dataSource
+        secondsPicker.delegate = self 
+        secondsPicker.dataSource = self // Add dataSource
+    }
+    
+    // Add required UIPickerViewDataSource methods
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
+        return String(format: "%02d", value)
+    }
     let trimSeguePreviewIdentifier = "preview"
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -36,6 +62,7 @@ class TrimViewController: UIViewController {
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
         setupSteppers()
+        setupPickers()
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
                 switch authStatus {
@@ -143,23 +170,23 @@ func transcribeAudio(at audioURL: URL) {
         numberOfClipsStepper.value = 1
         numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
         
-        maximumDurationOfClipsStepper.minimumValue = 30
-        maximumDurationOfClipsStepper.maximumValue = 300
-        maximumDurationOfClipsStepper.stepValue = 30
-        maximumDurationOfClipsStepper.value = 30
-        maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
-        
+//        maximumDurationOfClipsStepper.minimumValue = 30
+//        maximumDurationOfClipsStepper.maximumValue = 300
+//        maximumDurationOfClipsStepper.stepValue = 30
+//        maximumDurationOfClipsStepper.value = 30
+//        maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
+//        
         numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
-        maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
+//        maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
     }
     
     @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
         numberOfClipsStepperLabel.text = "\(Int(sender.value))"
     }
     
-    @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
-        maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
-    }
+//    @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
+//        maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
+//    }
     
     /// Fetches the project and its subfolders based on the project name.
     func getProject(projectName: String) -> Project? {
@@ -250,19 +277,21 @@ func transcribeAudio(at audioURL: URL) {
         
         extractAudioAndTranscribe(from: videoURL)
 
-        
-//        let numberOfClips = Int(numberOfClipsStepper.value)
-        let maximumDuration = Int(maximumDurationOfClipsStepper.value)
+//        let maximumDuration = Int(maximumDurationOfClipsStepper.value)
         let asset = AVAsset(url: videoURL)
         let totalDuration = CMTimeGetSeconds(asset.duration)
         
-        let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
+//        let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
         
-        for i in 0..<numberOfClips {
-            let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
-            let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
-            exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
-        }
+//        for i in 0..<numberOfClips {
+//            let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
+//            let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
+//            exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
+//        }
+        
+        print(minutesPicker.selectedRow(inComponent: 0))
+        print(secondsPicker.selectedRow(inComponent: 0))
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
