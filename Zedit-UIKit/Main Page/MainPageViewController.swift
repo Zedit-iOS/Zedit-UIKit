@@ -49,6 +49,7 @@ class MainPageViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
             if player != nil{
+                player?.pause()
                 player?.replaceCurrentItem(with: nil)
                 player = nil
             }
@@ -119,6 +120,7 @@ class MainPageViewController: UIViewController {
     }
     
     private func playVideo(url: URL) {
+        
         if player != nil{
             player?.replaceCurrentItem(with: nil)
             player = nil
