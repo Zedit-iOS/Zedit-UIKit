@@ -284,7 +284,6 @@ func transcribeAudio(at audioURL: URL) {
             return
         }
         
-        extractAudioAndTranscribe(from: videoURL)
 
         let minimumClipDuration = minutesPicker.selectedRow(inComponent: 0)*60 + secondsPicker.selectedRow(inComponent: 0)
         processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
@@ -293,6 +292,7 @@ func transcribeAudio(at audioURL: URL) {
         flatSceneRanges = finalSceneRanges.map { range in
             [range.lowerBound, range.upperBound]
         }
+        extractAudioAndTranscribe(from: videoURL)
     }
     
     func exportClip(from videoURL: URL, timestamps: [Double]) {
