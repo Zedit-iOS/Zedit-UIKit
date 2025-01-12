@@ -67,3 +67,6 @@ opencv2.framework/Resources/
 
 opencv2.framework/
 Zedit-UIKit.xcodeproj/project.xcworkspace/xcuserdata/vr.xcuserdatad/UserInterfaceState.xcuserstate
+Zedit-UIKit/models/
+Zedit-UIKit/models/tinyllama-1.1b-1t-openorca.Q4_0.gguf
+

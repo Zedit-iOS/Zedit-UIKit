@@ -3,8 +3,20 @@ import AVKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 import PhotosUI
+import AVFoundation
 
-class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate {
+class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
+    func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(projectNameTextField.text, forKey: .projectName)
+            try container.encode(selectedVideoURL?.absoluteString, forKey: .selectedVideoURL)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case projectName
+            case selectedVideoURL
+        }
+    
     
     @IBOutlet weak var selectProjectButton: UIButton!
     @IBOutlet weak var videoPlayerView: UIView!
@@ -16,10 +28,30 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     var playerViewController: AVPlayerViewController?
     var selectedVideoURL: URL?
     
+    var projects: [Project] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadProjects()
         setupNotifications()
+        do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print("Error setting up AVAudioSession: \(error.localizedDescription)")
+            }
+    }
+    
+    private func loadProjects() {
+        // Clear the existing data in the collection view to avoid duplicates
+        if !projects.isEmpty {
+            // Clear the collection view before reloading
+            projects = []
+        }
+        
+        // Retrieve new projects from storage or source
+        projects = retrieveProjects()
     }
     
     private func setupUI() {
@@ -118,46 +150,77 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     private func saveProject() -> Bool {
-    guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
-        return false
+        guard let projectName = projectNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !projectName.isEmpty else {
+            return false
+        }
+
+        guard let videoURL = selectedVideoURL else {
+            return false
+        }
+
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return false
+        }
+
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+
+        // Check if the project directory already exists
+        if fileManager.fileExists(atPath: projectDirectory.path) {
+            return false
+        }
+
+        do {
+            // Create the directory for the new project
+            try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
+
+            // Create subfolders
+            let subfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            var subfolders: [Subfolder] = []
+
+            for subfolderName in subfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                try fileManager.createDirectory(at: subfolderURL, withIntermediateDirectories: true, attributes: nil)
+
+                if subfolderName == "Original Videos" {
+                    // Copy the selected video into the "Original Videos" subfolder
+                    let destinationURL = subfolderURL.appendingPathComponent(videoURL.lastPathComponent)
+                    try fileManager.copyItem(at: videoURL, to: destinationURL)
+                    // Add the video to the subfolder
+                    subfolders.append(Subfolder(name: subfolderName, videos: [destinationURL]))
+                } else {
+                    // Initialize other subfolders with empty video arrays
+                    subfolders.append(Subfolder(name: subfolderName, videos: []))
+                }
+            }
+
+            // Initialize project with metadata
+            let project = Project(
+                name: projectName,
+                dateCreated: Date(),
+                timesVisited: 0,
+                subfolders: subfolders
+            )
+
+            // Save project metadata to persistent storage
+            var projects = retrieveProjects()
+            projects.append(project)
+
+            // Store updated project list in UserDefaults
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(projects), forKey: "projects")
+            
+            // Save additional metadata to a plist file
+            let metadataURL = projectDirectory.appendingPathComponent("metadata.plist")
+            let metadata: [String: Any] = ["timesVisited": project.timesVisited, "dateCreated": project.dateCreated]
+            try PropertyListSerialization.data(fromPropertyList: metadata, format: .xml, options: 0).write(to: metadataURL)
+
+            return true
+        } catch {
+            print("Error creating project: \(error.localizedDescription)")
+            return false
+        }
     }
-    
-    guard let videoURL = selectedVideoURL else {
-        return false
-    }
-    
-    let fileManager = FileManager.default
-    guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return false
-    }
-    
-    let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
-    
-    // Check if the project directory already exists
-    if fileManager.fileExists(atPath: projectDirectory.path) {
-        return false
-    }
-    
-    do {
-        // Create the directory for the new project
-        try fileManager.createDirectory(at: projectDirectory, withIntermediateDirectories: true, attributes: nil)
-        
-        // Copy the selected video into the project directory
-        let destinationURL = projectDirectory.appendingPathComponent(videoURL.lastPathComponent)
-        try fileManager.copyItem(at: videoURL, to: destinationURL)
-        
-        // Save project metadata in UserDefaults
-        let project = ["name": projectName, "videoURL": destinationURL.path]
-        var projects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-        projects.append(project)
-        UserDefaults.standard.setValue(projects, forKey: "projects")
-        
-        return true
-    } catch {
-        print("Error creating project: \(error.localizedDescription)")
-        return false
-    }
-}
+
 }
 
 // MARK: - Video Selection Delegates
@@ -245,14 +308,15 @@ extension CreateProjectCollectionViewController {
     @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
         
-        // Load the most recent projects from UserDefaults
-        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
+        // Retrieve projects and get their names as a list of strings
+        let existingProjects = retrieveProjects()
+        let existingProjectNames = existingProjects.map { $0.name }
         
         // Check if the current project name exists in the list
-        let projectNameExists = existingProjects.contains { $0["name"] == projectNameTextField.text }
+        let projectNameExists = existingProjectNames.contains { $0 == projectNameTextField.text }
         
+        // Update UI based on project name validity and existence
         createProjectButton.isEnabled = isProjectNameValid && selectedVideoURL != nil && !projectNameExists
-        
         nameExistsLabel.isHidden = !projectNameExists
         nameExistsLabel.text = projectNameExists ? "Name already exists!" : nil
     }

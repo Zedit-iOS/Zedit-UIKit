@@ -73,7 +73,10 @@ class MyProjectViewControllerCell: UICollectionViewCell {
         titleLabel.text = project.name
 
         // Generate thumbnail and set it as backgroundView
-        if let firstVideoURL = project.videos.first {
+        if let originalVideosSubfolder = project.subfolders.first(where: {
+            $0.name == "Original Videos"
+        }),
+           let firstVideoURL = originalVideosSubfolder.videoURLS.first{
             generateThumbnail(from: firstVideoURL) { [weak self] image in
                 DispatchQueue.main.async {
                     if let thumbnail = image {

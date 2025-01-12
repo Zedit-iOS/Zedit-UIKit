@@ -14,6 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let modelInitialized = Llama.shared.initializeModel()
+                
+                if modelInitialized {
+                    print("Llama model loaded successfully.")
+                } else {
+                    print("Llama model failed to load.")
+                }
+
         return true
     }
 
