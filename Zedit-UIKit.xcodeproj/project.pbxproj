@@ -28,14 +28,13 @@
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
 		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
+		37B0E0932D343EC300773CF7 /* libllama.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37B0E0922D343EC300773CF7 /* libllama.dylib */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
 		E1C9BD1B2D33B21B0018C254 /* Llama.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C9BD1A2D33B21B0018C254 /* Llama.swift */; };
-		E1C9BD202D33B7760018C254 /* libllama.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1C9BD1F2D33B7750018C254 /* libllama.dylib */; };
-		E1C9BD212D33B7760018C254 /* libllama.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = E1C9BD1F2D33B7750018C254 /* libllama.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E1C9BD252D33B8EC0018C254 /* LibLlama.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C9BD242D33B8EC0018C254 /* LibLlama.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +45,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E1C9BD212D33B7760018C254 /* libllama.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +77,7 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
+		37B0E0922D343EC300773CF7 /* libllama.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libllama.dylib; path = "Zedit-UIKit/libs/libllama.dylib"; sourceTree = "<group>"; };
 		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,7 +88,6 @@
 		E1C5CD8A2D33C9AB005D7795 /* llama.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = llama.h; sourceTree = "<group>"; };
 		E1C9BD1A2D33B21B0018C254 /* Llama.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Llama.swift; sourceTree = "<group>"; };
 		E1C9BD1D2D33B26D0018C254 /* tinyllama-1.1b-1t-openorca.Q4_0.gguf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "tinyllama-1.1b-1t-openorca.Q4_0.gguf"; sourceTree = "<group>"; };
-		E1C9BD1F2D33B7750018C254 /* libllama.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libllama.dylib; path = ../llama.cpp/build/src/libllama.dylib; sourceTree = "<group>"; };
 		E1C9BD242D33B8EC0018C254 /* LibLlama.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibLlama.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,8 +97,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
-				E1C9BD202D33B7760018C254 /* libllama.dylib in Frameworks */,
 				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
+				37B0E0932D343EC300773CF7 /* libllama.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +176,7 @@
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E1C9BD1F2D33B7750018C254 /* libllama.dylib */,
+				37B0E0922D343EC300773CF7 /* libllama.dylib */,
 				377215B82D26C74300F125B1 /* opencv2.xcframework */,
 			);
 			name = Frameworks;
@@ -286,7 +284,9 @@
 			);
 			mainGroup = E1BC32A72CCF78BE0026C60F;
 			packageReferences = (
-				E1C5CD892D33C138005D7795 /* XCLocalSwiftPackageReference "llama" */,
+				37B0E0942D343EDC00773CF7 /* XCLocalSwiftPackageReference "llama" */,
+				37B0E0972D343F4000773CF7 /* XCLocalSwiftPackageReference "../../../Desktop/llama.cpp" */,
+				37E7F15A2D34406F0020B383 /* XCRemoteSwiftPackageReference "llama.swift" */,
 			);
 			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
@@ -514,6 +514,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(SRCROOT)/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -531,7 +532,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libs";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/libs",
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/libs",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
@@ -555,6 +560,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(SRCROOT)/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -572,7 +578,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/libs";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/libs",
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/libs",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
@@ -607,11 +617,26 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E1C5CD892D33C138005D7795 /* XCLocalSwiftPackageReference "llama" */ = {
+		37B0E0942D343EDC00773CF7 /* XCLocalSwiftPackageReference "llama" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = llama;
 		};
+		37B0E0972D343F4000773CF7 /* XCLocalSwiftPackageReference "../../../Desktop/llama.cpp" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../Desktop/llama.cpp;
+		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		37E7F15A2D34406F0020B383 /* XCRemoteSwiftPackageReference "llama.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alexrozanski/llama.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = E1BC32A82CCF78BE0026C60F /* Project object */;
 }

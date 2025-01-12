@@ -1,4 +1,0 @@
-module llama {
-    umbrella header "llama.h" // Replace with the actual header file
-    export *
-}
