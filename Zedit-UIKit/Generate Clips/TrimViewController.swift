@@ -40,6 +40,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var finalSceneTimeStamps: Array<Double> = [];
     
     fileprivate var playerObserver: Any?
+    private var isModelDownloaded = false
     
     private func setupPickers(  ) {
         minutesPicker.delegate = self
@@ -93,9 +94,14 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        presentLLMDownloadView()
         verifyModelExists()
-        
+                
+                // Only present download view if model doesn't exist
+                if !isModelDownloaded {
+                    DispatchQueue.main.async {
+                        self.presentLLMDownloadView()
+                    }
+                }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,33 +112,41 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             }
     }
     private func verifyModelExists() {
-        let fileManager = FileManager.default
-        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
+            let fileManager = FileManager.default
+            let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+            let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
 
-        // Check if the file exists
-        if fileManager.fileExists(atPath: fileURL.path) {
-            print("Model successfully stored at: \(fileURL.path)")
-            // You can perform any additional actions here if needed
-        } else {
-            print("Model not found at expected location: \(fileURL.path)")
-            // Handle the case where the model is not found
+            isModelDownloaded = fileManager.fileExists(atPath: fileURL.path)
+            
+            if isModelDownloaded {
+                print("Model successfully stored at: \(fileURL.path)")
+            } else {
+                print("Model not found at expected location: \(fileURL.path)")
+            }
         }
-    }
-
     
     private func presentLLMDownloadView() {
-        let downloadView = LLMLocalOnboardingDownloadView {
-            // Dismiss the hosting controller when download completes
-            self.dismiss(animated: true, completion: nil)
+            let downloadView = LLMLocalOnboardingDownloadView {
+                // Update the model status after successful download
+                self.isModelDownloaded = true
+                print("Download completed successfully")
+                self.dismiss(animated: true) {
+                    // Any post-download logic can go here
+                }
+            }
+
+            let hostingController = UIHostingController(rootView: downloadView)
+            hostingController.modalPresentationStyle = .fullScreen
+            
+            // Make sure we're presenting from the main thread
+            if Thread.isMainThread {
+                present(hostingController, animated: true, completion: nil)
+            } else {
+                DispatchQueue.main.async {
+                    self.present(hostingController, animated: true, completion: nil)
+                }
+            }
         }
-
-        let hostingController = UIHostingController(rootView: downloadView)
-
-        hostingController.modalPresentationStyle = .fullScreen
-        present(hostingController, animated: true, completion: nil)
-    }
-
     
     func extractAudioAndTranscribe(from videoURL: URL) {
         let asset = AVAsset(url: videoURL)
