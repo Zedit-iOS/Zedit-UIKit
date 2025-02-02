@@ -82,11 +82,14 @@ func retrieveProjects() -> [Project] {
             var timesVisited = 0
             var dateCreated = Date()
             if let metadataData = try? Data(contentsOf: metadataURL),
-               let metadata = try? PropertyListSerialization.propertyList(from: metadataData, options: [], format: nil) as? [String: Any] {
+               let metadata = try? PropertyListSerialization.propertyList(from: metadataData, options: 0, format: nil) as? [String: Any] {
                 timesVisited = metadata["timesVisited"] as? Int ?? 0
-                dateCreated = metadata["dateCreated"] as? Date ?? Date()
+                // Since dateCreated is stored as a string in the plist, you might want to parse it properly
+                if let dateString = metadata["dateCreated"] as? String,
+                   let date = ISO8601DateFormatter().date(from: dateString) {
+                    dateCreated = date
+                }
             }
-
             // Create a Project object and add it to the array
             let project = Project(name: projectName, dateCreated: dateCreated, timesVisited: timesVisited, subfolders: subfolders)
             projects.append(project)

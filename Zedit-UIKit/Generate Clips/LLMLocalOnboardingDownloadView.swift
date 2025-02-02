@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SpeziLLMLocalDownload
+import SpeziLLMLocal
 
 struct LLMLocalOnboardingDownloadView: View {
     @State private var isDownloading: Bool = false
