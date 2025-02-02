@@ -105,6 +105,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                         self.presentLLMDownloadView()
                     }
                 }
+        if isModelDownloaded{
+            GetPrompt()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
