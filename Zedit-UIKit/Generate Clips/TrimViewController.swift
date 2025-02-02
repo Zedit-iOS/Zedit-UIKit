@@ -12,15 +12,18 @@ import Spezi
 import SpeziLLMLocalDownload
 import Foundation
 import SwiftUI
+import SpeziLLM
 import SpeziLLMLocal
 
-class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
     
     var videoList: [URL] = []
     var projectNameTrim = String()
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
+    private var llmRunner: LLMRunner?
+    private var llmSession: LLMLocalSession?
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
@@ -144,6 +147,49 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             } else {
                 DispatchQueue.main.async {
                     self.present(hostingController, animated: true, completion: nil)
+                }
+            }
+        }
+    
+    private func GetPrompt(){
+        llmRunner = LLMRunner()
+                
+                // Verify if LLM is loaded before proceeding
+        guard let runner = llmRunner else {
+            
+            print("LLMRunner not initialized.")
+            return
+            
+            }
+        let fileManager = FileManager.default
+        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
+        let modelURL = fileURL
+        llmSession = runner(with: LLMLocalSchema(modelPath: modelURL))
+        guard let llmSession = llmSession else {
+                    print("Failed to create LLM session.")
+                    return
+                }
+                
+                // Call the function to generate text
+                generateText(from: llmSession, prompt: "Describe yourself as a language model")
+    }
+    
+    private func generateText(from session: LLMLocalSession, prompt: String) {
+            Task {
+                do {
+                    var responseText = ""
+                    
+                    // Async iteration over generated tokens
+                    for try await token in try await session.generate() {
+                        responseText.append(token)
+                    }
+                    
+                    // Print the response in console
+                    print("LLM Response: \(responseText)")
+                    
+                } catch {
+                    print("Error generating response: \(error.localizedDescription)")
                 }
             }
         }
