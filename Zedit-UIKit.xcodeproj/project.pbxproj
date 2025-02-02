@@ -28,6 +28,12 @@
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
 		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
+		E1BAD6F22D4CD70000801B2D /* SpeziLLM in Frameworks */ = {isa = PBXBuildFile; productRef = E1BAD6F12D4CD70000801B2D /* SpeziLLM */; };
+		E1BAD6F42D4CD70000801B2D /* SpeziLLMFog in Frameworks */ = {isa = PBXBuildFile; productRef = E1BAD6F32D4CD70000801B2D /* SpeziLLMFog */; };
+		E1BAD6F62D4CD70000801B2D /* SpeziLLMLocal in Frameworks */ = {isa = PBXBuildFile; productRef = E1BAD6F52D4CD70000801B2D /* SpeziLLMLocal */; };
+		E1BAD6F82D4CD70000801B2D /* SpeziLLMLocalDownload in Frameworks */ = {isa = PBXBuildFile; productRef = E1BAD6F72D4CD70000801B2D /* SpeziLLMLocalDownload */; };
+		E1BAD6FA2D4CD70000801B2D /* SpeziLLMOpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = E1BAD6F92D4CD70000801B2D /* SpeziLLMOpenAI */; };
+		E1BAD6FC2D4FA04600801B2D /* LLMLocalOnboardingDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BAD6FB2D4FA04600801B2D /* LLMLocalOnboardingDownloadView.swift */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -62,6 +68,7 @@
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
 		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1BAD6FB2D4FA04600801B2D /* LLMLocalOnboardingDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMLocalOnboardingDownloadView.swift; sourceTree = "<group>"; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -75,8 +82,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1BAD6F22D4CD70000801B2D /* SpeziLLM in Frameworks */,
 				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
 				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
+				E1BAD6F62D4CD70000801B2D /* SpeziLLMLocal in Frameworks */,
+				E1BAD6FA2D4CD70000801B2D /* SpeziLLMOpenAI in Frameworks */,
+				E1BAD6F82D4CD70000801B2D /* SpeziLLMLocalDownload in Frameworks */,
+				E1BAD6F42D4CD70000801B2D /* SpeziLLMFog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +129,7 @@
 				3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */,
 				3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */,
 				3796055E2CEB203900C11189 /* TrimViewController.swift */,
+				E1BAD6FB2D4FA04600801B2D /* LLMLocalOnboardingDownloadView.swift */,
 			);
 			path = "Generate Clips";
 			sourceTree = "<group>";
@@ -209,6 +222,13 @@
 			dependencies = (
 			);
 			name = "Zedit-UIKit";
+			packageProductDependencies = (
+				E1BAD6F12D4CD70000801B2D /* SpeziLLM */,
+				E1BAD6F32D4CD70000801B2D /* SpeziLLMFog */,
+				E1BAD6F52D4CD70000801B2D /* SpeziLLMLocal */,
+				E1BAD6F72D4CD70000801B2D /* SpeziLLMLocalDownload */,
+				E1BAD6F92D4CD70000801B2D /* SpeziLLMOpenAI */,
+			);
 			productName = "Zedit-UIKit";
 			productReference = E192DDBC2D0851B6006D8F6A /* Zedit.app */;
 			productType = "com.apple.product-type.application";
@@ -238,6 +258,9 @@
 				Base,
 			);
 			mainGroup = E1BC32A72CCF78BE0026C60F;
+			packageReferences = (
+				E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */,
+			);
 			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
 			projectRoot = "";
@@ -284,6 +307,7 @@
 				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
 				379605772CEB203900C11189 /* TrimViewController.swift in Sources */,
 				379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */,
+				E1BAD6FC2D4FA04600801B2D /* LLMLocalOnboardingDownloadView.swift in Sources */,
 				379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */,
 				3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */,
 			);
@@ -464,6 +488,7 @@
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -504,6 +529,7 @@
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -531,6 +557,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/StanfordSpezi/SpeziLLM.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.8.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E1BAD6F12D4CD70000801B2D /* SpeziLLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */;
+			productName = SpeziLLM;
+		};
+		E1BAD6F32D4CD70000801B2D /* SpeziLLMFog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */;
+			productName = SpeziLLMFog;
+		};
+		E1BAD6F52D4CD70000801B2D /* SpeziLLMLocal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */;
+			productName = SpeziLLMLocal;
+		};
+		E1BAD6F72D4CD70000801B2D /* SpeziLLMLocalDownload */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */;
+			productName = SpeziLLMLocalDownload;
+		};
+		E1BAD6F92D4CD70000801B2D /* SpeziLLMOpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1BAD6F02D4CD70000801B2D /* XCRemoteSwiftPackageReference "SpeziLLM" */;
+			productName = SpeziLLMOpenAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E1BC32A82CCF78BE0026C60F /* Project object */;
 }

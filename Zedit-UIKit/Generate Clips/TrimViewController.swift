@@ -4,11 +4,15 @@
 //
 //  Created by Avinash on 04/11/24.
 //
-
 import UIKit
 import AVFoundation
 import AVKit
 import Speech
+import Spezi
+import SpeziLLMLocalDownload
+import Foundation
+import SwiftUI
+import SpeziLLMLocal
 
 class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -89,6 +93,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        presentLLMDownloadView()
+        verifyModelExists()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -97,6 +104,33 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 player?.replaceCurrentItem(with: nil)
                 player = nil
             }
+    }
+    private func verifyModelExists() {
+        let fileManager = FileManager.default
+        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
+
+        // Check if the file exists
+        if fileManager.fileExists(atPath: fileURL.path) {
+            print("Model successfully stored at: \(fileURL.path)")
+            // You can perform any additional actions here if needed
+        } else {
+            print("Model not found at expected location: \(fileURL.path)")
+            // Handle the case where the model is not found
+        }
+    }
+
+    
+    private func presentLLMDownloadView() {
+        let downloadView = LLMLocalOnboardingDownloadView {
+            // Dismiss the hosting controller when download completes
+            self.dismiss(animated: true, completion: nil)
+        }
+
+        let hostingController = UIHostingController(rootView: downloadView)
+
+        hostingController.modalPresentationStyle = .fullScreen
+        present(hostingController, animated: true, completion: nil)
     }
 
     
