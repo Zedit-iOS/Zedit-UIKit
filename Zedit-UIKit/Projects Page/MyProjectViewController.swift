@@ -248,7 +248,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         do {
             // Load existing metadata
             let metadataData = try Data(contentsOf: metadataURL)
-            guard var metadata = try PropertyListSerialization.propertyList(from: metadataData, options: [], format: nil) as? [String: Any] else {
+            guard var metadata = try PropertyListSerialization.propertyList(from: metadataData, options: 0, format: nil) as? [String: Any] else {
                 print("Error reading metadata.")
                 return
             }
