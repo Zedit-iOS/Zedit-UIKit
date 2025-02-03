@@ -23,7 +23,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
-    private var llmRunner: LLMRunner?
+    private let llmRunner: LLMRunner? = AppDelegate.sharedLLMRunner
     private var llmSession: LLMLocalSession?
     
     @IBOutlet weak var nameLabel: UILabel!
@@ -156,28 +156,21 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         }
     
     private func GetPrompt(){
-        llmRunner = LLMRunner()
-                
-                // Verify if LLM is loaded before proceeding
         guard let runner = llmRunner else {
-            
-            print("LLMRunner not initialized.")
+            print("LLMRunner not available.")
             return
-            
-            }
+        }
         let fileManager = FileManager.default
         let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
-        let modelURL = fileURL
+        let modelURL = cacheDirectory.appendingPathComponent("llm.gguf")
         let schema = LLMLocalSchema(modelPath: modelURL)
         llmSession = runner(with: schema)
+        
         guard let session = llmSession else {
-                    print("Failed to create LLM session.")
-                    return
-                }
-                
-                // Call the function to generate text
-                generateText(from: session, prompt: "Describe yourself as a language model")
+            print("Failed to create LLM session.")
+            return
+        }
+        generateText(from: session, prompt: "Describe yourself as a language model")
     }
     
     private func generateText(from session: LLMLocalSession, prompt: String) {

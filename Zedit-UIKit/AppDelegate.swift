@@ -13,16 +13,20 @@ import SpeziLLMLocal
 @main
 class AppDelegate: SpeziAppDelegate {
 
-    override var configuration: Configuration {
-        Configuration {
-            LLMRunner {
-                LLMLocalPlatform()
+    static var sharedLLMRunner: LLMRunner?
+
+        override var configuration: Configuration {
+            Configuration {
+                LLMRunner {
+                    LLMLocalPlatform()
+                }
             }
         }
-    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let runner = LLMRunner()
+        AppDelegate.sharedLLMRunner = runner
         return true
     }
 
