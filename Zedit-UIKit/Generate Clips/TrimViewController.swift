@@ -169,14 +169,15 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let fileURL = cacheDirectory.appendingPathComponent("llm.gguf")
         let modelURL = fileURL
-        llmSession = runner(with: LLMLocalSchema(modelPath: modelURL))
-        guard let llmSession = llmSession else {
+        let schema = LLMLocalSchema(modelPath: modelURL)
+        llmSession = runner(with: schema)
+        guard let session = llmSession else {
                     print("Failed to create LLM session.")
                     return
                 }
                 
                 // Call the function to generate text
-                generateText(from: llmSession, prompt: "Describe yourself as a language model")
+                generateText(from: session, prompt: "Describe yourself as a language model")
     }
     
     private func generateText(from session: LLMLocalSession, prompt: String) {
