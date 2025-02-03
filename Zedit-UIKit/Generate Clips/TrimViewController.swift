@@ -23,7 +23,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
-    private let llmRunner: LLMRunner? = AppDelegate.sharedLLMRunner
+    private var llmRunner: LLMRunner? = AppDelegate.sharedLLMRunner
     private var llmSession: LLMLocalSession?
     
     @IBOutlet weak var nameLabel: UILabel!
@@ -155,24 +155,22 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             }
         }
     
-    private func GetPrompt(){
-        guard let runner = llmRunner else {
-            print("LLMRunner not available.")
-            return
+    private func GetPrompt() {
+            guard let runner = llmRunner else {
+                print("LLMRunner not available.")
+                return
+            }
+            let fileManager = FileManager.default
+            let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+            let modelURL = cacheDirectory.appendingPathComponent("llm.gguf")
+            let schema = LLMLocalSchema(modelPath: modelURL)
+            llmSession = runner(with: schema)
+            guard let session = llmSession else {
+                print("Failed to create LLM session.")
+                return
+            }
+            generateText(from: session, prompt: "Describe yourself as a language model")
         }
-        let fileManager = FileManager.default
-        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let modelURL = cacheDirectory.appendingPathComponent("llm.gguf")
-        let schema = LLMLocalSchema(modelPath: modelURL)
-        llmSession = runner(with: schema)
-        
-        guard let session = llmSession else {
-            print("Failed to create LLM session.")
-            return
-        }
-        generateText(from: session, prompt: "Describe yourself as a language model")
-    }
-    
     private func generateText(from session: LLMLocalSession, prompt: String) {
             Task {
                 do {

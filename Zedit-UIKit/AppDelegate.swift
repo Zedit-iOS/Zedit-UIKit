@@ -9,7 +9,7 @@ import UIKit
 import Spezi
 import SpeziLLM
 import SpeziLLMLocal
-
+import SpeziChat
 @main
 class AppDelegate: SpeziAppDelegate {
 
