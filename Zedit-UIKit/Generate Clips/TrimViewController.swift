@@ -17,6 +17,7 @@ import SpeziLLMLocal
 
 class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
     
+    
     var videoList: [URL] = []
     var projectNameTrim = String()
     private var scenes: [SceneRange] = []
@@ -182,6 +183,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             Task {
                 do {
                     var responseText = ""
+                    await MainActor.run {
+                                    session.context.append(userInput: prompt)
+                                }
                     
                     // Async iteration over generated tokens
                     for try await token in try await session.generate() {
