@@ -10,7 +10,11 @@ import AVFoundation
 import AVKit
 import Speech
 
+
+
 class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    let llm = LLM()
     
     var videoList: [URL] = []
     var projectNameTrim = String()
@@ -40,7 +44,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private func setupPickers(  ) {
         minutesPicker.delegate = self
         minutesPicker.dataSource = self // Add dataSource
-        secondsPicker.delegate = self 
+        secondsPicker.delegate = self
         secondsPicker.dataSource = self // Add dataSource
     }
     
@@ -384,30 +388,32 @@ func transcribeAudio(at audioURL: URL) {
     }
     
     func getResults(timestamps: [String], sceneRanges: [[Double]]) {
-        
-        
-        
+       
+        var prompt = "Scene Changes: {body[\(sceneRanges)]}, Transcript: {body[\(timestamps)]}."
+        print(prompt)
+        let clipTimeStamps = llm.run(for: prompt)
+        print(clipTimestamps)
         
 //        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
 //        var request = URLRequest(url: apiURL)
 //        request.httpMethod = "POST"
 //        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//        
+//
 //        let payload = [
 //            "transcript": timestamps,
 //            "sceneChanges": sceneRanges
 //        ] as [String : Any]
-//        
+//
 //        do {
 //            let jsonData = try JSONSerialization.data(withJSONObject: payload)
 //            request.httpBody = jsonData
-//            
+//
 //            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
 //                if let error = error {
 //                    print("API Error: \(error)")
 //                    return
 //                }
-//                
+//
 //                if let data = data {
 //                    do {
 //                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],

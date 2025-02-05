@@ -18,14 +18,14 @@ class LLM {
     private var cancellable: Set<AnyCancellable> = []
     
     init() {
-        let path = Bundle.main.path(forResource: "tinyllama", ofType: "gguf") ?? ""
+        let path = Bundle.main.path(forResource: "", ofType: "gguf") ?? ""
         swiftLlama = (try? SwiftLlama(modelPath: path))!
     }
     
-    func run(for userMessage: String) {
+    func run(for userMessage: String)-> String {
         result = ""
         let prompt = Prompt(type: .llama3,
-                            systemPrompt: "You are a helpful coding AI assistant.",
+                            systemPrompt: "You are proffesional video clipper, where you just provide the list of timestamps where the video can be clipped by analyzing the data provided. 2 data is provided, first is the list of timestamps of scene changes according to OpenCV and second is the transcript with the timestamps. Provide the final result in list of timestamps where the video can be clipped dont provide any other text than this example: [0, 0.320, 2.34, 3]]. Also don't hallucinate",
                             userMessage: userMessage)
         Task {
             switch usingStream {
@@ -43,6 +43,7 @@ class LLM {
                     }.store(in: &cancellable)
             }
         }
+        return result
     }
 }
 

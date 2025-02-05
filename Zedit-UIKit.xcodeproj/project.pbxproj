@@ -3,14 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3741F5B62D534EB20012B874 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 3741F5B52D534EB20012B874 /* SwiftLlama */; };
+		3751D3182D53C1F400134621 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 3751D3172D53C1F400134621 /* SwiftLlama */; };
 		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
 		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
 		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
+		377B394A2D53C0CB00933A7A /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 377B39492D53C0CB00933A7A /* SwiftLlama */; };
 		378E87F52D534BD80015FADE /* LLMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E87F42D534BD80015FADE /* LLMFunctions.swift */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
 		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
@@ -30,8 +31,19 @@
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
 		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
-		379A913C2D5351E3009A04B4 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 379A913B2D5351E3009A04B4 /* SwiftLlama */; };
 		379A91422D535262009A04B4 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = 379A91412D535262009A04B4 /* llama */; };
+		37A25AD02D53D97A00EC49AA /* libllama.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACA2D53D97900EC49AA /* libllama.dylib */; };
+		37A25AD12D53D97A00EC49AA /* libllama.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACA2D53D97900EC49AA /* libllama.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		37A25AD22D53D97A00EC49AA /* libggml-cpu.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACB2D53D97900EC49AA /* libggml-cpu.dylib */; };
+		37A25AD32D53D97A00EC49AA /* libggml-cpu.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACB2D53D97900EC49AA /* libggml-cpu.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		37A25AD42D53D97A00EC49AA /* libggml-blas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACC2D53D97A00EC49AA /* libggml-blas.dylib */; };
+		37A25AD52D53D97A00EC49AA /* libggml-blas.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACC2D53D97A00EC49AA /* libggml-blas.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		37A25AD62D53D97A00EC49AA /* libggml-metal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACD2D53D97A00EC49AA /* libggml-metal.dylib */; };
+		37A25AD72D53D97A00EC49AA /* libggml-metal.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACD2D53D97A00EC49AA /* libggml-metal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		37A25AD82D53D97A00EC49AA /* libggml.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACE2D53D97A00EC49AA /* libggml.dylib */; };
+		37A25AD92D53D97A00EC49AA /* libggml.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACE2D53D97A00EC49AA /* libggml.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		37A25ADA2D53D97A00EC49AA /* libggml-base.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A25ACF2D53D97A00EC49AA /* libggml-base.dylib */; };
+		37A25ADB2D53D97A00EC49AA /* libggml-base.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 37A25ACF2D53D97A00EC49AA /* libggml-base.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -39,29 +51,24 @@
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B0B05772BE5C451002BC7AF;
-			remoteInfo = "TestApp-Macos";
+/* Begin PBXCopyFilesBuildPhase section */
+		3751D3152D53C1D200134621 /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				37A25ADB2D53D97A00EC49AA /* libggml-base.dylib in Embed Libraries */,
+				37A25AD52D53D97A00EC49AA /* libggml-blas.dylib in Embed Libraries */,
+				37A25AD92D53D97A00EC49AA /* libggml.dylib in Embed Libraries */,
+				37A25AD32D53D97A00EC49AA /* libggml-cpu.dylib in Embed Libraries */,
+				37A25AD12D53D97A00EC49AA /* libllama.dylib in Embed Libraries */,
+				37A25AD72D53D97A00EC49AA /* libggml-metal.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4BEE1DB32BE70024001CE949;
-			remoteInfo = swiftllama;
-		};
-		37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B0B055A2BE5B44E002BC7AF;
-			remoteInfo = "TestApp-iOS";
-		};
-/* End PBXContainerItemProxy section */
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -90,7 +97,12 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
-		37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestApp.xcodeproj; path = ../SwiftLlama/TestProjects/TestApp.xcodeproj; sourceTree = "<group>"; };
+		37A25ACA2D53D97900EC49AA /* libllama.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libllama.dylib; path = ../llama.cpp/llama_product_ios/lib/libllama.dylib; sourceTree = "<group>"; };
+		37A25ACB2D53D97900EC49AA /* libggml-cpu.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libggml-cpu.dylib"; path = "../llama.cpp/llama_product_ios/lib/libggml-cpu.dylib"; sourceTree = "<group>"; };
+		37A25ACC2D53D97A00EC49AA /* libggml-blas.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libggml-blas.dylib"; path = "../llama.cpp/llama_product_ios/lib/libggml-blas.dylib"; sourceTree = "<group>"; };
+		37A25ACD2D53D97A00EC49AA /* libggml-metal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libggml-metal.dylib"; path = "../llama.cpp/llama_product_ios/lib/libggml-metal.dylib"; sourceTree = "<group>"; };
+		37A25ACE2D53D97A00EC49AA /* libggml.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libggml.dylib; path = ../llama.cpp/llama_product_ios/lib/libggml.dylib; sourceTree = "<group>"; };
+		37A25ACF2D53D97A00EC49AA /* libggml-base.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libggml-base.dylib"; path = "../llama.cpp/llama_product_ios/lib/libggml-base.dylib"; sourceTree = "<group>"; };
 		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -100,16 +112,26 @@
 		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		37C675112D53C354003AF18B /* model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = model; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		E1BC32AD2CCF78BE0026C60F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				379A91422D535262009A04B4 /* llama in Frameworks */,
+				37A25AD82D53D97A00EC49AA /* libggml.dylib in Frameworks */,
+				37A25AD42D53D97A00EC49AA /* libggml-blas.dylib in Frameworks */,
 				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
-				3741F5B62D534EB20012B874 /* SwiftLlama in Frameworks */,
-				379A913C2D5351E3009A04B4 /* SwiftLlama in Frameworks */,
+				377B394A2D53C0CB00933A7A /* SwiftLlama in Frameworks */,
+				3751D3182D53C1F400134621 /* SwiftLlama in Frameworks */,
+				37A25AD02D53D97A00EC49AA /* libllama.dylib in Frameworks */,
+				37A25ADA2D53D97A00EC49AA /* libggml-base.dylib in Frameworks */,
+				37A25AD22D53D97A00EC49AA /* libggml-cpu.dylib in Frameworks */,
 				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
+				37A25AD62D53D97A00EC49AA /* libggml-metal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,20 +205,15 @@
 			path = "Table View Projects";
 			sourceTree = "<group>";
 		};
-		37DB105B2D5343E9001F1E52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */,
-				3741F5B12D534E9E0012B874 /* TestApp-Macos.app */,
-				3741F5B32D534E9E0012B874 /* swiftllama */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */,
+				37A25ACE2D53D97A00EC49AA /* libggml.dylib */,
+				37A25ACF2D53D97A00EC49AA /* libggml-base.dylib */,
+				37A25ACC2D53D97A00EC49AA /* libggml-blas.dylib */,
+				37A25ACB2D53D97900EC49AA /* libggml-cpu.dylib */,
+				37A25ACD2D53D97A00EC49AA /* libggml-metal.dylib */,
+				37A25ACA2D53D97900EC49AA /* libllama.dylib */,
 				377215B82D26C74300F125B1 /* opencv2.xcframework */,
 			);
 			name = Frameworks;
@@ -216,6 +233,7 @@
 			children = (
 				377215B12D26C50200F125B1 /* opencv2.framework */,
 				379605532CEB203900C11189 /* Colour Grading */,
+				37C675112D53C354003AF18B /* model */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
 				3796055A2CEB203900C11189 /* Export Videos */,
 				3796055F2CEB203900C11189 /* Generate Clips */,
@@ -248,6 +266,7 @@
 				E1BC32AC2CCF78BE0026C60F /* Sources */,
 				E1BC32AD2CCF78BE0026C60F /* Frameworks */,
 				E1BC32AE2CCF78BE0026C60F /* Resources */,
+				3751D3152D53C1D200134621 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -284,47 +303,17 @@
 			);
 			mainGroup = E1BC32A72CCF78BE0026C60F;
 			packageReferences = (
-				3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */,
 				379A91402D535256009A04B4 /* XCRemoteSwiftPackageReference "llama" */,
+				377B39482D53C0CB00933A7A /* XCLocalSwiftPackageReference "../SwiftLlama" */,
 			);
 			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 37DB105B2D5343E9001F1E52 /* Products */;
-					ProjectRef = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				E1BC32AF2CCF78BE0026C60F /* Zedit-UIKit */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		3741F5B12D534E9E0012B874 /* TestApp-Macos.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp-Macos.app";
-			remoteRef = 3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3741F5B32D534E9E0012B874 /* swiftllama */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = swiftllama;
-			remoteRef = 3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp-iOS.app";
-			remoteRef = 37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E1BC32AE2CCF78BE0026C60F /* Resources */ = {
@@ -518,6 +507,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = ZS7X249735;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -526,10 +516,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "/Users/vr/Development/Zedit/Zedit-UIKit/llama.cpp/llama_product_ios/lib";
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -538,11 +530,20 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@loader_path/Frameworks",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/vr/Development/Zedit/Zedit-UIKit/llama.cpp/llama_product_ios/lib",
+					"$(PROJECT_DIR)/llama.cpp/llama_product_ios/lib",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -559,6 +560,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = ZS7X249735;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -567,10 +569,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "/Users/vr/Development/Zedit/Zedit-UIKit/llama.cpp/llama_product_ios/lib";
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -579,11 +583,20 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@loader_path/Frameworks",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/vr/Development/Zedit/Zedit-UIKit/llama.cpp/llama_product_ios/lib",
+					"$(PROJECT_DIR)/llama.cpp/llama_product_ios/lib",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -615,7 +628,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */ = {
+		377B39482D53C0CB00933A7A /* XCLocalSwiftPackageReference "../SwiftLlama" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../SwiftLlama;
 		};
@@ -633,12 +646,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3741F5B52D534EB20012B874 /* SwiftLlama */ = {
+		3751D3172D53C1F400134621 /* SwiftLlama */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */;
+			package = 377B39482D53C0CB00933A7A /* XCLocalSwiftPackageReference "../SwiftLlama" */;
 			productName = SwiftLlama;
 		};
-		379A913B2D5351E3009A04B4 /* SwiftLlama */ = {
+		377B39492D53C0CB00933A7A /* SwiftLlama */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftLlama;
 		};
