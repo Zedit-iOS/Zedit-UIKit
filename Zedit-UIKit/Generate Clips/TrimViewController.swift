@@ -384,47 +384,50 @@ func transcribeAudio(at audioURL: URL) {
     }
     
     func getResults(timestamps: [String], sceneRanges: [[Double]]) {
-        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let payload = [
-            "transcript": timestamps,
-            "sceneChanges": sceneRanges
-        ] as [String : Any]
         
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: payload)
-            request.httpBody = jsonData
-            
-            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                if let error = error {
-                    print("API Error: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    do {
-                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
-                           let videoURL = self?.videoList.first {
-                            DispatchQueue.main.async {
-                                self?.clipTimestamps = timestamps
-                                self?.exportClip(from: videoURL, timestamps: timestamps)
-                            }
-                        }
-                    } catch {
-                        print("JSON parsing error: \(error)")
-                    }
-                }
-            }
-            task.resume()
-        } catch {
-            print("JSON serialization error: \(error)")
-        }
+        
+        
+//        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
+//        var request = URLRequest(url: apiURL)
+//        request.httpMethod = "POST"
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        
+//        let payload = [
+//            "transcript": timestamps,
+//            "sceneChanges": sceneRanges
+//        ] as [String : Any]
+//        
+//        do {
+//            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+//            request.httpBody = jsonData
+//            
+//            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+//                if let error = error {
+//                    print("API Error: \(error)")
+//                    return
+//                }
+//                
+//                if let data = data {
+//                    do {
+//                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
+//                           let videoURL = self?.videoList.first {
+//                            DispatchQueue.main.async {
+//                                self?.clipTimestamps = timestamps
+//                                self?.exportClip(from: videoURL, timestamps: timestamps)
+//                            }
+//                        }
+//                    } catch {
+//                        print("JSON parsing error: \(error)")
+//                    }
+//                }
+//            }
+//            task.resume()
+//        } catch {
+//            print("JSON serialization error: \(error)")
+//        }
     }
 }
-
 
 
 extension TrimViewController {

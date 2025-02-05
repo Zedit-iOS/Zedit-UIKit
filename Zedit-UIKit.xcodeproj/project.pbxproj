@@ -3,13 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3741F5B62D534EB20012B874 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 3741F5B52D534EB20012B874 /* SwiftLlama */; };
 		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
 		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
 		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
+		378E87F52D534BD80015FADE /* LLMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E87F42D534BD80015FADE /* LLMFunctions.swift */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
 		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
 		3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605682CEB203900C11189 /* ProjectsTableViewController.swift */; };
@@ -28,12 +30,38 @@
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
 		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
+		379A913C2D5351E3009A04B4 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 379A913B2D5351E3009A04B4 /* SwiftLlama */; };
+		379A91422D535262009A04B4 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = 379A91412D535262009A04B4 /* llama */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4B0B05772BE5C451002BC7AF;
+			remoteInfo = "TestApp-Macos";
+		};
+		3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4BEE1DB32BE70024001CE949;
+			remoteInfo = swiftllama;
+		};
+		37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4B0B055A2BE5B44E002BC7AF;
+			remoteInfo = "TestApp-iOS";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -44,6 +72,7 @@
 		377215B82D26C74300F125B1 /* opencv2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = opencv2.xcframework; path = ../opencv2.xcframework; sourceTree = "<group>"; };
 		377215BA2D26C77600F125B1 /* CVFuntions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFuntions.hpp; sourceTree = "<group>"; };
 		377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
+		378E87F42D534BD80015FADE /* LLMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMFunctions.swift; sourceTree = "<group>"; };
 		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		379605542CEB203900C11189 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		379605552CEB203900C11189 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
@@ -61,6 +90,7 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
+		37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestApp.xcodeproj; path = ../SwiftLlama/TestProjects/TestApp.xcodeproj; sourceTree = "<group>"; };
 		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,7 +105,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				379A91422D535262009A04B4 /* llama in Frameworks */,
 				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
+				3741F5B62D534EB20012B874 /* SwiftLlama in Frameworks */,
+				379A913C2D5351E3009A04B4 /* SwiftLlama in Frameworks */,
 				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +129,7 @@
 			children = (
 				379605542CEB203900C11189 /* Project.swift */,
 				379605552CEB203900C11189 /* safe+extension.swift */,
+				378E87F42D534BD80015FADE /* LLMFunctions.swift */,
 			);
 			path = "Data Model and Common Functions";
 			sourceTree = "<group>";
@@ -149,9 +183,20 @@
 			path = "Table View Projects";
 			sourceTree = "<group>";
 		};
+		37DB105B2D5343E9001F1E52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */,
+				3741F5B12D534E9E0012B874 /* TestApp-Macos.app */,
+				3741F5B32D534E9E0012B874 /* swiftllama */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */,
 				377215B82D26C74300F125B1 /* opencv2.xcframework */,
 			);
 			name = Frameworks;
@@ -238,14 +283,48 @@
 				Base,
 			);
 			mainGroup = E1BC32A72CCF78BE0026C60F;
+			packageReferences = (
+				3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */,
+				379A91402D535256009A04B4 /* XCRemoteSwiftPackageReference "llama" */,
+			);
 			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 37DB105B2D5343E9001F1E52 /* Products */;
+					ProjectRef = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				E1BC32AF2CCF78BE0026C60F /* Zedit-UIKit */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3741F5B12D534E9E0012B874 /* TestApp-Macos.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "TestApp-Macos.app";
+			remoteRef = 3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3741F5B32D534E9E0012B874 /* swiftllama */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = swiftllama;
+			remoteRef = 3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "TestApp-iOS.app";
+			remoteRef = 37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E1BC32AE2CCF78BE0026C60F /* Resources */ = {
@@ -266,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
+				378E87F52D534BD80015FADE /* LLMFunctions.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
 				3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */,
 				3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */,
@@ -455,6 +535,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -495,6 +576,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -531,6 +613,41 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../SwiftLlama;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		379A91402D535256009A04B4 /* XCRemoteSwiftPackageReference "llama" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ggerganov/llama.cpp";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3741F5B52D534EB20012B874 /* SwiftLlama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */;
+			productName = SwiftLlama;
+		};
+		379A913B2D5351E3009A04B4 /* SwiftLlama */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftLlama;
+		};
+		379A91412D535262009A04B4 /* llama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 379A91402D535256009A04B4 /* XCRemoteSwiftPackageReference "llama" */;
+			productName = llama;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E1BC32A82CCF78BE0026C60F /* Project object */;
 }
