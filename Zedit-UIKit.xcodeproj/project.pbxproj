@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -39,30 +39,6 @@
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B0B05772BE5C451002BC7AF;
-			remoteInfo = "TestApp-Macos";
-		};
-		3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4BEE1DB32BE70024001CE949;
-			remoteInfo = swiftllama;
-		};
-		37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B0B055A2BE5B44E002BC7AF;
-			remoteInfo = "TestApp-iOS";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		377215B32D26C54800F125B1 /* CVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVWrapper.h; sourceTree = "<group>"; };
@@ -90,7 +66,6 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
-		37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestApp.xcodeproj; path = ../SwiftLlama/TestProjects/TestApp.xcodeproj; sourceTree = "<group>"; };
 		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -183,20 +158,9 @@
 			path = "Table View Projects";
 			sourceTree = "<group>";
 		};
-		37DB105B2D5343E9001F1E52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */,
-				3741F5B12D534E9E0012B874 /* TestApp-Macos.app */,
-				3741F5B32D534E9E0012B874 /* swiftllama */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */,
 				377215B82D26C74300F125B1 /* opencv2.xcframework */,
 			);
 			name = Frameworks;
@@ -275,7 +239,6 @@
 				};
 			};
 			buildConfigurationList = E1BC32AB2CCF78BE0026C60F /* Build configuration list for PBXProject "Zedit-UIKit" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -287,44 +250,15 @@
 				3741F5B42D534EA10012B874 /* XCLocalSwiftPackageReference "../SwiftLlama" */,
 				379A91402D535256009A04B4 /* XCRemoteSwiftPackageReference "llama" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = E1BC32A72CCF78BE0026C60F;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 37DB105B2D5343E9001F1E52 /* Products */;
-					ProjectRef = 37DB105A2D5343E9001F1E52 /* TestApp.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				E1BC32AF2CCF78BE0026C60F /* Zedit-UIKit */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		3741F5B12D534E9E0012B874 /* TestApp-Macos.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp-Macos.app";
-			remoteRef = 3741F5B02D534E9E0012B874 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3741F5B32D534E9E0012B874 /* swiftllama */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = swiftllama;
-			remoteRef = 3741F5B22D534E9E0012B874 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		37DB105F2D5343E9001F1E52 /* TestApp-iOS.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "TestApp-iOS.app";
-			remoteRef = 37DB105E2D5343E9001F1E52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E1BC32AE2CCF78BE0026C60F /* Resources */ = {

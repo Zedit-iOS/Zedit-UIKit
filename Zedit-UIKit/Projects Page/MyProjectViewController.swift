@@ -69,7 +69,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(200))
         
         // Create a horizontal group
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         group.interItemSpacing = .fixed(20)  // Horizontal spacing between items
         
         // Create a section with vertical spacing between groups
