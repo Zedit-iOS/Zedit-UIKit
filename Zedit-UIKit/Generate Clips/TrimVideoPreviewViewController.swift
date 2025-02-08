@@ -1,10 +1,3 @@
-//
-//  TrimVideoPreviewViewController.swift
-//  Zedit-UIKit
-//
-//  Created by Avinash on 15/11/24.
-//
-
 import UIKit
 import AVKit
 import AVFoundation
@@ -18,21 +11,20 @@ class TrimVideoPreviewViewController: UIViewController {
     var videoList: [URL] = []
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
+    var loadingIndicator: UIAlertController?
+    var checkClipsTimer: Timer?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let videos = fetchVideos() {
-            videoList = videos
-            vidoListCollectionView.videoList = videos
-            print("Videos successfully loaded")
-            vidoListCollectionView.reloadData()
-        }
+        // Show the loading pop-up
+        showLoadingIndicator()
         
-        print("Project name is \(String(describing: trimPreviewProjectName))")
+        // Start checking for videos every 10 seconds
+        checkClipsTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(checkForVideos), userInfo: nil, repeats: true)
+        
+        // Set up the collection view
         vidoListCollectionView.setupCollectionView(in: view)
-        
-        // Set the delegate to handle video selection
         vidoListCollectionView.delegate = self
     }
     
@@ -40,53 +32,108 @@ class TrimVideoPreviewViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    func fetchVideos() -> [URL]? {
-        if let project = getProjects(ProjectName: trimPreviewProjectName) {
-            let videos = project.videos
-            print("Success: Found \(videos.count) videos")
-            return videos
+    deinit {
+        // Invalidate the timer when the view controller is deallocated
+        checkClipsTimer?.invalidate()
+    }
+    
+    @objc func checkForVideos() {
+        if let videos = fetchVideos(), !videos.isEmpty {
+            videoList = videos
+            vidoListCollectionView.videoList = videos
+            vidoListCollectionView.reloadData()
+            
+            print("Videos successfully loaded")
+            
+            // Stop the timer and hide the loading indicator
+            checkClipsTimer?.invalidate()
+            checkClipsTimer = nil
+            hideLoadingIndicator()
         } else {
-            print("Failure: Could not get project")
-            return nil
+            print("No videos found in the 'Clips' folder yet")
         }
     }
     
+    func fetchVideos() -> [URL]? {
+        guard let project = getProjects(ProjectName: trimPreviewProjectName) else {
+            print("Failure: Could not retrieve project")
+            return nil
+        }
+        
+        if let clipsFolder = project.subfolders.first(where: { $0.name.lowercased() == "clips" }) {
+            return clipsFolder.videoURLS
+        }
+        
+        return []
+    }
+
     func getProjects(ProjectName: String) -> Project? {
         let fileManager = FileManager.default
         
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to access directory")
             return nil
         }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
-        
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else {
-            print("Folder does not exist")
+        let projectDirectory = documentsDirectory.appendingPathComponent(ProjectName)
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
             return nil
         }
         
         do {
-            let videoFiles = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: [])
-                .filter { $0.pathExtension == "mp4" || $0.pathExtension == "mov" }
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            var subfolders: [Subfolder] = []
             
-            return Project(name: ProjectName, videos: videoFiles)
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderPath = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
+                
+                if fileManager.fileExists(atPath: subfolderPath.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
+            }
+            
+            return Project(name: ProjectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch files")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
+
+    private func showLoadingIndicator() {
+        loadingIndicator = UIAlertController(title: "Loading", message: "Checking for videos...", preferredStyle: .alert)
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.startAnimating()
+        
+        loadingIndicator?.view.addSubview(spinner)
+        spinner.centerXAnchor.constraint(equalTo: loadingIndicator!.view.centerXAnchor).isActive = true
+        spinner.bottomAnchor.constraint(equalTo: loadingIndicator!.view.bottomAnchor, constant: -20).isActive = true
+        
+        if let loadingIndicator = loadingIndicator {
+            present(loadingIndicator, animated: true, completion: nil)
+        }
+    }
+
+    private func hideLoadingIndicator() {
+        loadingIndicator?.dismiss(animated: true, completion: nil)
+        loadingIndicator = nil
+    }
     
     private func playVideo(url: URL) {
+        if player != nil {
+            player?.replaceCurrentItem(with: nil)
+            player = nil
+        }
         player = AVPlayer(url: url)
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
         
-        // Clear previous player views
         videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
         
-        // Embed the video player
         if let playerVC = playerViewController {
             addChild(playerVC)
             playerVC.view.frame = videoPlayerView.bounds

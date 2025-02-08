@@ -8,11 +8,15 @@
 import UIKit
 import AVFoundation
 import AVKit
+import Speech
 
-class TrimViewController: UIViewController {
+class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var videoList: [URL] = []
     var projectNameTrim = String()
+    private var scenes: [SceneRange] = []
+    private var transcriptionTimestamps: [TimeInterval: String] = [:]
+    private var clipTimestamps: [Double] = []
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
@@ -21,10 +25,38 @@ class TrimViewController: UIViewController {
     @IBOutlet weak var generateButton: UIButton!
     @IBOutlet weak var numberOfClipsStepper: UIStepper!
     @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
-    @IBOutlet weak var maximumDurationOfClipsStepper: UIStepper!
-    @IBOutlet weak var maximumDurationOfClipsStepperLabel: UILabel!
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
+    @IBOutlet weak var minutesPicker: UIPickerView!
+    @IBOutlet weak var secondsPicker: UIPickerView!
+    
+    private let minutesRange = Array(0...59)
+    private let secondsRange = Array(0...59)
+    private var flatSceneRanges: [[Double]] = []
+    private var finalSceneTimeStamps: Array<Double> = [];
+    
+    fileprivate var playerObserver: Any?
+    
+    private func setupPickers(  ) {
+        minutesPicker.delegate = self
+        minutesPicker.dataSource = self // Add dataSource
+        secondsPicker.delegate = self 
+        secondsPicker.dataSource = self // Add dataSource
+    }
+    
+    // Add required UIPickerViewDataSource methods
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
+        return String(format: "%02d", value)
+    }
     let trimSeguePreviewIdentifier = "preview"
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -33,69 +65,169 @@ class TrimViewController: UIViewController {
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
         setupSteppers()
+        setupPickers()
         
-        if let videos = fetchVideos() {
-            videoList = videos
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+                switch authStatus {
+                case .authorized:
+                    print("Speech recognition authorized")
+                case .denied:
+                    print("Speech recognition denied")
+                case .restricted, .notDetermined:
+                    print("Speech recognition not available")
+                @unknown default:
+                    fatalError("Unknown authorization status")
+                }
+            }
+        
+        if let project = getProject(projectName: projectNameTrim) {
+            // Aggregate videos from all subfolders
+            videoList = project.subfolders.flatMap { $0.videoURLS }
             setUpButton()
         }
         
-//        promptTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+    }
+
+    
+    func extractAudioAndTranscribe(from videoURL: URL) {
+        let asset = AVAsset(url: videoURL)
+        let audioTrack = asset.tracks(withMediaType: .audio).first
+
+    
+        guard let track = audioTrack else {
+            print("No audio track found in video.")
+            return
+        }
+
+        let composition = AVMutableComposition()
+        let audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+
+        do {
+            try audioCompositionTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: track, at: .zero)
+            
+            let audioOutputURL = videoURL.deletingPathExtension().appendingPathExtension("m4a") // Change file extension to m4a
+            let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A)
+            exportSession?.outputURL = audioOutputURL
+            exportSession?.outputFileType = .m4a
+            
+            exportSession?.exportAsynchronously {
+                switch exportSession?.status {
+                case .completed:
+                    print("Audio extracted successfully to: \(audioOutputURL)")
+                    self.transcribeAudio(at: audioOutputURL)
+                case .failed:
+                    print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                case .cancelled:
+                    print("Audio export cancelled")
+                default:
+                    break
+                }
+            }
+        } catch {
+            print("Error extracting audio: \(error.localizedDescription)")
+        }
+    }
+
+func transcribeAudio(at audioURL: URL) {
+       guard let recognizer = SFSpeechRecognizer() else {
+           print("Speech recognizer not available")
+           return
+       }
+       let request = SFSpeechURLRecognitionRequest(url: audioURL)
+       request.shouldReportPartialResults = false
+
+       recognizer.recognitionTask(with: request) { [weak self] result, error in
+           guard let self = self else { return }
+           
+           if let error = error {
+               
+               print("Transcription error: \(error.localizedDescription)")
+               return
+           }
+           
+           if let result = result, result.isFinal {
+               DispatchQueue.main.async {
+                   for segment in result.bestTranscription.segments {
+                       let word = segment.substring
+                       let timestamp = segment.timestamp
+                       self.transcriptionTimestamps[timestamp] = word
+                   }
+                   let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
+                   var formattedTimestamps: [String: String] = [:]
+                   for (key, value) in sortedTimestamps {
+                       let timestampString = String(format: "%02d:%02d:%02d", Int(key) / 3600, (Int(key) % 3600) / 60, Int(key) % 60)
+                       formattedTimestamps[timestampString] = value.replacingOccurrences(of: "\'", with: "")
+                   }
+                   print(formattedTimestamps)
+                   let timestamps = formattedTimestamps.map { $0.key }
+                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges)
+               }
+           }
+       }
+   }
     func setupSteppers() {
-        
         numberOfClipsStepper.minimumValue = 1
         numberOfClipsStepper.maximumValue = 10
         numberOfClipsStepper.stepValue = 1
         numberOfClipsStepper.value = 1
         numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
-        
-        // Configure maximum duration stepper
-        maximumDurationOfClipsStepper.minimumValue = 30
-        maximumDurationOfClipsStepper.maximumValue = 300
-        maximumDurationOfClipsStepper.stepValue = 30
-        maximumDurationOfClipsStepper.value = 30
-        maximumDurationOfClipsStepperLabel.text = "\(Int(maximumDurationOfClipsStepper.value))s"
-        
-        // Add target actions for steppers
+
         numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
-        maximumDurationOfClipsStepper.addTarget(self, action: #selector(maximumDurationStepperChanged(_:)), for: .valueChanged)
     }
     
     @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
         numberOfClipsStepperLabel.text = "\(Int(sender.value))"
     }
     
-    @objc func maximumDurationStepperChanged(_ sender: UIStepper) {
-        maximumDurationOfClipsStepperLabel.text = "\(Int(sender.value))s"
-    }
-    
-    func fetchVideos() -> [URL]? {
-        guard let project = getProjects(ProjectName: projectNameTrim) else { return nil }
-        return project.videos
-    }
-    
-    func getProjects(ProjectName: String) -> Project? {
+    func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else { return nil }
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access documents directory.")
+            return nil
+        }
+        
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist.")
+            return nil
+        }
         
         do {
-            let videoFiles = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: []).filter {
-                $0.pathExtension == "mp4" || $0.pathExtension == "mov"
+            var subfolders: [Subfolder] = []
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
+                
+                if fileManager.fileExists(atPath: subfolderURL.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
             }
-            return Project(name: ProjectName, videos: videoFiles)
+            
+            return Project(name: projectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch files")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
     
+
     func setUpButton() {
         guard !videoList.isEmpty else {
             videoSelectorButton.isEnabled = false
@@ -104,20 +236,32 @@ class TrimViewController: UIViewController {
         
         videoSelectorButton.isEnabled = true
         let actionClosure = { (action: UIAction) in
-            self.playVideo(url: self.videoList.first { $0.lastPathComponent == action.title }!)
+            if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
+                self.playVideo(url: selectedVideo)
+            }
         }
         
         var menuChildren: [UIMenuElement] = []
-        for videoName in videoList {
-            menuChildren.append(UIAction(title: videoName.lastPathComponent, handler: actionClosure))
+        for videoURL in videoList {
+            menuChildren.append(UIAction(title: videoURL.lastPathComponent, handler: actionClosure))
         }
         
         videoSelectorButton.menu = UIMenu(options: .displayInline, children: menuChildren)
         videoSelectorButton.showsMenuAsPrimaryAction = true
     }
     
+
     private func playVideo(url: URL) {
+        if player != nil{
+            player?.replaceCurrentItem(with: nil)
+            player = nil
+        }
         player = AVPlayer(url: url)
+        let resetPlayer                  = {
+            self.player?.seek(to: CMTime.zero)
+                    self.player?.play()
+                }
+        playerObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { notification in resetPlayer() }
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
@@ -136,22 +280,67 @@ class TrimViewController: UIViewController {
     
     func generateClips() {
         guard let videoURL = videoList.first else {
-            print("Invalid input for video")
+            print("No video selected")
             return
         }
         
-        let numberOfClips = Int(numberOfClipsStepper.value)
-        let maximumDuration = Int(maximumDurationOfClipsStepper.value)
+
+        let minimumClipDuration = minutesPicker.selectedRow(inComponent: 0)*60 + secondsPicker.selectedRow(inComponent: 0)
+        processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
+        
+        let finalSceneRanges = scenes.map { $0.start...$0.end }
+        flatSceneRanges = finalSceneRanges.map { range in
+            [range.lowerBound, range.upperBound]
+        }
+        extractAudioAndTranscribe(from: videoURL)
+    }
+    
+    func exportClip(from videoURL: URL, timestamps: [Double]) {
         let asset = AVAsset(url: videoURL)
-        let totalDuration = CMTimeGetSeconds(asset.duration)
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Failed to find the documents directory")
+            return
+        }
         
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectNameTrim)
+        let clipsDirectory = projectDirectory.appendingPathComponent("Clips")
         
-        let clipDuration = min(totalDuration / Double(numberOfClips), Double(maximumDuration))
+        if !FileManager.default.fileExists(atPath: clipsDirectory.path) {
+            do {
+                try FileManager.default.createDirectory(at: clipsDirectory, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("Failed to create 'Clips' folder: \(error.localizedDescription)")
+                return
+            }
+        }
         
-        for i in 0..<numberOfClips {
-            let startTime = CMTime(seconds: clipDuration * Double(i), preferredTimescale: asset.duration.timescale)
-            let endTime = CMTime(seconds: min(clipDuration * Double(i + 1), totalDuration), preferredTimescale: asset.duration.timescale)
-            exportClip(from: videoURL, startTime: startTime, endTime: endTime, index: i)
+        for i in 0..<(timestamps.count - 1) {
+            let startTime = CMTime(seconds: timestamps[i], preferredTimescale: 600)
+            let endTime = CMTime(seconds: timestamps[i + 1], preferredTimescale: 600)
+            
+            let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
+            exportSession?.outputFileType = .mp4
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMdd_HHmm"
+            let currentTimeString = dateFormatter.string(from: Date())
+            let outputURL = clipsDirectory.appendingPathComponent("clip_\(i)_\(currentTimeString).mp4")
+            
+            exportSession?.outputURL = outputURL
+            exportSession?.timeRange = CMTimeRange(start: startTime, end: endTime)
+            
+            exportSession?.exportAsynchronously {
+                switch exportSession?.status {
+                case .completed:
+                    print("Clip \(i) exported successfully to: \(outputURL)")
+                case .failed:
+                    print("Failed to export clip \(i): \(String(describing: exportSession?.error))")
+                case .cancelled:
+                    print("Export cancelled for clip \(i)")
+                default:
+                    break
+                }
+            }
         }
     }
     
@@ -171,46 +360,72 @@ class TrimViewController: UIViewController {
             preferredStyle: .alert
         )
         
-        // "Yes" action: Perform the unwind segue programmatically
         alertController.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
             self.performSegue(withIdentifier: "cancel", sender: nil)
         })
         
-        // "No" action: Dismiss the alert
         alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
-
     
-    func exportClip(from videoURL: URL, startTime: CMTime, endTime: CMTime, index: Int) {
-        let asset = AVAsset(url: videoURL)
-        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-        
-        exportSession?.outputFileType = .mp4
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmm"
-        let currentTimeString = dateFormatter.string(from: Date())
-        
-        let outputURL = videoURL.deletingLastPathComponent().appendingPathComponent("clip_\(index)_\(currentTimeString).mp4")
-        exportSession?.outputURL = outputURL
-        exportSession?.timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
-        
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Generate", message: "Generating clips \(index)...", preferredStyle: .alert)
-            self.present(alert, animated: true, completion: nil)
+    func processVideoForScenes(videoPath: String, minimumClipDuration:Int) {
+    let scenesArray = NSMutableArray()
+    
+        if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: Double(minimumClipDuration)) {
+        if error.hasError {
+            print("Error detecting scenes: \(error.message ?? "")")
+            return
         }
         
-        exportSession?.exportAsynchronously {
-            DispatchQueue.main.async {
-                if let presentedVC = self.presentedViewController, presentedVC is UIAlertController {
-                    presentedVC.dismiss(animated: true)
+        let scenes = scenesArray.compactMap { $0 as? SceneRange }
+        self.scenes = scenes
+    }
+    }
+    
+    func getResults(timestamps: [String], sceneRanges: [[Double]]) {
+        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
+        var request = URLRequest(url: apiURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let payload = [
+            "transcript": timestamps,
+            "sceneChanges": sceneRanges
+        ] as [String : Any]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: payload)
+            request.httpBody = jsonData
+            
+            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                if let error = error {
+                    print("API Error: \(error)")
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
+                           let videoURL = self?.videoList.first {
+                            DispatchQueue.main.async {
+                                self?.clipTimestamps = timestamps
+                                self?.exportClip(from: videoURL, timestamps: timestamps)
+                            }
+                        }
+                    } catch {
+                        print("JSON parsing error: \(error)")
+                    }
                 }
             }
+            task.resume()
+        } catch {
+            print("JSON serialization error: \(error)")
         }
     }
 }
+
+
 
 extension TrimViewController {
     @objc func keyboard(notification: Notification) {
@@ -222,20 +437,4 @@ extension TrimViewController {
             self.view.frame.origin.y = 0
         }
     }
-    
-//    @objc func textFieldDidChange(_ textField: UITextField) {
-//        let isProjectNameValid = !(promptTextField.text?.isEmpty ?? true)
-//        
-//        let existingProjects = UserDefaults.standard.array(forKey: "projects") as? [[String: String]] ?? []
-//        let projectNameExists = existingProjects.contains { $0["name"] == promptTextField.text }
-        
-//        generateButton.isEnabled = isProjectNameValid && !projectNameExists
-//        
-//        if projectNameExists {
-//            nameLabel.isHidden = false
-//            nameLabel.text = "Name already exists."
-//        } else {
-//            nameLabel.isHidden = true
-//        }
-//    }
 }

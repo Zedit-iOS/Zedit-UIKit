@@ -1,3 +1,4 @@
+
 //
 //  ColorViewController.swift
 //  Zedit-UIKit
@@ -26,15 +27,16 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var contrastLabel: UILabel!
     
     var projectNameColorGrade = String()
+    private var project: Project?
+    private var videoList: [URL] = []
     private var player: AVPlayer?
     private var playerViewController: AVPlayerViewController?
     private var colorPlayerLayer: AVPlayerLayer?
     private var asset: AVAsset?
     private var context: CIContext?
-    private var videoList: [URL] = []
-    
     private var timeObserverToken: (observer: Any, player: AVPlayer)?
     private var isNavigatingBack = false
+    fileprivate var playerObserver: Any?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,40 +46,31 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         navigationController?.delegate = self
         
-        self.navigationItem.hidesBackButton = true // Hide the default back button
+        self.navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
         
         if let videos = fetchVideos() {
             videoList = videos
             setUpVideoSelector()
-            if !videos.isEmpty {
-                loadVideo(url: videos[0])
-            }
         }
     }
     
     @objc func backButtonTapped() {
-            // Show the confirmation alert
-            let alert = UIAlertController(
-                title: "Confirm Navigation",
-                message: "Are you sure you want to go back? Unsaved changes may be lost.",
-                preferredStyle: .alert
-            )
-            
-            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
-                self.isNavigatingBack = true
-                self.navigationController?.popViewController(animated: true) // Proceed with back navigation
-            }))
-            
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in
-                // Do nothing, navigation is cancelled
-            }))
-            
-            present(alert, animated: true)
-        }
-
-
+        let alert = UIAlertController(
+            title: "Confirm Navigation",
+            message: "Are you sure you want to go back? Unsaved changes may be lost.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+            self.isNavigatingBack = true
+            self.navigationController?.popViewController(animated: true)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "No", style: .cancel))
+        present(alert, animated: true)
+    }
     
     private func setupSliders() {
         redSlider.minimumValue = 0
@@ -121,6 +114,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func loadVideo(url: URL) {
+        
         asset = AVAsset(url: url)
         let playerItem = AVPlayerItem(url: url)
         
@@ -132,10 +126,12 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         addPeriodicTimeObserver()
     }
-
+    
     private func setupColorAdjustedVideo(with url: URL) {
         guard let asset = AVAsset(url: url) as? AVURLAsset else { return }
-        let composition = AVMutableComposition()        
+        let composition = AVMutableComposition()
+        
+        // Insert video tracks
         let videoTracks = asset.tracks(withMediaType: .video)
         for assetTrack in videoTracks {
             guard let compositionTrack = composition.addMutableTrack(
@@ -146,16 +142,15 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                     CMTimeRange(start: .zero, duration: asset.duration),
                     of: assetTrack,
                     at: .zero)
-    } catch {
-        print("Error inserting track: \(error)")
-    }
-}
-
-let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] request in
-            guard let self = self else { return }
-            
-            let image = request.sourceImage
+            } catch {
+                print("Error inserting track: \(error)")
+            }
+        }
         
+        let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] request in
+            guard let self = self else { return }
+            let image = request.sourceImage
+            
             let colorKernel = """
                 kernel vec4 colorAdjust(__sample s, float redScale, float greenScale, float blueScale, float contrast) {
                     vec4 color = s.rgba;
@@ -171,15 +166,14 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
                 }
             """
             
-            guard let kernel =  CIColorKernel(source: colorKernel) else { return }
+            guard let kernel = CIColorKernel(source: colorKernel) else { return }
             
             let redScale = self.redSlider.value / 100.0
             let greenScale = self.greenSlider.value / 100.0
             let blueScale = self.blueSlider.value / 100.0
             let contrastScale = self.contrastSlider.value / 100.0
             
-            if let outputImage = kernel.apply(extent: image.extent,
-                                           arguments: [image, redScale, greenScale, blueScale, contrastScale]) {
+            if let outputImage = kernel.apply(extent: image.extent, arguments: [image, redScale, greenScale, blueScale, contrastScale]) {
                 request.finish(with: outputImage, context: self.context)
             } else {
                 request.finish(with: image, context: self.context)
@@ -191,39 +185,24 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
         
         let colorPlayer = AVPlayer(playerItem: playerItem)
         colorPlayerLayer?.player = colorPlayer
-        
         colorPlayer.rate = playerViewController?.player?.rate ?? 1.0
     }
     
-    
     private func addPeriodicTimeObserver() {
-
         if let token = timeObserverToken {
-
             token.player.removeTimeObserver(token.observer)
-
             timeObserverToken = nil
-
         }
-
         
-
         let interval = CMTime(seconds: 0.03, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-
+        
         if let player = playerViewController?.player {
-
             let observer = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-
                 self?.colorPlayerLayer?.player?.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
-
             }
-
             timeObserverToken = (observer: observer, player: player)
-
         }
-
     }
-
     
     @objc private func sliderValueChanged() {
         updateColorLabels()
@@ -233,10 +212,10 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
     }
     
     private func updateColorLabels() {
-        redLabel.text = String(format: "Red: %.1f %", redSlider.value)
-        greenLabel.text = String(format: "Green: %.1f %", greenSlider.value)
-        blueLabel.text = String(format: "Blue: %.1f %", blueSlider.value)
-        contrastLabel.text = String(format: "Contrast: %.1f %", contrastSlider.value)
+        redLabel.text = String(format: "Red: %.1f%%", redSlider.value)
+        greenLabel.text = String(format: "Green: %.1f%%", greenSlider.value)
+        blueLabel.text = String(format: "Blue: %.1f%%", blueSlider.value)
+        contrastLabel.text = String(format: "Contrast: %.1f%%", contrastSlider.value)
     }
     
     override func viewDidLayoutSubviews() {
@@ -245,48 +224,86 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
         colorPlayerLayer?.frame = colorVideoPlayer.bounds
     }
     
-    
     deinit {
         if let token = timeObserverToken {
             token.player.removeTimeObserver(token.observer)
         }
-
     }
     
-    private func fetchVideos() -> [URL]? {
-        guard let project = getProjects(ProjectName: projectNameColorGrade) else {
-            print("Failed to get project")
-            return nil
+    func fetchVideos() -> [URL]? {
+        guard let project = getProject(projectName: projectNameColorGrade) else {
+            print("Failure: Could not get project")
+            return []
         }
-        return project.videos
+        
+        var allVideos: [URL] = []
+        
+        // Fetch videos from "clips" folder
+        if let clipsFolder = project.subfolders.first(where: { $0.name == "Clips" }) {
+            print("Found \(clipsFolder.videoURLS.count) videos in the clips folder")
+            allVideos.append(contentsOf: clipsFolder.videoURLS)
+        }
+        
+        // Fetch videos from "original videos" folder
+        if let originalFolder = project.subfolders.first(where: { $0.name == "Original Videos" }) {
+            print("Found \(originalFolder.videoURLS.count) videos in the original videos folder")
+            allVideos.append(contentsOf: originalFolder.videoURLS)
+        }
+        
+        if allVideos.isEmpty {
+            print("No videos found in 'clips' or 'original videos' folders.")
+        } else {
+            print("Total videos found: \(allVideos.count)")
+        }
+        
+        return allVideos
     }
     
-    private func getProjects(ProjectName: String) -> Project? {
+    func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
+        
         guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to access directory")
+            print("Unable to access documents directory.")
             return nil
         }
         
-        let projectsDirectory = documentsDirectory.appendingPathComponent(ProjectName)
-        guard fileManager.fileExists(atPath: projectsDirectory.path) else {
-            print("Folder does not exist")
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        
+        guard fileManager.fileExists(atPath: projectDirectory.path) else {
+            print("Project folder does not exist.")
             return nil
         }
         
         do {
-            let videoFiles = try fileManager.contentsOfDirectory(at: projectsDirectory, includingPropertiesForKeys: nil, options: [])
-                .filter { ["mp4", "mov", "m4v", "avi", "mkv"].contains($0.pathExtension.lowercased()) }
-            return Project(name: ProjectName, videos: videoFiles)
+            var subfolders: [Subfolder] = []
+            let predefinedSubfolderNames = ["Original Videos", "Clips", "Colour Graded Videos"]
+            
+            for subfolderName in predefinedSubfolderNames {
+                let subfolderURL = projectDirectory.appendingPathComponent(subfolderName)
+                var videoURLs: [URL] = []
+                
+                if fileManager.fileExists(atPath: subfolderURL.path) {
+                    let videoFiles = try fileManager.contentsOfDirectory(at: subfolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                    videoURLs = videoFiles.filter { ["mp4", "mov"].contains($0.pathExtension.lowercased()) }
+                }
+                
+                subfolders.append(Subfolder(name: subfolderName, videos: videoURLs))
+            }
+            
+            return Project(name: projectName, subfolders: subfolders)
         } catch {
-            print("Failed to fetch files: \(error)")
+            print("Error reading project folder: \(error.localizedDescription)")
             return nil
         }
     }
     
     private func setUpVideoSelector() {
-        videoSelectorButton.isEnabled = !videoList.isEmpty
+        guard !videoList.isEmpty else {
+            videoSelectorButton.isEnabled = false
+            return
+        }
         
+        videoSelectorButton.isEnabled = true
         let actionClosure = { (action: UIAction) in
             if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
                 self.loadVideo(url: selectedVideo)
@@ -302,124 +319,152 @@ let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] req
     }
     
     @IBAction func applyChanges(_ sender: UIButton) {
-    guard let asset = asset,
-          let url = (asset as? AVURLAsset)?.url else { return }
-    
-    let composition = AVMutableComposition()
-    
-    // Handle all video tracks
-    let videoTracks = asset.tracks(withMediaType: .video)
-    for assetTrack in videoTracks {
-        guard let compositionTrack = composition.addMutableTrack(
-            withMediaType: .video,
-            preferredTrackID: assetTrack.trackID) else { continue }
+        guard let asset = asset,
+              let url = (asset as? AVURLAsset)?.url else { return }
         
-        do {
-            try compositionTrack.insertTimeRange(
-                CMTimeRange(start: .zero, duration: asset.duration),
-                of: assetTrack,
-                at: .zero)
-        } catch {
-            print("Error inserting video track: \(error)")
-            return
-        }
-    }
-    
-    // Handle audio tracks if present
-    let audioTracks = asset.tracks(withMediaType: .audio)
-    for audioTrack in audioTracks {
-        guard let compositionAudioTrack = composition.addMutableTrack(
-            withMediaType: .audio,
-            preferredTrackID: audioTrack.trackID) else { continue }
+        let composition = AVMutableComposition()
         
-        do {
-            try compositionAudioTrack.insertTimeRange(
-                CMTimeRange(start: .zero, duration: asset.duration),
-                of: audioTrack,
-                at: .zero)
-        } catch {
-            print("Error inserting audio track: \(error)")
-        }
-    }
-    
-    let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] request in
-        guard let self = self else { return }
-        
-        let image = request.sourceImage
-        
-        let colorKernel = """
-            kernel vec4 colorAdjust(__sample s, float redScale, float greenScale, float blueScale, float contrast) {
-                vec4 color = s.rgba;
-                color.r *= redScale;
-                color.g *= greenScale;
-                color.b *= blueScale;
-                
-                float factor = (contrast * 2.0) - 1.0;
-                vec4 mean = vec4(0.5, 0.5, 0.5, 0.5);
-                color = mix(mean, color, 1.0 + factor);
-                
-                return clamp(color, vec4(0.0), vec4(1.0));
-            }
-        """
-       
-        guard let kernel = try? CIColorKernel(source: colorKernel) else { return }
-        
-        let redScale = self.redSlider.value / 100.0
-        let greenScale = self.greenSlider.value / 100.0
-        let blueScale = self.blueSlider.value / 100.0
-        let contrastScale = self.contrastSlider.value / 100.0
-        
-        if let outputImage = kernel.apply(extent: image.extent,
-                                       arguments: [image, redScale, greenScale, blueScale, contrastScale]) {
-            request.finish(with: outputImage, context: self.context)
-        } else {
-            request.finish(with: image, context: self.context)
-        }
-    }
-    
-    guard let exportSession = AVAssetExportSession(
-        asset: composition,
-        presetName: AVAssetExportPresetHighestQuality) else { return }
-    
-    let outputURL = url.deletingLastPathComponent()
-        .appendingPathComponent("color_" + url.lastPathComponent)
-    
-    try? FileManager.default.removeItem(at: outputURL)
-    
-    exportSession.outputURL = outputURL
-    exportSession.outputFileType = .mp4
-    exportSession.videoComposition = videoComposition
-    
-    let alert = UIAlertController(title: "Applying color grading",
-                                  message: "Please wait...",
-                                  preferredStyle: .alert)
-    present(alert, animated: true)
-    
-    exportSession.exportAsynchronously {
-        DispatchQueue.main.async {
-            alert.dismiss(animated: true)
+        // Handle video tracks
+        let videoTracks = asset.tracks(withMediaType: .video)
+        for assetTrack in videoTracks {
+            guard let compositionTrack = composition.addMutableTrack(
+                withMediaType: .video,
+                preferredTrackID: assetTrack.trackID) else { continue }
             
-            switch exportSession.status {
-            case .completed:
-                let successAlert = UIAlertController(
-                    title: "Success",
-                    message: "Video exported successfully",
-                    preferredStyle: .alert)
-                successAlert.addAction(UIAlertAction(title: "OK", style: .default))
-                self.present(successAlert, animated: true)
-                
-            case .failed, .cancelled:
-                let errorAlert = UIAlertController(
-                    title: "Error",
-                    message: exportSession.error?.localizedDescription ?? "Export failed",
-                    preferredStyle: .alert)
-                errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
-                self.present(errorAlert, animated: true)
-                
-            default:
-                break
+            do {
+                try compositionTrack.insertTimeRange(
+                    CMTimeRange(start: .zero, duration: asset.duration),
+                    of: assetTrack,
+                    at: .zero)
+            } catch {
+                print("Error inserting video track: \(error)")
+                return
+            }
+        }
+        
+        // Handle audio tracks
+        let audioTracks = asset.tracks(withMediaType: .audio)
+        for audioTrack in audioTracks {
+            guard let compositionAudioTrack = composition.addMutableTrack(
+                withMediaType: .audio,
+                preferredTrackID: audioTrack.trackID) else { continue }
+            
+            do {
+                try compositionAudioTrack.insertTimeRange(
+                    CMTimeRange(start: .zero, duration: asset.duration),
+                    of: audioTrack,
+                    at: .zero)
+            } catch {
+                print("Error inserting audio track: \(error)")
+            }
+        }
+        
+        // Define the color adjustment kernel
+        let videoComposition = AVMutableVideoComposition(asset: asset) { [weak self] request in
+            guard let self = self else { return }
+            
+            let image = request.sourceImage
+            
+            let colorKernel = """
+                kernel vec4 colorAdjust(__sample s, float redScale, float greenScale, float blueScale, float contrast) {
+                    vec4 color = s.rgba;
+                    color.r *= redScale;
+                    color.g *= greenScale;
+                    color.b *= blueScale;
+                    
+                    float factor = (contrast * 2.0) - 1.0;
+                    vec4 mean = vec4(0.5, 0.5, 0.5, 0.5);
+                    color = mix(mean, color, 1.0 + factor);
+                    
+                    return clamp(color, vec4(0.0), vec4(1.0));
+                }
+            """
+            
+            guard let kernel = try? CIColorKernel(source: colorKernel) else { return }
+            
+            let redScale = self.redSlider.value / 100.0
+            let greenScale = self.greenSlider.value / 100.0
+            let blueScale = self.blueSlider.value / 100.0
+            let contrastScale = self.contrastSlider.value / 100.0
+            
+            if let outputImage = kernel.apply(extent: image.extent,
+                                              arguments: [image, redScale, greenScale, blueScale, contrastScale]) {
+                request.finish(with: outputImage, context: self.context)
+            } else {
+                request.finish(with: image, context: self.context)
+            }
+        }
+        
+        guard let exportSession = AVAssetExportSession(
+            asset: composition,
+            presetName: AVAssetExportPresetHighestQuality) else { return }
+        
+        // Determine the output URL
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let projectFolder = documentsDirectory.appendingPathComponent(projectNameColorGrade)
+        let outputFolder = projectFolder.appendingPathComponent("Colour Graded Videos")
+        
+        // Create the output folder if it doesn't exist
+        if !FileManager.default.fileExists(atPath: outputFolder.path) {
+            do {
+                try FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
+            } catch {
+                print("Error creating directory: \(error)")
+                return
+            }
+        }
+        
+        // Create a color-graded file name
+        let originalFileName = url.deletingPathExtension().lastPathComponent
+        let colorGradedFileName = "\(originalFileName)_ColourGraded.mp4"
+        let outputURL = outputFolder.appendingPathComponent(colorGradedFileName)
+        
+        // Check for existing file and remove if necessary
+        if FileManager.default.fileExists(atPath: outputURL.path) {
+            do {
+                try FileManager.default.removeItem(at: outputURL)
+            } catch {
+                print("Error removing existing file: \(error)")
+                return
+            }
+        }
+        
+        // Configure the export session
+        exportSession.outputFileType = .mp4
+        exportSession.outputURL = outputURL
+        exportSession.videoComposition = videoComposition
+        
+        // Display a progress alert
+        let alert = UIAlertController(title: "Exporting", message: "Color grading in progress...", preferredStyle: .alert)
+        present(alert, animated: true)
+        
+        exportSession.exportAsynchronously { [weak self] in
+            DispatchQueue.main.async {
+                alert.dismiss(animated: true) {
+                    guard let self = self else { return }
+                    switch exportSession.status {
+                    case .completed:
+                        let successAlert = UIAlertController(
+                            title: "Export Successful",
+                            message: "File exported to: \(outputURL.lastPathComponent)",
+                            preferredStyle: .alert
+                        )
+                        successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(successAlert, animated: true)
+                    case .failed, .cancelled:
+                        let errorAlert = UIAlertController(
+                            title: "Export Failed",
+                            message: exportSession.error?.localizedDescription ?? "Unknown error occurred.",
+                            preferredStyle: .alert
+                        )
+                        errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(errorAlert, animated: true)
+                    default:
+                        break
+                    }
+                }
             }
         }
     }
-}
+
 }
