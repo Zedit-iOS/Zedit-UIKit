@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
+		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
+		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
 		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
 		3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605682CEB203900C11189 /* ProjectsTableViewController.swift */; };
@@ -24,6 +27,7 @@
 		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
+		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -32,6 +36,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		377215B32D26C54800F125B1 /* CVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVWrapper.h; sourceTree = "<group>"; };
+		377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
+		377215B52D26C5DE00F125B1 /* CVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CVWrapper.mm; sourceTree = "<group>"; };
+		377215B72D26C67100F125B1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		377215B82D26C74300F125B1 /* opencv2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = opencv2.xcframework; path = ../opencv2.xcframework; sourceTree = "<group>"; };
+		377215BA2D26C77600F125B1 /* CVFuntions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFuntions.hpp; sourceTree = "<group>"; };
+		377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
 		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		379605542CEB203900C11189 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		379605552CEB203900C11189 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
@@ -49,7 +61,7 @@
 		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
 		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
 		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
-		E1BC32B02CCF78BE0026C60F /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Zedit.app; path = "/Users/vr/Development/Zedit/Zedit-UIKit/build/Debug-iphoneos/Zedit.app"; sourceTree = "<absolute>"; };
+		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -63,6 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
+				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,16 +149,27 @@
 			path = "Table View Projects";
 			sourceTree = "<group>";
 		};
+		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				377215B82D26C74300F125B1 /* opencv2.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E1BC32A72CCF78BE0026C60F = {
 			isa = PBXGroup;
 			children = (
 				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
+				E192DDBC2D0851B6006D8F6A /* Zedit.app */,
+				E192DDBD2D0EDA12006D8F6A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				377215B12D26C50200F125B1 /* opencv2.framework */,
 				379605532CEB203900C11189 /* Colour Grading */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
 				3796055A2CEB203900C11189 /* Export Videos */,
@@ -158,6 +183,12 @@
 				E1BC32BC2CCF78C10026C60F /* Assets.xcassets */,
 				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
 				E1BC32C12CCF78C10026C60F /* Info.plist */,
+				377215B32D26C54800F125B1 /* CVWrapper.h */,
+				377215BA2D26C77600F125B1 /* CVFuntions.hpp */,
+				377215B52D26C5DE00F125B1 /* CVWrapper.mm */,
+				377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */,
+				377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */,
+				377215B72D26C67100F125B1 /* PrefixHeader.pch */,
 			);
 			path = "Zedit-UIKit";
 			sourceTree = "<group>";
@@ -179,7 +210,7 @@
 			);
 			name = "Zedit-UIKit";
 			productName = "Zedit-UIKit";
-			productReference = E1BC32B02CCF78BE0026C60F /* Zedit.app */;
+			productReference = E192DDBC2D0851B6006D8F6A /* Zedit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -243,9 +274,11 @@
 				3796056E2CEB203900C11189 /* TrimVideoPreviewViewController.swift in Sources */,
 				3796056F2CEB203900C11189 /* Project.swift in Sources */,
 				379605702CEB203900C11189 /* MainPageViewController.swift in Sources */,
+				377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */,
 				379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */,
 				379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */,
 				379605732CEB203900C11189 /* safe+extension.swift in Sources */,
+				377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */,
 				379605742CEB203900C11189 /* ExportViewController.swift in Sources */,
 				379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */,
 				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
@@ -406,6 +439,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZS7X249735;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Zedit-UIKit",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
@@ -424,7 +463,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -440,6 +479,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZS7X249735;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Zedit-UIKit",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
@@ -458,7 +503,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
