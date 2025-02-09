@@ -283,6 +283,13 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             print("Wrong identifier or cancelled")
             return
         }
+        if let sourceVC = unwindSegue.source as? CreateProjectViewController {
+                // Pause the player
+                sourceVC.player?.pause()
+            } else {
+                print("Source view controller is not of type CreateProjectViewController")
+            }
+        //player?.pause()
         
         print("Before loading projects")
         loadProjects()
