@@ -22,8 +22,9 @@ class MainPageViewController: UIViewController {
     var playerViewController: AVPlayerViewController?
     let trimSegueIdentifier = "Trim"
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
         
         if let project = getProject(projectName: projectname) {
             videoList = project.subfolders.flatMap { $0.videoURLS }
@@ -43,7 +44,31 @@ class MainPageViewController: UIViewController {
             }
         
         navigationItem.title = projectname
+        
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        if let project = getProject(projectName: projectname) {
+//            videoList = project.subfolders.flatMap { $0.videoURLS }
+//            print("Videos successfully loaded: \(videoList.count) videos found.")
+//            setUpButton()
+//            if let firstVideo = videoList.first {
+//                playVideo(url: firstVideo)
+//            }
+//        } else {
+//            print("Failed to load project.")
+//        }
+//        do {
+//                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
+//                try AVAudioSession.sharedInstance().setActive(true)
+//            } catch {
+//                print("Error setting up AVAudioSession: \(error.localizedDescription)")
+//            }
+//        
+//        navigationItem.title = projectname
+//    }
     
     
     override func viewWillDisappear(_ animated: Bool) {
