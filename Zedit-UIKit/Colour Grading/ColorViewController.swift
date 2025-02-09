@@ -55,6 +55,13 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             setUpVideoSelector()
         }
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+    }
     
     @objc func backButtonTapped() {
         let alert = UIAlertController(
