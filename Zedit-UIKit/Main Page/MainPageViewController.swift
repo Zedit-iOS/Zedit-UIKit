@@ -118,9 +118,9 @@ class MainPageViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//    }
     
     func setUpButton() {
         guard !videoList.isEmpty else {
