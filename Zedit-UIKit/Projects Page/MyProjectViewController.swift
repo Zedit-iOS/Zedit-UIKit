@@ -24,7 +24,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         self.setupSearchController()
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "My Projects"
-        navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItem = editButtonItem
         
         projectsCollectionView.dataSource = self
         projectsCollectionView.delegate = self

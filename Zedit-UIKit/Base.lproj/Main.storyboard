@@ -124,13 +124,7 @@
                             <constraint firstItem="VlY-60-N81" firstAttribute="bottom" secondItem="I4N-Wn-d8f" secondAttribute="bottom" constant="5" id="tbz-Hd-32y"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="XZH-BY-trp">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="aIg-kF-Rbh">
-                            <connections>
-                                <segue destination="yWS-xt-nX1" kind="presentation" identifier="Create2" id="qqA-1n-aKM"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="XZH-BY-trp"/>
                     <connections>
                         <outlet property="projectsCollectionView" destination="vFO-JR-S6s" id="bzH-8G-j6i"/>
                     </connections>
@@ -883,9 +877,6 @@
             <point key="canvasLocation" x="137" y="-675"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="zhC-S8-Szd"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="camera.filters" catalog="system" width="128" height="119"/>
         <image name="diamond.circle" catalog="system" width="128" height="123"/>
