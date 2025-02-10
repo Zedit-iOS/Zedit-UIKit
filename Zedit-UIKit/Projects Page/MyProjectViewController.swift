@@ -24,7 +24,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         self.setupSearchController()
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "My Projects"
-        navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItem = editButtonItem
         
         projectsCollectionView.dataSource = self
         projectsCollectionView.delegate = self
@@ -66,10 +66,10 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         // Create a group size
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(200))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(150))
         
         // Create a horizontal group
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 1)
         group.interItemSpacing = .fixed(20)  // Horizontal spacing between items
         
         // Create a section with vertical spacing between groups
@@ -108,9 +108,9 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
 
         cell.layer.borderColor = UIColor.white.cgColor
         cell.layer.borderWidth = 3
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOffset = CGSize(width: 1.0, height: 4.0)
-        cell.layer.masksToBounds = false
+//        cell.layer.shadowColor = UIColor.black.cgColor
+//        cell.layer.shadowOffset = CGSize(width: 1.0, height: 4.0)
+//        cell.layer.masksToBounds = false
 
         let project = filteredProjects[indexPath.item]  // Get project from filtered array
         cell.update(with: project)
@@ -283,6 +283,13 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             print("Wrong identifier or cancelled")
             return
         }
+        if let sourceVC = unwindSegue.source as? CreateProjectViewController {
+                // Pause the player
+                sourceVC.player?.pause()
+            } else {
+                print("Source view controller is not of type CreateProjectViewController")
+            }
+        //player?.pause()
         
         print("Before loading projects")
         loadProjects()
