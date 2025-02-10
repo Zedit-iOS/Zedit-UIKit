@@ -32,6 +32,14 @@ class TrimVideoPreviewViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+    }
+    
     deinit {
         // Invalidate the timer when the view controller is deallocated
         checkClipsTimer?.invalidate()
