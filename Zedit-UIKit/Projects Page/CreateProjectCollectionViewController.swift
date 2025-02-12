@@ -293,16 +293,16 @@ extension CreateProjectCollectionViewController {
 // MARK: - TextField and Keyboard Handling
 extension CreateProjectCollectionViewController {
     @objc func keyboard(notification: Notification) {
-        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-            return
-        }
-        
-        if notification.name == UIResponder.keyboardWillShowNotification ||
-            notification.name == UIResponder.keyboardWillChangeFrameNotification {
-            view.frame.origin.y = -keyboardRect.height
-        } else {
-            view.frame.origin.y = 0
-        }
+//        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+//            return
+//        }
+//        
+//        if notification.name == UIResponder.keyboardWillShowNotification ||
+//            notification.name == UIResponder.keyboardWillChangeFrameNotification {
+//            view.frame.origin.y = -keyboardRect.height
+//        } else {
+//            view.frame.origin.y = 0
+//        }
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
