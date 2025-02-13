@@ -384,7 +384,7 @@ func transcribeAudio(at audioURL: URL) {
     }
     
     func getResults(timestamps: [String], sceneRanges: [[Double]]) {
-        let apiURL = URL(string: "https://jqz31hwh-8000.inc1.devtunnels.ms/getClipTimeStamps")!
+        let apiURL = URL(string: "https://gvnn439j-8000.inc1.devtunnels.ms/getClipTimeStamps")!
         var request = URLRequest(url: apiURL)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -429,6 +429,7 @@ func transcribeAudio(at audioURL: URL) {
 
 extension TrimViewController {
     @objc func keyboard(notification: Notification) {
+
 //        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
 //        
 //        if notification.name == UIResponder.keyboardWillShowNotification || notification.name == UIResponder.keyboardWillChangeFrameNotification {
