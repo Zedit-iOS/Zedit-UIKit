@@ -10,6 +10,23 @@ import AVFoundation
 
 class MyProjectViewControllerCell: UICollectionViewCell {
 
+    private var customSelected: Bool = false
+    
+    override var isSelected: Bool {
+        get { return customSelected }
+        set { 
+            customSelected = newValue
+            updateSelectionAppearance(newValue)
+        }
+    }
+
+    private func updateSelectionAppearance(_ selected: Bool) {
+        selectionOverlay.isHidden = !selected
+        checkmarkImageView.isHidden = !selected
+        contentView.backgroundColor = selected ? .systemBlue.withAlphaComponent(0.3) : .clear
+        deleteButton.isHidden = !selected
+    }
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -32,6 +49,22 @@ class MyProjectViewControllerCell: UICollectionViewCell {
         return button
     }()
     
+    private let selectionOverlay: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.blue.withAlphaComponent(0.3)
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let checkmarkImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+        imageView.tintColor = .white
+        imageView.isHidden = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     var deleteAction: (() -> Void)?
 
     override init(frame: CGRect) {
@@ -46,7 +79,9 @@ class MyProjectViewControllerCell: UICollectionViewCell {
 
     private func setupUI() {
         contentView.addSubview(titleLabel)
-        contentView.addSubview(deleteButton)
+//        contentView.addSubview(deleteButton)
+        contentView.addSubview(selectionOverlay)
+        contentView.addSubview(checkmarkImageView)
 
         // Constraints for the title label at the bottom
         NSLayoutConstraint.activate([
@@ -57,11 +92,23 @@ class MyProjectViewControllerCell: UICollectionViewCell {
         ])
 
         // Layout for delete button at top-right
+//        NSLayoutConstraint.activate([
+//            deleteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+//            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+//            deleteButton.widthAnchor.constraint(equalToConstant: 24),
+//            deleteButton.heightAnchor.constraint(equalToConstant: 24)
+//        ])
+//        
         NSLayoutConstraint.activate([
-            deleteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            deleteButton.widthAnchor.constraint(equalToConstant: 24),
-            deleteButton.heightAnchor.constraint(equalToConstant: 24)
+            selectionOverlay.topAnchor.constraint(equalTo: contentView.topAnchor),
+            selectionOverlay.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            selectionOverlay.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            selectionOverlay.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            checkmarkImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            checkmarkImageView.widthAnchor.constraint(equalToConstant: 24),
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 24)
         ])
 
         layer.cornerRadius = 8
@@ -118,6 +165,11 @@ class MyProjectViewControllerCell: UICollectionViewCell {
     func showDeleteButton(_ show: Bool, deleteAction: @escaping () -> Void) {
         deleteButton.isHidden = !show
         self.deleteAction = deleteAction
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isSelected = false
     }
 
     @objc private func deleteTapped() {

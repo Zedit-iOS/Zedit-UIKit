@@ -18,13 +18,25 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
     var filteredProjects: [Project] = []  // Array to hold filtered projects based on search
     
     var isEditingMode = false
+    private var selectedIndexPaths = Set<IndexPath>()
+    private lazy var deleteBarButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "trash"),
+            style: .plain,
+            target: self,
+            action: #selector(deleteSelectedItems)
+        )
+        button.tintColor = .red
+        button.isEnabled = false
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupSearchController()
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "My Projects"
-        navigationItem.rightBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItem = deleteBarButton
         
         projectsCollectionView.dataSource = self
         projectsCollectionView.delegate = self
@@ -40,6 +52,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         loadProjects()
         filteredProjects = projects// Initially, show all projects
         print(projects)
+        setupLongPressGesture()
     }
     
 
@@ -311,6 +324,48 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             updateTimesVisited(for: selectedProjectName)
             destination.projectname = filteredProjects[indexPath.item].name
         }
+    }
+    
+    private func setupLongPressGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(handleLongPress(_:))
+        )
+        projectsCollectionView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            let point = gesture.location(in: projectsCollectionView)
+            if let indexPath = projectsCollectionView.indexPathForItem(at: point) {
+                toggleSelection(at: indexPath)
+            }
+        }
+    }
+    
+    private func toggleSelection(at indexPath: IndexPath) {
+        if selectedIndexPaths.contains(indexPath) {
+            selectedIndexPaths.remove(indexPath)
+        } else {
+            selectedIndexPaths.insert(indexPath)
+        }
+        
+        if let cell = projectsCollectionView.cellForItem(at: indexPath) as? MyProjectViewControllerCell {
+            cell.isSelected = !cell.isSelected  // Use isSelected property instead of setSelected
+        }
+        
+        deleteBarButton.isEnabled = !selectedIndexPaths.isEmpty
+    }
+    
+    @objc private func deleteSelectedItems() {
+        let sortedIndexPaths = selectedIndexPaths.sorted(by: >)
+        
+        for indexPath in sortedIndexPaths {
+            deleteProject(at: indexPath)
+        }
+        
+        selectedIndexPaths.removeAll()
+        deleteBarButton.isEnabled = false
     }
 }
 
