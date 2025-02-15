@@ -26,7 +26,11 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
-    var selectedVideoURL: URL?
+    var selectedVideoURL: URL? {
+            didSet {
+                updateVideoPreviewView()
+            }
+        }
     
     var projects: [Project] = []
     
@@ -41,6 +45,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             } catch {
                 print("Error setting up AVAudioSession: \(error.localizedDescription)")
             }
+        updateVideoPreviewView()
     }
     
     private func loadProjects() {
@@ -80,6 +85,49 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         videoPlayerView.layer.borderWidth = 1
         videoPlayerView.layer.borderColor = UIColor.lightGray.cgColor
     }
+    
+    private func updateVideoPreviewView() {
+            videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
+
+            if let videoURL = selectedVideoURL {
+                // Video is selected -> Show player
+                playVideo(url: videoURL)
+                selectProjectButton.isHidden = false
+                videoPlayerView.isUserInteractionEnabled = false // Disable tap selection
+            } else {
+                // No video -> Show placeholder UI
+                let placeholderView = UIView(frame: videoPlayerView.bounds)
+                placeholderView.backgroundColor = UIColor.systemGray5
+                placeholderView.layer.cornerRadius = 10
+                placeholderView.clipsToBounds = true
+
+                let imageView = UIImageView(image: UIImage(systemName: "video.fill"))
+                imageView.tintColor = .gray
+                imageView.contentMode = .scaleAspectFit
+                imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+                imageView.center = CGPoint(x: videoPlayerView.bounds.midX, y: videoPlayerView.bounds.midY - 10)
+
+                let label = UILabel(frame: CGRect(x: 0, y: imageView.frame.maxY + 10, width: videoPlayerView.bounds.width, height: 20))
+                label.text = "Tap to select video"
+                label.textAlignment = .center
+                label.textColor = .gray
+                label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+
+                placeholderView.addSubview(imageView)
+                placeholderView.addSubview(label)
+                videoPlayerView.addSubview(placeholderView)
+
+                videoPlayerView.isUserInteractionEnabled = true // Enable tap selection
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectVideoButtonTapped))
+                videoPlayerView.addGestureRecognizer(tapGesture)
+
+                selectProjectButton.isHidden = true // Hide button when placeholder is shown
+            }
+        }
+//    
+//    @objc private func selectVideoButtonTapped() {
+//            presentVideoSourceOptions()
+//        }
     
     @IBAction func selectVideoButtonTapped(_ sender: UIButton) {
         presentVideoSourceOptions()
@@ -305,7 +353,7 @@ extension CreateProjectCollectionViewController {
 //        
        if notification.name == UIResponder.keyboardWillShowNotification ||
            notification.name == UIResponder.keyboardWillChangeFrameNotification {
-           view.frame.origin.y = -keyboardRect.height
+           view.frame.origin.y = 0
        } else {
            view.frame.origin.y = 0
        }
