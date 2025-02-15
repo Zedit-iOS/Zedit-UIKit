@@ -39,6 +39,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         setupUI()
         loadProjects()
         setupNotifications()
+        setDefaultProjectName()
         do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
                 try AVAudioSession.sharedInstance().setActive(true)
@@ -46,6 +47,23 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 print("Error setting up AVAudioSession: \(error.localizedDescription)")
             }
         updateVideoPreviewView()
+    }
+    private func setDefaultProjectName() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: Date())
+        
+        var projectNumber = 1
+        var projectName: String
+        let existingProjectNames = retrieveProjects().map { $0.name }
+        
+        repeat {
+            projectName = "\(dateString)-project-\(projectNumber)"
+            projectNumber += 1
+        } while existingProjectNames.contains(projectName)
+        
+        projectNameTextField.text = projectName
+        textFieldDidChange(projectNameTextField) // Trigger validation
     }
     
     private func loadProjects() {
