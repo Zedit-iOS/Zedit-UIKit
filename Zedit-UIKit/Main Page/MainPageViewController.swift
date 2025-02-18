@@ -44,7 +44,13 @@ class MainPageViewController: UIViewController {
             }
         
         navigationItem.title = projectname
+        self.navigationItem.hidesBackButton = true
+        let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
         
+    }
+    
+    @objc func backButtonTapped(){
+        self.navigationController?.popToRootViewController(animated: false)
     }
     
 //    override func viewWillAppear(_ animated: Bool) {

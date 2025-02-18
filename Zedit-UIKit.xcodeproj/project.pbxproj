@@ -3,11 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
 		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
 		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
@@ -27,21 +26,20 @@
 		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
-		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
+		E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D22D62F8510034F916 /* opencv2.framework */; };
+		E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D62D62F8B80034F916 /* opencv2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		377215B32D26C54800F125B1 /* CVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVWrapper.h; sourceTree = "<group>"; };
 		377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		377215B52D26C5DE00F125B1 /* CVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CVWrapper.mm; sourceTree = "<group>"; };
 		377215B72D26C67100F125B1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		377215B82D26C74300F125B1 /* opencv2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = opencv2.xcframework; path = ../opencv2.xcframework; sourceTree = "<group>"; };
 		377215BA2D26C77600F125B1 /* CVFuntions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFuntions.hpp; sourceTree = "<group>"; };
 		377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
 		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
@@ -68,15 +66,21 @@
 		E1BC32BC2CCF78C10026C60F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1BC32BF2CCF78C10026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1FD21D22D62F8510034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Downloads/opencv2.framework; sourceTree = "<group>"; };
+		E1FD21D62D62F8B80034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		E1FD21D82D63932C0034F916 /* Projects2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Projects2; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E1BC32AD2CCF78BE0026C60F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
-				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
+				E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */,
+				E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +156,7 @@
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				377215B82D26C74300F125B1 /* opencv2.xcframework */,
+				E1FD21D22D62F8510034F916 /* opencv2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,12 +173,13 @@
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				377215B12D26C50200F125B1 /* opencv2.framework */,
+				E1FD21D62D62F8B80034F916 /* opencv2.framework */,
 				379605532CEB203900C11189 /* Colour Grading */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
 				3796055A2CEB203900C11189 /* Export Videos */,
 				3796055F2CEB203900C11189 /* Generate Clips */,
 				379605612CEB203900C11189 /* Main Page */,
+				E1FD21D82D63932C0034F916 /* Projects2 */,
 				379605652CEB203900C11189 /* Projects Page */,
 				379605692CEB203900C11189 /* Table View Projects */,
 				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
@@ -207,6 +212,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E1FD21D82D63932C0034F916 /* Projects2 */,
 			);
 			name = "Zedit-UIKit";
 			productName = "Zedit-UIKit";
@@ -438,10 +446,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS7X249735;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -450,6 +458,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -478,10 +487,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZS7X249735;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/**",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -490,6 +499,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
 				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
