@@ -155,6 +155,7 @@
                                                 <connections>
                                                     <outlet property="projectDetailsLabel" destination="Se1-xH-nvz" id="VA7-QL-Thw"/>
                                                     <outlet property="projectNameLabel" destination="Caa-4z-XtB" id="aBV-oW-cOx"/>
+                                                    <segue destination="9Lp-0K-qM7" kind="show" identifier="HomeMain" id="41F-4h-AHy"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
@@ -1048,8 +1049,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qwn-dj-PL0"/>
-        <segue reference="sgf-hx-G6G"/>
+        <segue reference="41F-4h-AHy"/>
+        <segue reference="zhC-S8-Szd"/>
         <segue reference="aCe-Es-j7s"/>
     </inferredMetricsTieBreakers>
     <resources>
