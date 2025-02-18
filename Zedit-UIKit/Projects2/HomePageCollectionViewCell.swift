@@ -105,27 +105,28 @@ class HomePageCollectionViewCell: UICollectionViewCell {
     
     
     private func generateThumbnail(from url: URL) {
+        let asset = AVAsset(url: url)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+
+        let time = CMTime(seconds: 1.0, preferredTimescale: 600)
+
         DispatchQueue.global().async {
-            let asset = AVAsset(url: url)
-            let assetImageGenerator = AVAssetImageGenerator(asset: asset)
-            assetImageGenerator.appliesPreferredTrackTransform = true
-            
-            let time = CMTime(seconds: 1, preferredTimescale: 600)
             do {
-                let cgImage = try assetImageGenerator.copyCGImage(at: time, actualTime: nil)
+                let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
                 let thumbnail = UIImage(cgImage: cgImage)
-                
+
                 DispatchQueue.main.async {
                     self.thumbnailImageView.image = thumbnail
                 }
             } catch {
+                print("Error generating thumbnail: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.setPlaceholderThumbnail()
                 }
             }
         }
     }
-
     private func setPlaceholderThumbnail() {
         DispatchQueue.main.async {
             self.thumbnailImageView.image = UIImage(systemName: "video") // Placeholder icon
