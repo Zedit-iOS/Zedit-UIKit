@@ -102,6 +102,8 @@ class HomePageCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    
+    
     private func generateThumbnail(from url: URL) {
         DispatchQueue.global().async {
             let asset = AVAsset(url: url)

@@ -208,4 +208,49 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         // Save the updated array back to UserDefaults
         UserDefaults.standard.setValue(projects, forKey: "projects")
     }
+    
+    func updateTimesVisited(for projectName: String) {
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access the documents directory.")
+            return
+        }
+
+        let projectDirectory = documentsDirectory.appendingPathComponent(projectName)
+        let metadataURL = projectDirectory.appendingPathComponent("metadata.plist")
+
+        // Check if the metadata file exists
+        guard fileManager.fileExists(atPath: metadataURL.path) else {
+            print("Metadata file does not exist for project: \(projectName)")
+            return
+        }
+
+        do {
+            // Load existing metadata
+            let metadataData = try Data(contentsOf: metadataURL)
+            guard var metadata = try PropertyListSerialization.propertyList(from: metadataData, options: [], format: nil) as? [String: Any] else {
+                print("Error reading metadata.")
+                return
+            }
+
+            // Update timesVisited
+            let currentTimesVisited = metadata["timesVisited"] as? Int ?? 0
+            metadata["timesVisited"] = currentTimesVisited + 1 // Increment the count
+
+            // Save updated metadata back to the plist file
+            let updatedMetadataData = try PropertyListSerialization.data(fromPropertyList: metadata, format: .xml, options: 0)
+            try updatedMetadataData.write(to: metadataURL)
+
+            print("Successfully updated timesVisited for project: \(projectName)")
+        } catch {
+            print("Error updating timesVisited: \(error.localizedDescription)")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?){
+        if segue.identifier == "HomeMain", let destinationVC = segue.destination as? MainPageViewController, let indexPath = RecentProjectsCollectionView.indexPathsForSelectedItems?.first {
+            updateTimesVisited(for: projects[indexPath.item].name)
+            destinationVC.projectname = projects[indexPath.item].name
+        }
+    }
 }
