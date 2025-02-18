@@ -53,7 +53,26 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         filteredProjects = projects// Initially, show all projects
         print(projects)
         setupLongPressGesture()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSelection))
+            tapGesture.cancelsTouchesInView = false
+            projectsCollectionView.addGestureRecognizer(tapGesture)
     }
+    
+    @objc private func handleTapOutsideSelection(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: projectsCollectionView)
+            
+            // Check if tap was on a cell
+            if let indexPath = projectsCollectionView.indexPathForItem(at: location) {
+                // If the tapped cell is already selected, do nothing
+                return
+            }
+
+            // If tapped outside a cell, clear selection
+            selectedIndexPaths.removeAll()
+            deleteBarButton.isEnabled = false
+            projectsCollectionView.reloadData()
+    }
+
     
 
     
@@ -296,7 +315,7 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
             print("Wrong identifier or cancelled")
             return
         }
-        if let sourceVC = unwindSegue.source as? CreateProjectViewController {
+        if let sourceVC = unwindSegue.source as? CreateProjectCollectionViewController {
                 // Pause the player
                 sourceVC.player?.pause()
             } else {

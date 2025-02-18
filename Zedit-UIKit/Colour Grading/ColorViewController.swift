@@ -18,13 +18,19 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var videoSelectorButton: UIButton!
     
     @IBOutlet weak var redSlider: UISlider!
-    @IBOutlet weak var redLabel: UILabel!
     @IBOutlet weak var greenSlider: UISlider!
-    @IBOutlet weak var greenLabel: UILabel!
     @IBOutlet weak var blueSlider: UISlider!
-    @IBOutlet weak var blueLabel: UILabel!
     @IBOutlet weak var contrastSlider: UISlider!
-    @IBOutlet weak var contrastLabel: UILabel!
+    
+    
+    @IBOutlet weak var redValueLabel: UILabel!
+    
+    @IBOutlet weak var greenValueLabel: UILabel!
+    
+    @IBOutlet weak var blueValueLabel: UILabel!
+    
+    
+    @IBOutlet weak var contrastValueLabel: UILabel!
     
     var projectNameColorGrade = String()
     private var project: Project?
@@ -80,30 +86,65 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func setupSliders() {
-        redSlider.minimumValue = 0
-        redSlider.maximumValue = 200
-        redSlider.value = 100
-        
-        greenSlider.minimumValue = 0
-        greenSlider.maximumValue = 200
-        greenSlider.value = 100
-        
-        blueSlider.minimumValue = 0
-        blueSlider.maximumValue = 200
-        blueSlider.value = 100
-        
-        contrastSlider.minimumValue = 0
-        contrastSlider.maximumValue = 150
-        contrastSlider.value = 50
+        setupSlider(slider: redSlider, min: 0, max: 200, value: 100, color: .red, label: redValueLabel)
+        setupSlider(slider: greenSlider, min: 0, max: 200, value: 100, color: .green, label: greenValueLabel)
+        setupSlider(slider: blueSlider, min: 0, max: 200, value: 100, color: .blue, label: blueValueLabel)
+        setupSlider(slider: contrastSlider, min: 0, max: 150, value: 50, color: .yellow, label: contrastValueLabel)
         
         redSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         greenSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         blueSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         contrastSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         
-        updateColorLabels()
+//        updateColorLabels()
     }
-    
+
+    // Helper function to configure each slider and label
+    private func setupSlider(slider: UISlider, min: Float, max: Float, value: Float, color: UIColor, label: UILabel) {
+        slider.minimumValue = min
+        slider.maximumValue = max
+        slider.value = value
+        
+        // Set slider track and thumb colors
+        slider.minimumTrackTintColor = color
+        slider.maximumTrackTintColor = color.withAlphaComponent(0.3) // Dimmed for contrast
+        slider.thumbTintColor = color
+        
+        // Set initial label value
+        let percentage = Int((value / max) * 100)
+        label.text = "\(percentage)%"
+    }
+
+    // Update label beside slider when value changes
+    @objc private func sliderValueChanged(_ sender: UISlider) {
+        let percentage = Int((sender.value / sender.maximumValue) * 100)
+        
+        switch sender {
+        case redSlider:
+            redValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case greenSlider:
+            greenValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case blueSlider:
+            blueValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case contrastSlider:
+            contrastValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        default:
+            break
+        }
+    }
+
     private func setupVideoPlayers() {
         let originalPlayer = AVPlayerViewController()
         originalPlayer.view.frame = videoPlayer.bounds
@@ -211,19 +252,19 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    @objc private func sliderValueChanged() {
-        updateColorLabels()
-        if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
-            setupColorAdjustedVideo(with: url.url)
-        }
-    }
+//    @objc private func sliderValueChanged() {
+//        updateColorLabels()
+//        if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+//            setupColorAdjustedVideo(with: url.url)
+//        }
+//    }
     
-    private func updateColorLabels() {
-        redLabel.text = String(format: "Red: %.1f%%", redSlider.value)
-        greenLabel.text = String(format: "Green: %.1f%%", greenSlider.value)
-        blueLabel.text = String(format: "Blue: %.1f%%", blueSlider.value)
-        contrastLabel.text = String(format: "Contrast: %.1f%%", contrastSlider.value)
-    }
+//    private func updateColorLabels() {
+//        redLabel.text = String(format: "Red: %.1f%%", redSlider.value)
+//        greenLabel.text = String(format: "Green: %.1f%%", greenSlider.value)
+//        blueLabel.text = String(format: "Blue: %.1f%%", blueSlider.value)
+//        contrastLabel.text = String(format: "Contrast: %.1f%%", contrastSlider.value)
+//    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
