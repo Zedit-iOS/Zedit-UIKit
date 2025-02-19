@@ -254,3 +254,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
 }
+
+#Preview {
+    var storyboard = UIStoryboard(name: "main", bundle: nil)
+    var homeVC = storyboard.instantiateViewController(identifier: "lol")
+    return homeVC
+}

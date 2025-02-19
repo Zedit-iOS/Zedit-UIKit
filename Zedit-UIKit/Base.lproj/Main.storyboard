@@ -65,7 +65,7 @@
         <!--Home Page View Controller-->
         <scene sceneID="Rm2-xF-YKc">
             <objects>
-                <viewController id="gCN-t6-0GU" customClass="HomePageViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="lol" id="gCN-t6-0GU" customClass="HomePageViewController" customModule="Zedit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2jT-LY-tjd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -114,7 +114,7 @@
                                         </subviews>
                                     </stackView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="D0q-xm-sFR">
-                                        <rect key="frame" x="0.0" y="75" width="373" height="565.33333333333326"/>
+                                        <rect key="frame" x="0.0" y="75" width="373" height="565.33333333333337"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="U7e-ju-Dps">
                                             <size key="itemSize" width="128" height="128"/>
@@ -1050,7 +1050,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="41F-4h-AHy"/>
-        <segue reference="zhC-S8-Szd"/>
+        <segue reference="sgf-hx-G6G"/>
         <segue reference="aCe-Es-j7s"/>
     </inferredMetricsTieBreakers>
     <resources>
