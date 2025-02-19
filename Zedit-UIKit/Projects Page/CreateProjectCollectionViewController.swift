@@ -29,6 +29,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     var selectedVideoURL: URL? {
             didSet {
                 updateVideoPreviewView()
+                textFieldDidChange(projectNameTextField) 
             }
         }
     

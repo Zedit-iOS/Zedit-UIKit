@@ -65,5 +65,5 @@ opencv2.framework/Resources/
 *.vscode/
 
 
-opencv2.framework/
+Zedit-UIKit/opencv2.framework
 Zedit-UIKit.xcodeproj/project.xcworkspace/xcuserdata/vr.xcuserdatad/UserInterfaceState.xcuserstate
