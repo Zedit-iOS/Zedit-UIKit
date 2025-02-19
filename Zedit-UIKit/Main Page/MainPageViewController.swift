@@ -46,6 +46,7 @@ class MainPageViewController: UIViewController {
         navigationItem.title = projectname
         self.navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
+        self.navigationItem.leftBarButtonItem = backButton
         
     }
     
