@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 import PhotosUI
 import AVFoundation
 
-class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable {
+class CreateProjectCollectionViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, PHPickerViewControllerDelegate, Encodable, UITextFieldDelegate {
     func encode(to encoder: any Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(projectNameTextField.text, forKey: .projectName)
@@ -16,6 +16,8 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             case projectName
             case selectedVideoURL
         }
+    
+    fileprivate var playerObserver: Any?
     
     
     @IBOutlet weak var selectProjectButton: UIButton!
@@ -41,6 +43,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         loadProjects()
         setupNotifications()
         setDefaultProjectName()
+        projectNameTextField.delegate = self
         do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
                 try AVAudioSession.sharedInstance().setActive(true)
@@ -48,6 +51,15 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 print("Error setting up AVAudioSession: \(error.localizedDescription)")
             }
         updateVideoPreviewView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+            if player != nil{
+                player?.pause()
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
     }
     private func setDefaultProjectName() {
         let dateFormatter = DateFormatter()
@@ -100,50 +112,59 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                                                object: nil)
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            textField.resignFirstResponder() // Dismiss the keyboard
+            return true
+        }
+    
     private func setupVideoPreviewView() {
         videoPlayerView.layer.borderWidth = 1
         videoPlayerView.layer.borderColor = UIColor.lightGray.cgColor
     }
     
     private func updateVideoPreviewView() {
-            videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
-
-            if let videoURL = selectedVideoURL {
-                // Video is selected -> Show player
-                playVideo(url: videoURL)
-                selectProjectButton.isHidden = false
-                videoPlayerView.isUserInteractionEnabled = false // Disable tap selection
-            } else {
-                // No video -> Show placeholder UI
-                let placeholderView = UIView(frame: videoPlayerView.bounds)
-                placeholderView.backgroundColor = UIColor.systemGray5
-                placeholderView.layer.cornerRadius = 10
-                placeholderView.clipsToBounds = true
-
-                let imageView = UIImageView(image: UIImage(systemName: "video.fill"))
-                imageView.tintColor = .gray
-                imageView.contentMode = .scaleAspectFit
-                imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-                imageView.center = CGPoint(x: videoPlayerView.bounds.midX, y: videoPlayerView.bounds.midY - 10)
-
-                let label = UILabel(frame: CGRect(x: 0, y: imageView.frame.maxY + 10, width: videoPlayerView.bounds.width, height: 20))
-                label.text = "Tap to select video"
-                label.textAlignment = .center
-                label.textColor = .gray
-                label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-
-                placeholderView.addSubview(imageView)
-                placeholderView.addSubview(label)
-                videoPlayerView.addSubview(placeholderView)
-
-                videoPlayerView.isUserInteractionEnabled = true // Enable tap selection
-                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectVideoButtonTapped))
-                videoPlayerView.addGestureRecognizer(tapGesture)
-
-                selectProjectButton.isHidden = true // Hide button when placeholder is shown
-            }
+        // Remove any existing subviews
+        videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
+        
+        if let videoURL = selectedVideoURL {
+            // Video is selected → Setup AVPlayer
+            playVideo(url: videoURL)
+            selectProjectButton.isHidden = false
+            videoPlayerView.isUserInteractionEnabled = true // Disable tap selection
+        } else {
+            // No video → Setup placeholder UI
+            let placeholderView = UIView(frame: videoPlayerView.bounds)
+            placeholderView.backgroundColor = UIColor.systemGray5
+            placeholderView.layer.cornerRadius = 10
+            placeholderView.clipsToBounds = true
+            
+            // Create an image view that fills the entire placeholder
+            let imageView = UIImageView(frame: placeholderView.bounds)
+            imageView.image = UIImage(systemName: "video.fill")
+            imageView.tintColor = .gray
+            imageView.contentMode = .scaleAspectFit
+            imageView.clipsToBounds = false
+            placeholderView.addSubview(imageView)
+            
+            // Optionally, add a label on top of the image
+            let label = UILabel(frame: CGRect(x: 0, y: imageView.frame.maxY - 40, width: placeholderView.bounds.width, height: 40))
+            label.text = "Tap to select video"
+            label.textAlignment = .center
+            label.textColor = .white
+            label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+            placeholderView.addSubview(label)
+            
+            videoPlayerView.addSubview(placeholderView)
+            videoPlayerView.isUserInteractionEnabled = true // Enable tap selection
+            
+            // Add tap gesture to placeholder
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectVideoButtonTapped))
+            videoPlayerView.addGestureRecognizer(tapGesture)
+            
+            selectProjectButton.isHidden = true // Hide button when placeholder is shown
         }
-//    
+    }
+//
 //    @objc private func selectVideoButtonTapped() {
 //            presentVideoSourceOptions()
 //        }
@@ -155,12 +176,15 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Create",
            let destination = segue.destination as? MainPageViewController{
+            if saveProject(){
+                updateTimesVisited(for: projectNameTextField.text!)
+                destination.projectname = projectNameTextField.text!
+                
+            }
             
             // Set the destination's projectname with the selected project's name
                     
                     // Update the timesVisited count for the selected project
-            updateTimesVisited(for: projectNameTextField.text!)
-            destination.projectname = projectNameTextField.text!
         }
     }
     
@@ -372,45 +396,97 @@ extension CreateProjectCollectionViewController {
     }
     
     private func playVideo(url: URL) {
+        // Clear any previous player and observer
+        if let player = player {
+            player.pause()
+            player.replaceCurrentItem(with: nil)
+            self.player = nil
+        }
+        
+        if let observer = playerObserver {
+            NotificationCenter.default.removeObserver(observer)
+            playerObserver = nil
+        }
+        
+        // Clean up any existing player view controller
+        if let existingPlayerVC = playerViewController {
+            existingPlayerVC.willMove(toParent: nil)
+            existingPlayerVC.view.removeFromSuperview()
+            existingPlayerVC.removeFromParent()
+            playerViewController = nil
+        }
+        
+        // Remove all subviews from the videoPlayerView
+        videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
+        
+        // Create a new player with the given URL
         player = AVPlayer(url: url)
+        
+        // Create and configure the AVPlayerViewController
         playerViewController = AVPlayerViewController()
         playerViewController?.player = player
         playerViewController?.showsPlaybackControls = true
         
-        videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
+        // Important: Set these properties to ensure controls are visible
+        playerViewController?.videoGravity = .resizeAspect
         
+        // Add the player view controller as a child
         if let playerVC = playerViewController {
+            // Add as a child view controller
             addChild(playerVC)
+            
+            // Configure the player view to fill the container
             playerVC.view.frame = videoPlayerView.bounds
+            playerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            
+            // Add to view hierarchy
             videoPlayerView.addSubview(playerVC.view)
+            
+            // Complete the parent-child relationship
             playerVC.didMove(toParent: self)
+            
+            // Enable user interaction
+            playerVC.view.isUserInteractionEnabled = true
+            videoPlayerView.isUserInteractionEnabled = true
         }
         
+        // Set up loop playback
+        playerObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player?.currentItem,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.player?.seek(to: CMTime.zero)
+            self.player?.play()
+        }
+        
+        // Start playback
         player?.play()
     }
+
 }
 
 // MARK: - TextField and Keyboard Handling
 extension CreateProjectCollectionViewController {
     @objc func keyboard(notification: Notification) {
-
-        
-        // Return early if a segue is in progress
         if view.window?.isKind(of: UIWindow.self) == false {
             return
-        }        
-       guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-           return
-       }
-//        
-       if notification.name == UIResponder.keyboardWillShowNotification ||
-           notification.name == UIResponder.keyboardWillChangeFrameNotification {
-           view.frame.origin.y = 0
-       } else {
-           view.frame.origin.y = 0
-       }
+        }
+        
+        guard let keyboardRect = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+
+        if notification.name == UIResponder.keyboardWillShowNotification ||
+            notification.name == UIResponder.keyboardWillChangeFrameNotification {
+            view.frame.origin.y = 0
+        } else {
+            view.frame.origin.y = 0
+            view.endEditing(true) // Dismiss keyboard when keyboard hides
+        }
     }
-    
+
     @objc func textFieldDidChange(_ textField: UITextField) {
         let isProjectNameValid = !(projectNameTextField.text?.isEmpty ?? true)
         
