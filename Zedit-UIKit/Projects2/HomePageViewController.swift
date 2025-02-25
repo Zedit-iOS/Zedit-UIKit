@@ -33,42 +33,110 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         setupUI()
     }
     
+    private func setupBackgroundImage() {
+            // Create an image view with the asset from the Assets catalog.
+            // If you need to render SVG, you might consider using SVGKit or convert it to PDF/PNG.
+            let backgroundImageView = UIImageView(frame: self.view.bounds)
+            backgroundImageView.image = UIImage(named: "lol")
+            backgroundImageView.contentMode = .scaleAspectFill
+            backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Insert the image view behind all other views.
+            self.view.insertSubview(backgroundImageView, at: 0)
+            
+            // Setup constraints so that the background fills the view.
+            NSLayoutConstraint.activate([
+                backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+                backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
+        }
+    
     private func setupUI() {
         // Create Projects Button (Small Circle with +)
-        createProjectsButton.layer.cornerRadius = 35  // Half of width & height
-        createProjectsButton.clipsToBounds = true
-        createProjectsButton.setTitle("+", for: .normal)
-        createProjectsButton.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        createProjectsButton.backgroundColor = UIColor.systemBlue
-        createProjectsButton.setTitleColor(.white, for: .normal)
+        createProjectsButton.layer.cornerRadius = 37.5  // half of 75
+            createProjectsButton.clipsToBounds = true
+            createProjectsButton.setTitle("+", for: .normal)
+            createProjectsButton.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+            createProjectsButton.backgroundColor = UIColor.systemBlue
+            createProjectsButton.setTitleColor(.white, for: .normal)
             
-            // Increase size using Auto Layout
-        createProjectsButton.translatesAutoresizingMaskIntoConstraints = false
-        createProjectsButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        createProjectsButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+            // Button Auto Layout
+            createProjectsButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(createProjectsButton)  // Make sure it's added to the view
+            
+            NSLayoutConstraint.activate([
+                // Width and height
+                createProjectsButton.widthAnchor.constraint(equalToConstant: 75),
+                createProjectsButton.heightAnchor.constraint(equalToConstant: 75),
+                
+                // Center horizontally
+                createProjectsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                
+                // Position near bottom (adjust constant as needed)
+                createProjectsButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            ])
         // Generate Clips Button (Scissor Icon + Text)
-        let scissorIcon = UIImage(systemName: "scissors")
-        generateClipsTrim.setImage(scissorIcon, for: .normal)
-        generateClipsTrim.tintColor = .white
-        generateClipsTrim.setTitle(" Generate Clips", for: .normal)
-        generateClipsTrim.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        generateClipsTrim.setTitleColor(.white, for: .normal)
-        generateClipsTrim.backgroundColor = UIColor.systemGreen
-        generateClipsTrim.layer.cornerRadius = 10
-        generateClipsTrim.clipsToBounds = true
-        
-        // Colour Grade Button (Magic Wand Icon + Text)
-        let magicWandIcon = UIImage(systemName: "wand.and.stars")
-        colourGradeTrim.setImage(magicWandIcon, for: .normal)
-        colourGradeTrim.tintColor = .white
-        colourGradeTrim.setTitle(" Colour Grade", for: .normal)
-        colourGradeTrim.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        colourGradeTrim.setTitleColor(.white, for: .normal)
-        colourGradeTrim.backgroundColor = UIColor.systemPurple
-        colourGradeTrim.layer.cornerRadius = 10
-        colourGradeTrim.clipsToBounds = true
+        styleButtonAsCard(generateClipsTrim, title: "Generate Clips", systemImageName: "scissors")
+        styleButtonAsCard(colourGradeTrim, title: "Colour Grade", systemImageName: "wand.and.stars")
     }
-    
+    func styleButtonAsCard(_ button: UIButton, title: String, systemImageName: String) {
+        // Set the image and title
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+            let icon = UIImage(systemName: systemImageName, withConfiguration: imageConfig)
+            
+            // Set the image and title
+            button.setImage(icon, for: .normal)
+            button.setTitle(" \(title)", for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+            button.tintColor = .white
+            button.setTitleColor(.white, for: .normal)
+            
+            // Background color
+            button.backgroundColor = UIColor(red: 0.12, green: 0.14, blue: 0.18, alpha: 1.0)
+            
+            // Bigger corner radius for a "boxier" feel
+            button.layer.cornerRadius = 20
+            
+            // Shadow for depth
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOffset = CGSize(width: 0, height: 4)
+            button.layer.shadowOpacity = 0.3
+            button.layer.shadowRadius = 6
+            button.layer.masksToBounds = false
+            
+            // Increase content edge insets for more padding and height
+            button.contentEdgeInsets = UIEdgeInsets(top: 20, left: 24, bottom: 20, right: 24)
+            
+            // Keep the icon on the left
+            button.semanticContentAttribute = .forceLeftToRight
+            
+            // Ensure vertical alignment of image and text
+            button.imageView?.contentMode = .center
+            button.titleLabel?.textAlignment = .center
+            
+            // Fix for image and text alignment
+            if #available(iOS 15.0, *) {
+                var config = UIButton.Configuration.filled()
+                config.imagePadding = 12
+                config.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 24, bottom: 20, trailing: 24)
+                config.image = icon
+                config.title = title
+                config.imagePlacement = .leading
+                config.baseBackgroundColor = UIColor(red: 0.12, green: 0.14, blue: 0.18, alpha: 1.0)
+                config.baseForegroundColor = .white
+                button.configuration = config
+            } else {
+                // For older iOS versions, adjust the image insets to align with text
+                button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+                
+                // Force layout update for proper alignment
+                button.layoutIfNeeded()
+            }
+    }
+
+
     private func loadProjects() {
         // Retrieve projects and sort them by most recent creation date
         let allProjects = retrieveProjects().sorted(by: { $0.dateCreated > $1.dateCreated })
@@ -255,8 +323,3 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
 }
 
-#Preview {
-    var storyboard = UIStoryboard(name: "main", bundle: nil)
-    var homeVC = storyboard.instantiateViewController(identifier: "lol")
-    return homeVC
-}
