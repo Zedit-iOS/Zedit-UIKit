@@ -133,35 +133,58 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             videoPlayerView.isUserInteractionEnabled = true // Disable tap selection
         } else {
             // No video → Setup placeholder UI
-            let placeholderView = UIView(frame: videoPlayerView.bounds)
-            placeholderView.backgroundColor = UIColor.systemGray5
-            placeholderView.layer.cornerRadius = 10
-            placeholderView.clipsToBounds = true
-            
-            // Create an image view that fills the entire placeholder
-            let imageView = UIImageView(frame: placeholderView.bounds)
-            imageView.image = UIImage(systemName: "video.fill")
-            imageView.tintColor = .gray
-            imageView.contentMode = .scaleAspectFit
-            imageView.clipsToBounds = false
-            placeholderView.addSubview(imageView)
-            
-            // Optionally, add a label on top of the image
-            let label = UILabel(frame: CGRect(x: 0, y: imageView.frame.maxY - 40, width: placeholderView.bounds.width, height: 40))
-            label.text = "Tap to select video"
-            label.textAlignment = .center
-            label.textColor = .white
-            label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-            placeholderView.addSubview(label)
-            
-            videoPlayerView.addSubview(placeholderView)
-            videoPlayerView.isUserInteractionEnabled = true // Enable tap selection
-            
-            // Add tap gesture to placeholder
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectVideoButtonTapped))
-            videoPlayerView.addGestureRecognizer(tapGesture)
-            
-            selectProjectButton.isHidden = true // Hide button when placeholder is shown
+            videoPlayerView.backgroundColor = UIColor.systemGray5
+                    
+                    // Create the placeholder view and add it to the videoPlayerView
+                    let placeholderView = UIView(frame: videoPlayerView.bounds)
+                    placeholderView.backgroundColor = UIColor.systemGray5
+                    placeholderView.layer.cornerRadius = 10
+                    placeholderView.clipsToBounds = true
+                    placeholderView.translatesAutoresizingMaskIntoConstraints = false
+                    videoPlayerView.addSubview(placeholderView)
+                    NSLayoutConstraint.activate([
+                        placeholderView.topAnchor.constraint(equalTo: videoPlayerView.topAnchor),
+                        placeholderView.bottomAnchor.constraint(equalTo: videoPlayerView.bottomAnchor),
+                        placeholderView.leadingAnchor.constraint(equalTo: videoPlayerView.leadingAnchor),
+                        placeholderView.trailingAnchor.constraint(equalTo: videoPlayerView.trailingAnchor)
+                    ])
+                    
+                    // Create an image view for the placeholder icon
+                    let imageView = UIImageView(image: UIImage(systemName: "video.fill"))
+                    imageView.tintColor = .gray
+                    imageView.contentMode = .scaleAspectFit
+                    imageView.translatesAutoresizingMaskIntoConstraints = false
+                    placeholderView.addSubview(imageView)
+                    
+                    // Instead of a multiplier constraint, set a fixed size (e.g., 100x100)
+                    NSLayoutConstraint.activate([
+                        imageView.centerXAnchor.constraint(equalTo: placeholderView.centerXAnchor),
+                        imageView.centerYAnchor.constraint(equalTo: placeholderView.centerYAnchor),
+                        imageView.widthAnchor.constraint(equalToConstant: 100),
+                        imageView.heightAnchor.constraint(equalToConstant: 100)
+                    ])
+                    
+                    // Create and add a label anchored to the bottom of the placeholder
+                    let label = UILabel()
+                    label.text = "Tap to select video"
+                    label.textAlignment = .center
+                    label.textColor = .white
+                    label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                    placeholderView.addSubview(label)
+                    
+                    NSLayoutConstraint.activate([
+                        label.leadingAnchor.constraint(equalTo: placeholderView.leadingAnchor),
+                        label.trailingAnchor.constraint(equalTo: placeholderView.trailingAnchor),
+                        label.bottomAnchor.constraint(equalTo: placeholderView.bottomAnchor),
+                        label.heightAnchor.constraint(equalToConstant: 40)
+                    ])
+                    
+                    // Add tap gesture to placeholder
+                    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectVideoButtonTapped))
+                    videoPlayerView.addGestureRecognizer(tapGesture)
+                    
+                    selectProjectButton.isHidden = true
         }
     }
 //
