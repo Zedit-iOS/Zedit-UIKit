@@ -21,8 +21,15 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     var projects: [Project] = []
     
+    override func viewWillAppear(_ animated: Bool) {
+        addPulsatingAnimation(to: createProjectsButton)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        
+        addPulsatingAnimation(to: createProjectsButton)
         
         RecentProjectsCollectionView.dataSource = self
         RecentProjectsCollectionView.delegate = self
@@ -31,6 +38,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         RecentProjectsCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         loadProjects()
         setupUI()
+        if let onboardingVC = storyboard?.instantiateViewController(withIdentifier: "OnboardingVC") {
+            onboardingVC.modalPresentationStyle = .fullScreen  // or .overFullScreen if you prefer transparency
+            present(onboardingVC, animated: true)
+        }
     }
     
     private func setupBackgroundImage() {
@@ -145,6 +156,17 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         projects = Array(allProjects.prefix(2))
         
         RecentProjectsCollectionView.reloadData()
+    }
+    
+    func addPulsatingAnimation(to button: UIButton) {
+        let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
+        pulseAnimation.duration = 0.8
+        pulseAnimation.fromValue = 1.0
+        pulseAnimation.toValue = 1.1
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = .infinity
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        button.layer.add(pulseAnimation, forKey: "pulsing")
     }
     
     
