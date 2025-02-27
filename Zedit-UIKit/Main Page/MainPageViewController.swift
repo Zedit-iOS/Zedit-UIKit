@@ -57,6 +57,16 @@ class MainPageViewController: UIViewController {
                 generateThumbnails()
         
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // Position the playhead over the scrollView
+        playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
+        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 95
+        playheadIndicator.frame.size.height = videoScrubber.bounds.height
+    }
+
+
     
     func setupSwipeGesture() {
             let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
@@ -97,7 +107,7 @@ class MainPageViewController: UIViewController {
         }
 
         DispatchQueue.global(qos: .userInitiated).async {
-            var xOffset: CGFloat = 0
+            var xOffset: CGFloat = self.videoScrubber.frame.midX - (self.playheadIndicator.frame.width/2)// Start at playhead position
             let thumbnailWidth: CGFloat = 60  // Thumbnail width
             let spacing: CGFloat = 1  // Space between thumbnails
 
@@ -112,6 +122,11 @@ class MainPageViewController: UIViewController {
                         xOffset += thumbnailWidth + spacing  // Move x position with spacing
 
                         self.videoScrubber.contentSize = CGSize(width: xOffset, height: self.videoScrubber.bounds.height)
+                        
+                        // Align scroll position so playhead points to the first frame
+                        if xOffset == self.playheadIndicator.frame.origin.x {
+                            self.videoScrubber.contentOffset.x = xOffset - (self.videoScrubber.frame.width / 2)
+                        }
                     }
                 }
             }
@@ -129,22 +144,16 @@ class MainPageViewController: UIViewController {
         
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: videoScrubber)
+        let newOffset = videoScrubber.contentOffset.x - translation.x
         
-        guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+        videoScrubber.contentOffset.x = max(0, min(newOffset, videoScrubber.contentSize.width - videoScrubber.bounds.width))
         
-        let maxOffset = videoScrubber.contentSize.width - videoScrubber.bounds.width
-        let progress = min(max(0, videoScrubber.contentOffset.x - translation.x), maxOffset) / maxOffset  // 🔄 Inverted Direction
-        let newTime = CMTime(seconds: duration * Double(progress), preferredTimescale: 600)
-        
-        player?.seek(to: newTime)
-        
-        // Move scrubber & reset gesture translation
-        videoScrubber.contentOffset.x -= translation.x  // 🔄 Inverted Direction
         gesture.setTranslation(.zero, in: videoScrubber)
         
         updatePlayheadPosition()
     }
-//    func setUpSliderConstraints() {
+    
+    //    func setUpSliderConstraints() {
 //            videoSlider.translatesAutoresizingMaskIntoConstraints = false
 //            NSLayoutConstraint.activate([
 //                videoSlider.centerXAnchor.constraint(equalTo: videoScrubber.centerXAnchor),
@@ -157,22 +166,23 @@ class MainPageViewController: UIViewController {
         // MARK: - Playhead Indicator
     func setupPlayheadIndicator() {
         playheadIndicator = UIView()
-        playheadIndicator.backgroundColor = .red
-        playheadIndicator.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
-        videoScrubber.addSubview(playheadIndicator)
-        
-        // Ensure it's in front of thumbnails
-        videoScrubber.bringSubviewToFront(playheadIndicator)
+        playheadIndicator.backgroundColor = .yellow
+        playheadIndicator.frame = CGRect(x: 0, y: 0, width: 2, height: videoScrubber.bounds.height)
+
+        self.view.addSubview(playheadIndicator) // Add it to the main view
+        self.view.bringSubviewToFront(playheadIndicator)
     }
+
     func updatePlayheadPosition() {
-            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
-            let currentTime = player?.currentTime().seconds ?? 0
-            
-            let progress = CGFloat(currentTime / duration)
-            let maxX = videoScrubber.contentSize.width - playheadIndicator.frame.width
-            playheadIndicator.frame.origin.x = progress * maxX
-        }
-        // MARK: - Sync Slider with Video
+        guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+        
+        let maxOffset = videoScrubber.contentSize.width - videoScrubber.bounds.width
+        let progress = min(max(videoScrubber.contentOffset.x / maxOffset, 0), 1) // Normalize
+        let newTime = CMTime(seconds: duration * Double(progress), preferredTimescale: 600)
+        
+        player?.seek(to: newTime)
+    }
+    // MARK: - Sync Slider with Video
     @objc func sliderValueChanged(_ sender: UISlider) {
             guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
             let newTime = CMTime(seconds: duration * Double(sender.value), preferredTimescale: 600)
