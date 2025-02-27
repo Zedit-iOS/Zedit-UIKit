@@ -14,6 +14,9 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var videoSelector: UIButton!
     @IBOutlet weak var videoPreviewView: UIView!
     
+    @IBOutlet weak var videoSlider: UISlider!
+    @IBOutlet weak var videoScrubber: UIScrollView!
+    
     fileprivate var playerObserver: Any?
     
     var projectname = String()
@@ -21,7 +24,8 @@ class MainPageViewController: UIViewController {
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     let trimSegueIdentifier = "Trim"
-    
+    var playheadIndicator: UIView!
+    var sliderIndicator: UIView!
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -48,11 +52,139 @@ class MainPageViewController: UIViewController {
         let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
         
+        setupPlayheadIndicator()
+                setupGestureRecognizer()
+                generateThumbnails()
+        
     }
     
+    func setupSwipeGesture() {
+            let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+            swipeLeft.direction = .left
+            videoScrubber.addGestureRecognizer(swipeLeft)
+        }
+    
+    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+            guard let player = player, let duration = player.currentItem?.duration.seconds else { return }
+            let currentTime = player.currentTime().seconds
+            let newTime = CMTime(seconds: min(currentTime + 5, duration), preferredTimescale: 600)
+            player.seek(to: newTime)
+        }
+    
+//    func setupSliderIndicator() {
+//        sliderIndicator = UIView()
+//        sliderIndicator.backgroundColor = .white
+//        sliderIndicator.frame = CGRect(x: 0, y: 0, width: 2, height: videoScrubber.bounds.height)
+//        videoScrubber.addSubview(sliderIndicator)
+//        
+//        // Bring indicator to the front
+//        videoScrubber.bringSubviewToFront(sliderIndicator)
+//    }
+    
+    func generateThumbnails() {
+        guard let firstVideo = videoList.first else { return }
+        let asset = AVAsset(url: firstVideo)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+
+        let duration = Int(CMTimeGetSeconds(asset.duration))  // Total seconds of video
+        let interval = 1  // Generate one thumbnail per second
+
+        var times = [NSValue]()
+        for i in 0..<duration {
+            let cmTime = CMTime(seconds: Double(i) * Double(interval), preferredTimescale: 600)
+            times.append(NSValue(time: cmTime))
+        }
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            var xOffset: CGFloat = 0
+            let thumbnailWidth: CGFloat = 60  // Thumbnail width
+            let spacing: CGFloat = 1  // Space between thumbnails
+
+            imageGenerator.generateCGImagesAsynchronously(forTimes: times) { requestedTime, image, actualTime, result, error in
+                if let image = image, error == nil {
+                    DispatchQueue.main.async {
+                        let thumbnailImage = UIImage(cgImage: image)
+                        let imageView = UIImageView(image: thumbnailImage)
+                        imageView.frame = CGRect(x: xOffset, y: 0, width: thumbnailWidth, height: self.videoScrubber.bounds.height)
+                        
+                        self.videoScrubber.addSubview(imageView)
+                        xOffset += thumbnailWidth + spacing  // Move x position with spacing
+
+                        self.videoScrubber.contentSize = CGSize(width: xOffset, height: self.videoScrubber.bounds.height)
+                    }
+                }
+            }
+        }
+    }
+
     @objc func backButtonTapped(){
         self.navigationController?.popToRootViewController(animated: false)
     }
+    
+    func setupGestureRecognizer() {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+            videoScrubber.addGestureRecognizer(panGesture)
+        }
+        
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: videoScrubber)
+        
+        guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+        
+        let maxOffset = videoScrubber.contentSize.width - videoScrubber.bounds.width
+        let progress = min(max(0, videoScrubber.contentOffset.x - translation.x), maxOffset) / maxOffset  // 🔄 Inverted Direction
+        let newTime = CMTime(seconds: duration * Double(progress), preferredTimescale: 600)
+        
+        player?.seek(to: newTime)
+        
+        // Move scrubber & reset gesture translation
+        videoScrubber.contentOffset.x -= translation.x  // 🔄 Inverted Direction
+        gesture.setTranslation(.zero, in: videoScrubber)
+        
+        updatePlayheadPosition()
+    }
+//    func setUpSliderConstraints() {
+//            videoSlider.translatesAutoresizingMaskIntoConstraints = false
+//            NSLayoutConstraint.activate([
+//                videoSlider.centerXAnchor.constraint(equalTo: videoScrubber.centerXAnchor),
+//                videoSlider.widthAnchor.constraint(equalTo: videoScrubber.widthAnchor, multiplier: 0.9),
+//                videoSlider.centerYAnchor.constraint(equalTo: videoScrubber.centerYAnchor),
+//                videoSlider.heightAnchor.constraint(equalToConstant: 30)
+//            ])
+//        }
+        
+        // MARK: - Playhead Indicator
+    func setupPlayheadIndicator() {
+        playheadIndicator = UIView()
+        playheadIndicator.backgroundColor = .red
+        playheadIndicator.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
+        videoScrubber.addSubview(playheadIndicator)
+        
+        // Ensure it's in front of thumbnails
+        videoScrubber.bringSubviewToFront(playheadIndicator)
+    }
+    func updatePlayheadPosition() {
+            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+            let currentTime = player?.currentTime().seconds ?? 0
+            
+            let progress = CGFloat(currentTime / duration)
+            let maxX = videoScrubber.contentSize.width - playheadIndicator.frame.width
+            playheadIndicator.frame.origin.x = progress * maxX
+        }
+        // MARK: - Sync Slider with Video
+    @objc func sliderValueChanged(_ sender: UISlider) {
+            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+            let newTime = CMTime(seconds: duration * Double(sender.value), preferredTimescale: 600)
+            player?.seek(to: newTime)
+        }
+    
+    func observePlayerTime() {
+            player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { [weak self] time in
+                self?.updatePlayheadPosition()
+            }
+        }
+    
     
 //    override func viewWillAppear(_ animated: Bool) {
 //        super.viewWillAppear(animated)
@@ -151,37 +283,29 @@ class MainPageViewController: UIViewController {
         videoSelector.showsMenuAsPrimaryAction = true
     }
     
-    private func playVideo(url: URL) {
-        
-        if player != nil{
-            player?.replaceCurrentItem(with: nil)
-            player = nil
+    func playVideo(url: URL) {
+            if player != nil {
+                player?.replaceCurrentItem(with: nil)
+                player = nil
+            }
+            player = AVPlayer(url: url)
+            observePlayerTime()
+
+            playerViewController = AVPlayerViewController()
+            playerViewController?.player = player
+            playerViewController?.showsPlaybackControls = true
+
+            videoPreviewView.subviews.forEach { $0.removeFromSuperview() }
+
+            if let playerVC = playerViewController {
+                addChild(playerVC)
+                playerVC.view.frame = videoPreviewView.bounds
+                videoPreviewView.addSubview(playerVC.view)
+                playerVC.didMove(toParent: self)
+            }
+
+            player?.play()
         }
-        player = AVPlayer(url: url)
-        let resetPlayer                  = {
-            self.player?.seek(to: CMTime.zero)
-                    self.player?.play()
-                }
-        playerObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { notification in resetPlayer() }
-        
-        playerViewController = AVPlayerViewController()
-        playerViewController?.player = player
-        playerViewController?.showsPlaybackControls = true
-        
-        videoPreviewView.subviews.forEach {
-            $0.removeFromSuperview()
-        }
-        
-        if let playerVC = playerViewController {
-            addChild(playerVC)
-            playerVC.view.frame = videoPreviewView.bounds
-            videoPreviewView.addSubview(playerVC.view)
-            playerVC.didMove(toParent: self)
-        }
-        
-        player?.play()
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSegueIdentifier,
            let destination = segue.destination as? TrimViewController {
