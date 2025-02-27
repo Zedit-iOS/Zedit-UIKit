@@ -347,11 +347,41 @@ func transcribeAudio(at audioURL: URL) {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
             if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
-                generateClips()
+                //generateClips()
+                guard let videoURL = videoList.first else {
+                            print("No video available for clipping")
+                            return
+                        }
+                        let numberOfClips = Int(numberOfClipsStepper.value)
+                        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                            self.clipTimestamps = timestamps
+                            exportClip(from: videoURL, timestamps: timestamps)
+                        } else {
+                            print("Failed to generate clip timestamps")
+                        }
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
     }
+    
+    // New helper function to generate even clip timestamps.
+    func generateEvenClipTimestamps(for videoURL: URL, numberOfClips: Int) -> [Double]? {
+        let asset = AVAsset(url: videoURL)
+        let durationSeconds = CMTimeGetSeconds(asset.duration)
+        guard durationSeconds > 0, numberOfClips > 0 else { return nil }
+        
+        // Calculate the clip duration (each clip will be of equal duration).
+        let clipDuration = durationSeconds / Double(numberOfClips)
+        
+        // Build timestamps array. We start at 0, then add clipDuration repeatedly.
+        // Ensure we include the final timestamp.
+        var timestamps: [Double] = []
+        for i in 0...numberOfClips {
+            timestamps.append(Double(i) * clipDuration)
+        }
+        return timestamps
+    }
+
     
     @IBAction func cancelButtonTapped(_ sender: UIButton) {
         let alertController = UIAlertController(
