@@ -18,6 +18,14 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let overlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.3) // Darken effect
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true // Hidden by default
+        return view
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -29,7 +37,13 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
     private let tickMarkView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .systemGreen
+        imageView.tintColor = .white // Brighter tick
+        imageView.backgroundColor = .systemGreen // Green background for visibility
+        imageView.layer.cornerRadius = 30 // Make it circular
+        imageView.layer.masksToBounds = true
+        imageView.layer.shadowColor = UIColor.black.cgColor // Add shadow
+        imageView.layer.shadowOpacity = 0.5
+        imageView.layer.shadowOffset = CGSize(width: 2, height: 2)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isHidden = true // Hidden by default
         return imageView
@@ -49,6 +63,7 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(tickMarkView)
+        contentView.addSubview(overlayView)
         
         NSLayoutConstraint.activate([
             contentView.widthAnchor.constraint(equalToConstant: 150),
@@ -65,10 +80,15 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            tickMarkView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            tickMarkView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            tickMarkView.widthAnchor.constraint(equalToConstant: 20),
-            tickMarkView.heightAnchor.constraint(equalToConstant: 20),
+            overlayView.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: thumbnailImageView.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor),
+            
+            tickMarkView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            tickMarkView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            tickMarkView.widthAnchor.constraint(equalToConstant: 60), // Increased size
+            tickMarkView.heightAnchor.constraint(equalToConstant: 60),
         ])
         
         layer.cornerRadius = 8
@@ -77,7 +97,7 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            contentView.backgroundColor = isSelected ? .systemBlue.withAlphaComponent(0.3) : .clear
+            overlayView.isHidden = !isSelected
             tickMarkView.isHidden = !isSelected
         }
     }
