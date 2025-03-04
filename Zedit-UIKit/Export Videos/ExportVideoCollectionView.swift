@@ -22,14 +22,21 @@ class ExportVideoCollectionView: UICollectionView, UICollectionViewDelegate, UIC
         
         // Setup collection view layout
         if let layout = self.collectionViewLayout as? UICollectionViewFlowLayout {
-            let spacing: CGFloat = 10
-            layout.minimumInteritemSpacing = spacing
-            layout.minimumLineSpacing = spacing
-            
-            // Calculate cell size (2 cells per row with spacing)
-            let width = (view.bounds.width - spacing * 3) / 2
-            layout.itemSize = CGSize(width: width, height: width * 1.2)
-            layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
+            let leadingTrailingSpacing: CGFloat = 35 // Slightly more space on the sides
+            let interItemSpacing: CGFloat = 5 // Reduce center gap
+            let numberOfColumns: CGFloat = 2
+
+            // Calculate cell width with proper spacing
+            let totalSpacing = interItemSpacing * (numberOfColumns - 1) // Only between items
+            let availableWidth = view.bounds.width - (leadingTrailingSpacing * 2) - totalSpacing
+            let cellWidth = availableWidth / numberOfColumns
+
+            layout.minimumInteritemSpacing = interItemSpacing
+            layout.minimumLineSpacing = interItemSpacing
+            layout.itemSize = CGSize(width: cellWidth + 15, height: (cellWidth + 15) * 1.2) // Increase cell width
+
+            // Ensure more space on leading & trailing
+            layout.sectionInset = UIEdgeInsets(top: interItemSpacing, left: leadingTrailingSpacing, bottom: interItemSpacing, right: leadingTrailingSpacing)
         }
     }
     

@@ -62,7 +62,7 @@ class MainPageViewController: UIViewController {
 
         // Position the playhead over the scrollView
         playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 95
+        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 92
         playheadIndicator.frame.size.height = videoScrubber.bounds.height
     }
 
