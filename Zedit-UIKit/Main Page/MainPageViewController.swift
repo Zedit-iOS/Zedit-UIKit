@@ -17,10 +17,11 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var videoSlider: UISlider!
     @IBOutlet weak var videoScrubber: UIScrollView!
     
+    @IBOutlet weak var collectionView: UICollectionView!
     fileprivate var playerObserver: Any?
     
     var projectname = String()
-    var videoList: [URL] = []
+    public var videoListHome: [URL] = []
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
     let trimSegueIdentifier = "Trim"
@@ -29,12 +30,13 @@ class MainPageViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
+        setupCollectionView()
         if let project = getProject(projectName: projectname) {
-            videoList = project.subfolders.flatMap { $0.videoURLS }
-            print("Videos successfully loaded: \(videoList.count) videos found.")
+            videoListHome = project.subfolders.flatMap { $0.videoURLS }
+            collectionView.reloadData()
+            print("Videos successfully loaded: \(videoListHome.count) videos found.")
             setUpButton()
-            if let firstVideo = videoList.first {
+            if let firstVideo = videoListHome.first {
                 playVideo(url: firstVideo)
             }
         } else {
@@ -65,6 +67,19 @@ class MainPageViewController: UIViewController {
         playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 92
         playheadIndicator.frame.size.height = videoScrubber.bounds.height
     }
+    
+    func setupCollectionView() {
+            collectionView.delegate = self
+            collectionView.dataSource = self
+            collectionView.register(MainPageCollectionViewCell.self, forCellWithReuseIdentifier: "HomeCell")
+            
+            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                layout.scrollDirection = .horizontal
+                layout.minimumInteritemSpacing = 8
+                layout.minimumLineSpacing = 8
+                layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
+            }
+        }
 
 
     
@@ -92,7 +107,7 @@ class MainPageViewController: UIViewController {
 //    }
     
     func generateThumbnails() {
-        guard let firstVideo = videoList.first else { return }
+        guard let firstVideo = videoListHome.first else { return }
         let asset = AVAsset(url: firstVideo)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
@@ -272,20 +287,20 @@ class MainPageViewController: UIViewController {
 //    }
     
     func setUpButton() {
-        guard !videoList.isEmpty else {
+        guard !videoListHome.isEmpty else {
             videoSelector.isEnabled = false
             return
         }
         
         videoSelector.isEnabled = true
         let actionClosure = { (action: UIAction) in
-            if let selectedVideo = self.videoList.first(where: { $0.lastPathComponent == action.title }) {
+            if let selectedVideo = self.videoListHome.first(where: { $0.lastPathComponent == action.title }) {
                 self.playVideo(url: selectedVideo)
             }
         }
         
         var menuChildren: [UIMenuElement] = []
-        for videoURL in videoList {
+        for videoURL in videoListHome {
             menuChildren.append(UIAction(title: videoURL.lastPathComponent, handler: actionClosure))
         }
         
@@ -337,9 +352,9 @@ class MainPageViewController: UIViewController {
            let sourceVC = unwindSegue.source as? TrimViewController {
             projectname = sourceVC.projectNameTrim
             if let project = getProject(projectName: projectname) {
-                videoList = project.subfolders.flatMap { $0.videoURLS }
+                videoListHome = project.subfolders.flatMap { $0.videoURLS }
                 setUpButton()
-                print("Data updated:", videoList)
+                print("Data updated:", videoListHome)
             }
         } else if unwindSegue.identifier == "ExportCancel",
                   let sourceVC = unwindSegue.source as? ExportViewController {
@@ -347,5 +362,27 @@ class MainPageViewController: UIViewController {
         } else {
             print("Cancelled without changes.")
         }
+    }
+}
+
+
+extension MainPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return videoListHome.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCell", for: indexPath) as? MainPageCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        let videoURL = videoListHome[indexPath.item]
+        cell.configure(with: videoURL)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedVideo = videoListHome[indexPath.item]
+        playVideo(url: selectedVideo)
     }
 }
