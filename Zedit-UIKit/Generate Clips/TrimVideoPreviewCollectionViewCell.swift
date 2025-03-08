@@ -26,13 +26,13 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let tickMarkView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .systemGreen
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.isHidden = true // Hidden by default
-        return imageView
+    private let waveformView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBlue
+        view.layer.cornerRadius = 10
+        view.isHidden = true // Hidden by default
+        return view
     }()
     
     override init(frame: CGRect) {
@@ -48,7 +48,7 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
     private func setupUI() {
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(tickMarkView)
+        contentView.addSubview(waveformView)
 
         NSLayoutConstraint.activate([
             contentView.widthAnchor.constraint(equalToConstant: 150),
@@ -65,10 +65,11 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            tickMarkView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            tickMarkView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            tickMarkView.widthAnchor.constraint(equalToConstant: 20),
-            tickMarkView.heightAnchor.constraint(equalToConstant: 20),
+            // Center waveform animation
+            waveformView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            waveformView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            waveformView.widthAnchor.constraint(equalToConstant: 20),
+            waveformView.heightAnchor.constraint(equalToConstant: 20),
         ])
         
         // Add white outline
@@ -86,8 +87,11 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            contentView.backgroundColor = isSelected ? .systemBlue.withAlphaComponent(0.3) : .clear
-            tickMarkView.isHidden = !isSelected
+            if isSelected {
+                showWaveformAnimation()
+            } else {
+                hideWaveformAnimation()
+            }
         }
     }
     
@@ -118,5 +122,24 @@ class TrimVideoPreviewCollectionViewCell: UICollectionViewCell {
                 completion(nil)
             }
         }
+    }
+    
+    // MARK: - Waveform Animation
+    private func showWaveformAnimation() {
+        waveformView.isHidden = false
+        
+        let animation = CABasicAnimation(keyPath: "transform.scale")
+        animation.fromValue = 1.0
+        animation.toValue = 1.5
+        animation.duration = 0.5
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        
+        waveformView.layer.add(animation, forKey: "waveformPulse")
+    }
+    
+    private func hideWaveformAnimation() {
+        waveformView.layer.removeAllAnimations()
+        waveformView.isHidden = true
     }
 }

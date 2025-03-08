@@ -18,6 +18,19 @@ class MainPageCollectionViewCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+    private let waveformStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 3
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let bar1 = UIView()
+    private let bar2 = UIView()
+    private let bar3 = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,12 +44,42 @@ class MainPageCollectionViewCell: UICollectionViewCell {
     
     private func setupViews() {
         contentView.addSubview(thumbnailImageView)
+        contentView.addSubview(waveformStackView)
         NSLayoutConstraint.activate([
             thumbnailImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             thumbnailImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            thumbnailImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            thumbnailImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            waveformStackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            waveformStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+        setupWaveformBars()
+    }
+    private func setupWaveformBars() {
+        let bars = [bar1, bar2, bar3]
+        for bar in bars {
+            bar.backgroundColor = .systemBlue
+            bar.layer.cornerRadius = 2
+            bar.translatesAutoresizingMaskIntoConstraints = false
+            waveformStackView.addArrangedSubview(bar)
+            NSLayoutConstraint.activate([
+                bar.widthAnchor.constraint(equalToConstant: 5),
+                bar.heightAnchor.constraint(equalToConstant: 10)
+            ])
+        }
+        waveformStackView.isHidden = true
+    }
+    
+    
+    override var isSelected: Bool {
+        didSet {
+            if isSelected {
+                showWaveformAnimation()
+            } else {
+                hideWaveformAnimation()
+            }
+        }
     }
     
     func configure(with videoURL: URL) {
@@ -59,6 +102,31 @@ class MainPageCollectionViewCell: UICollectionViewCell {
             } else {
                 completion(nil)
             }
+        }
+    }
+    
+    private func showWaveformAnimation() {
+        waveformStackView.isHidden = false
+        animateBar(bar1, delay: 0.0)
+        animateBar(bar2, delay: 0.2)
+        animateBar(bar3, delay: 0.4)
+    }
+    
+    private func animateBar(_ bar: UIView, delay: TimeInterval) {
+        let animation = CABasicAnimation(keyPath: "transform.scale.y")
+        animation.fromValue = 1.0
+        animation.toValue = 2.0
+        animation.duration = 0.4
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.beginTime = CACurrentMediaTime() + delay
+        bar.layer.add(animation, forKey: "waveform")
+    }
+    
+    private func hideWaveformAnimation() {
+        waveformStackView.isHidden = true
+        for bar in [bar1, bar2, bar3] {
+            bar.layer.removeAllAnimations()
         }
     }
 }
