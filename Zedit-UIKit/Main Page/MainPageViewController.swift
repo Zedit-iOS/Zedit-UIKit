@@ -20,6 +20,14 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     fileprivate var playerObserver: Any?
     
+//    private var playPauseButton: UIButton!
+//    private var timeLabel: UILabel!
+
+    @IBOutlet weak var playPauseButton: UIButton!
+    
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    
     var projectname = String()
     public var videoListHome: [URL] = []
     var player: AVPlayer?
@@ -32,16 +40,20 @@ class MainPageViewController: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
         if let project = getProject(projectName: projectname) {
-            videoListHome = project.subfolders.flatMap { $0.videoURLS }
-            collectionView.reloadData()
-            print("Videos successfully loaded: \(videoListHome.count) videos found.")
-            setUpButton()
-            if let firstVideo = videoListHome.first {
-                playVideo(url: firstVideo)
+                videoListHome = project.subfolders.flatMap { $0.videoURLS }
+                collectionView.reloadData()
+                print("Videos successfully loaded: \(videoListHome.count) videos found.")
+                
+                // Select first video from collection view by default
+                if !videoListHome.isEmpty {
+                    let indexPath = IndexPath(item: 0, section: 0)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                    playVideo(url: videoListHome[0])
+                }
+            } else {
+                print("Failed to load project.")
             }
-        } else {
-            print("Failed to load project.")
-        }
+        
         do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, options: [])
                 try AVAudioSession.sharedInstance().setActive(true)
@@ -53,12 +65,95 @@ class MainPageViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButton
+        playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
         
         setupPlayheadIndicator()
                 setupGestureRecognizer()
                 generateThumbnails()
         
     }
+    
+    func setupTimelineControls() {
+        // Create a container view above the scrubber
+        let controlsContainer = UIView()
+        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
+        controlsContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controlsContainer)
+        
+        // Position the container above the scrubber
+        NSLayoutConstraint.activate([
+            controlsContainer.leftAnchor.constraint(equalTo: videoScrubber.leftAnchor),
+            controlsContainer.rightAnchor.constraint(equalTo: videoScrubber.rightAnchor),
+            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubber.topAnchor, constant: -5),
+            controlsContainer.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // Create play/pause button
+        let playPauseButton = UIButton(type: .system)
+        playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        playPauseButton.tintColor = .white
+        playPauseButton.translatesAutoresizingMaskIntoConstraints = false
+        playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
+        controlsContainer.addSubview(playPauseButton)
+        
+        // Create time label
+        let timeLabel = UILabel()
+        timeLabel.text = "00:00 / 00:00"
+        timeLabel.textColor = .white
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium)
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        controlsContainer.addSubview(timeLabel)
+        
+        // Position controls
+        NSLayoutConstraint.activate([
+            playPauseButton.leftAnchor.constraint(equalTo: controlsContainer.leftAnchor, constant: 15),
+            playPauseButton.centerYAnchor.constraint(equalTo: controlsContainer.centerYAnchor),
+            playPauseButton.widthAnchor.constraint(equalToConstant: 40),
+            playPauseButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            timeLabel.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 15),
+            timeLabel.centerYAnchor.constraint(equalTo: controlsContainer.centerYAnchor)
+        ])
+        
+        // Store references
+        self.playPauseButton = playPauseButton
+        self.timeLabel = timeLabel
+    }
+
+    @objc func togglePlayPause() {
+        guard let player = player else { return }
+        
+        if player.rate == 0 {
+            player.play()
+            playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        } else {
+            player.pause()
+            playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        }
+    }
+
+    func updateTimeDisplay() {
+        guard let player = player,
+              let currentItem = player.currentItem,
+              let timeLabel = timeLabel else { return }
+        
+        let currentTime = player.currentTime().seconds
+        let duration = currentItem.duration.seconds
+        
+        if !currentTime.isNaN && !duration.isNaN {
+            let currentTimeString = formatTime(seconds: currentTime)
+            let durationString = formatTime(seconds: duration)
+            timeLabel.text = "\(currentTimeString) / \(durationString)"
+        }
+    }
+
+    func formatTime(seconds: Double) -> String {
+        let totalSeconds = Int(seconds.rounded())
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -182,12 +277,13 @@ class MainPageViewController: UIViewController {
     func setupPlayheadIndicator() {
         playheadIndicator = UIView()
         playheadIndicator.backgroundColor = .yellow
-        playheadIndicator.frame = CGRect(x: 0, y: 0, width: 2, height: videoScrubber.bounds.height)
-
-        self.view.addSubview(playheadIndicator) // Add it to the main view
+        playheadIndicator.frame = CGRect(x: videoScrubber.frame.midX - 1, y: videoScrubber.frame.origin.y, width: 2, height: videoScrubber.bounds.height)
+        
+        self.view.addSubview(playheadIndicator)
         self.view.bringSubviewToFront(playheadIndicator)
     }
-
+    
+    
     func updatePlayheadPosition() {
         guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
         
@@ -309,28 +405,76 @@ class MainPageViewController: UIViewController {
     }
     
     func playVideo(url: URL) {
-            if player != nil {
-                player?.replaceCurrentItem(with: nil)
-                player = nil
-            }
-            player = AVPlayer(url: url)
-            observePlayerTime()
-
-            playerViewController = AVPlayerViewController()
-            playerViewController?.player = player
-            playerViewController?.showsPlaybackControls = true
-
-            videoPreviewView.subviews.forEach { $0.removeFromSuperview() }
-
-            if let playerVC = playerViewController {
-                addChild(playerVC)
-                playerVC.view.frame = videoPreviewView.bounds
-                videoPreviewView.addSubview(playerVC.view)
-                playerVC.didMove(toParent: self)
-            }
-
-            player?.play()
+        // Remove any existing time observers
+        if let observer = playerObserver {
+            player?.removeTimeObserver(observer)
+            playerObserver = nil
         }
+        
+        // Reset or create a new player
+        if player == nil {
+            player = AVPlayer(url: url)
+        } else {
+            let playerItem = AVPlayerItem(url: url)
+            player?.replaceCurrentItem(with: playerItem)
+        }
+        
+        print("Attempting to play: \(url)")
+        
+        // Reset the player view controller
+        if playerViewController == nil {
+            playerViewController = AVPlayerViewController()
+            playerViewController?.showsPlaybackControls = false // Hide default controls
+        }
+        
+        // Assign the player to the view controller
+        playerViewController?.player = player
+        
+        // Remove any existing subviews in videoPreviewView
+        videoPreviewView.subviews.forEach { $0.removeFromSuperview() }
+        
+        // Add AVPlayerViewController view to the container
+        if let playerVC = playerViewController {
+            addChild(playerVC)
+            playerVC.view.frame = videoPreviewView.bounds
+            videoPreviewView.addSubview(playerVC.view)
+            playerVC.didMove(toParent: self)
+        }
+        
+        // Add a new time observer
+        playerObserver = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main, using: { [weak self] time in
+            guard let self = self else { return }
+            
+            // Update time label
+            self.updateTimeDisplay()
+            
+            // Update playhead position based on current time
+            if let duration = self.player?.currentItem?.duration.seconds, duration > 0 {
+                let progress = time.seconds / duration
+                
+                // Calculate scrubber content offset based on video progress
+                if self.videoScrubber.contentSize.width > self.videoScrubber.bounds.width {
+                    let maxOffset = self.videoScrubber.contentSize.width - self.videoScrubber.bounds.width
+                    let newOffset = CGFloat(progress) * maxOffset
+                    
+                    // Only update if significantly different to avoid jerky updates
+                    if abs(self.videoScrubber.contentOffset.x - newOffset) > 2.0 {
+                        self.videoScrubber.contentOffset.x = newOffset
+                    }
+                }
+            }
+        })
+        
+        // Update play/pause button state
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        
+        // Play after a slight delay to ensure UI updates first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.player?.play()
+        }
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSegueIdentifier,
            let destination = segue.destination as? TrimViewController {
@@ -383,6 +527,7 @@ extension MainPageViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedVideo = videoListHome[indexPath.item]
+        print("Playing video from collection: \(selectedVideo)")
         playVideo(url: selectedVideo)
     }
 }
