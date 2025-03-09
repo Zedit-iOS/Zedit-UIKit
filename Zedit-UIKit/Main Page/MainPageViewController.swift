@@ -70,6 +70,7 @@ class MainPageViewController: UIViewController {
         setupPlayheadIndicator()
                 setupGestureRecognizer()
                 generateThumbnails()
+        setupTimelineControls()
         
     }
     
@@ -159,7 +160,7 @@ class MainPageViewController: UIViewController {
 
         // Position the playhead over the scrollView
         playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 92
+        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 106
         playheadIndicator.frame.size.height = videoScrubber.bounds.height
     }
     
@@ -191,15 +192,7 @@ class MainPageViewController: UIViewController {
             player.seek(to: newTime)
         }
     
-//    func setupSliderIndicator() {
-//        sliderIndicator = UIView()
-//        sliderIndicator.backgroundColor = .white
-//        sliderIndicator.frame = CGRect(x: 0, y: 0, width: 2, height: videoScrubber.bounds.height)
-//        videoScrubber.addSubview(sliderIndicator)
-//        
-//        // Bring indicator to the front
-//        videoScrubber.bringSubviewToFront(sliderIndicator)
-//    }
+
     
     func generateThumbnails() {
         guard let firstVideo = videoListHome.first else { return }

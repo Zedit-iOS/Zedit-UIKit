@@ -32,7 +32,7 @@
 		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
 		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
 		E1EB196A2D794EFF00E08BF9 /* MainPageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */; };
-		E1EB196C2D79503800E08BF9 /* MainPageCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB196B2D79503800E08BF9 /* MainPageCollectionView.swift */; };
+		E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */; };
 		E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D22D62F8510034F916 /* opencv2.framework */; };
 		E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D62D62F8B80034F916 /* opencv2.framework */; };
 /* End PBXBuildFile section */
@@ -69,7 +69,7 @@
 		E1BC32BF2CCF78C10026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageCollectionViewCell.swift; sourceTree = "<group>"; };
-		E1EB196B2D79503800E08BF9 /* MainPageCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageCollectionView.swift; sourceTree = "<group>"; };
+		E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1FD21D22D62F8510034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Downloads/opencv2.framework; sourceTree = "<group>"; };
 		E1FD21D62D62F8B80034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,6 +125,7 @@
 				3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */,
 				3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */,
 				3796055E2CEB203900C11189 /* TrimViewController.swift */,
+				E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */,
 			);
 			path = "Generate Clips";
 			sourceTree = "<group>";
@@ -134,7 +135,6 @@
 			children = (
 				379605602CEB203900C11189 /* MainPageViewController.swift */,
 				E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */,
-				E1EB196B2D79503800E08BF9 /* MainPageCollectionView.swift */,
 			);
 			path = "Main Page";
 			sourceTree = "<group>";
@@ -291,12 +291,12 @@
 				379605702CEB203900C11189 /* MainPageViewController.swift in Sources */,
 				377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */,
 				379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */,
-				E1EB196C2D79503800E08BF9 /* MainPageCollectionView.swift in Sources */,
 				379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */,
 				379605732CEB203900C11189 /* safe+extension.swift in Sources */,
 				377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */,
 				379605742CEB203900C11189 /* ExportViewController.swift in Sources */,
 				379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */,
+				E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */,
 				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
 				379605772CEB203900C11189 /* TrimViewController.swift in Sources */,
 				379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */,
