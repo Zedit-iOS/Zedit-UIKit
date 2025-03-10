@@ -30,8 +30,10 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
-    @IBOutlet weak var minutesPicker: UIPickerView!
-    @IBOutlet weak var secondsPicker: UIPickerView!
+    @IBOutlet weak var minuitesLabel: UILabel!
+    
+    
+    @IBOutlet weak var secondsLabel: UILabel!
     
     private var playPauseButton = UIButton(type: .system)
     private var timeLabel: UILabel!
@@ -42,6 +44,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     var playheadIndicator: UIView!
     var sliderIndicator: UIView!
     
+    private var selectedMinutes: Int = 0
+        private var selectedSeconds: Int = 0
+    
     private let minutesRange = Array(0...59)
     private let secondsRange = Array(0...59)
     private var flatSceneRanges: [[Double]] = []
@@ -49,27 +54,27 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     fileprivate var playerObserver: Any?
     
-    private func setupPickers(  ) {
-        minutesPicker.delegate = self
-        minutesPicker.dataSource = self // Add dataSource
-        secondsPicker.delegate = self 
-        secondsPicker.dataSource = self // Add dataSource
-    }
-    
-    // Add required UIPickerViewDataSource methods
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
-        return String(format: "%02d", value)
-    }
+//    private func setupPickers(  ) {
+//        minutesPicker.delegate = self
+//        minutesPicker.dataSource = self // Add dataSource
+//        secondsPicker.delegate = self 
+//        secondsPicker.dataSource = self // Add dataSource
+//    }
+//    
+//    // Add required UIPickerViewDataSource methods
+//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//        return 1
+//    }
+//    
+//    
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
+//    }
+//    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
+//        return String(format: "%02d", value)
+//    }
     let trimSeguePreviewIdentifier = "preview"
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -78,7 +83,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
         setupSteppers()
-        setupPickers()
+        //setupPickers()
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
                 switch authStatus {
@@ -117,7 +122,80 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         setupGestureRecognizer()
         generateThumbnails()
         setupTimelineControls()
+        updateTimeLabels()
+                
+                // Add tap gesture to open picker popup
+                let minutesTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
+                let secondsTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
+        setupLabels()
+                
+                minuitesLabel.isUserInteractionEnabled = true
+                secondsLabel.isUserInteractionEnabled = true
+                minuitesLabel.addGestureRecognizer(minutesTap)
+                secondsLabel.addGestureRecognizer(secondsTap)
     }
+    
+    private func setupLabels() {
+            let labels = [minuitesLabel, secondsLabel]
+            for label in labels {
+                label?.textAlignment = .center
+                label?.clipsToBounds = true
+                label?.font = UIFont.boldSystemFont(ofSize: 16)
+                label?.textColor = .white
+                label?.backgroundColor = UIColor(white: 0.15, alpha: 1.0)
+                
+                // Set fixed width constraint to fit "59 min" or "59 sec"
+                label?.translatesAutoresizingMaskIntoConstraints = false
+                label?.widthAnchor.constraint(equalToConstant: 60).isActive = true
+                label?.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            }
+        }
+    
+    @objc private func showTimePicker() {
+            let alert = UIAlertController(title: "Select Time", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+            
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.frame = CGRect(x: 0, y: 50, width: 270, height: 150)
+            
+            // Pre-select current values
+            pickerView.selectRow(selectedMinutes, inComponent: 0, animated: false)
+            pickerView.selectRow(selectedSeconds, inComponent: 1, animated: false)
+            
+            alert.view.addSubview(pickerView)
+            
+            let selectAction = UIAlertAction(title: "Select", style: .default) { _ in
+                self.selectedMinutes = pickerView.selectedRow(inComponent: 0)
+                self.selectedSeconds = pickerView.selectedRow(inComponent: 1)
+                self.updateTimeLabels()
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            alert.addAction(selectAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+        }
+        
+        private func updateTimeLabels() {
+            minuitesLabel.text = String(format: "%02d min", selectedMinutes)
+            secondsLabel.text = String(format: "%02d sec", selectedSeconds)
+        }
+        
+        // MARK: - UIPickerView DataSource & Delegate
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 2 // One for minutes, one for seconds
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return component == 0 ? minutesRange.count : secondsRange.count
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return String(format: "%02d", row)
+        }
     
     func setupTimelineControls() {
         // Create a container view above the scrubber
@@ -569,7 +647,7 @@ func transcribeAudio(at audioURL: URL) {
         }
         
 
-        let minimumClipDuration = minutesPicker.selectedRow(inComponent: 0)*60 + secondsPicker.selectedRow(inComponent: 0)
+        let minimumClipDuration = Int(minuitesLabel.text!)!*60 + Int(secondsLabel.text!)!
         processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
         
         let finalSceneRanges = scenes.map { $0.start...$0.end }
