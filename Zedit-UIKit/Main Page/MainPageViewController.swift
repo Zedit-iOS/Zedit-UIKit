@@ -23,9 +23,6 @@ class MainPageViewController: UIViewController {
 //    private var playPauseButton: UIButton!
 //    private var timeLabel: UILabel!
 
-    @IBOutlet weak var playPauseButton: UIButton!
-    
-    @IBOutlet weak var timeLabel: UILabel!
     
     
     var projectname = String()
@@ -35,6 +32,8 @@ class MainPageViewController: UIViewController {
     let trimSegueIdentifier = "Trim"
     var playheadIndicator: UIView!
     var sliderIndicator: UIView!
+    private var playPauseButton = UIButton(type: .system)
+    private var timeLabel: UILabel!
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -71,6 +70,7 @@ class MainPageViewController: UIViewController {
                 setupGestureRecognizer()
                 generateThumbnails()
         setupTimelineControls()
+        
         
     }
     
