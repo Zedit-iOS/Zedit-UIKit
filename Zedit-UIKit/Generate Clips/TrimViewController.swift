@@ -17,6 +17,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
+    private var isClipsPickerActive = false
     
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -26,8 +27,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     @IBOutlet weak var videoSelectorButton: UIButton!
     
     @IBOutlet weak var generateButton: UIButton!
-    @IBOutlet weak var numberOfClipsStepper: UIStepper!
-    @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
+
+    @IBOutlet weak var numberOfClipsDisplayLabel: UILabel!
+    
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
     @IBOutlet weak var minuitesLabel: UILabel!
@@ -46,6 +48,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     private var selectedMinutes: Int = 0
         private var selectedSeconds: Int = 0
+    private var selectedClips: Int = 0
     
     private let minutesRange = Array(0...59)
     private let secondsRange = Array(0...59)
@@ -82,7 +85,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
-        setupSteppers()
+//        setupSteppers()
         //setupPickers()
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
@@ -127,16 +130,19 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 // Add tap gesture to open picker popup
                 let minutesTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
                 let secondsTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
+        let clipsTap = UITapGestureRecognizer(target: self, action: #selector(showClipsPicker))
         setupLabels()
                 
                 minuitesLabel.isUserInteractionEnabled = true
                 secondsLabel.isUserInteractionEnabled = true
                 minuitesLabel.addGestureRecognizer(minutesTap)
                 secondsLabel.addGestureRecognizer(secondsTap)
+        numberOfClipsDisplayLabel.isUserInteractionEnabled = true
+        numberOfClipsDisplayLabel.addGestureRecognizer(clipsTap)
     }
     
     private func setupLabels() {
-            let labels = [minuitesLabel, secondsLabel]
+        let labels = [minuitesLabel, secondsLabel, numberOfClipsDisplayLabel]
             for label in labels {
                 label?.textAlignment = .center
                 label?.clipsToBounds = true
@@ -150,7 +156,37 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             }
         }
     
+    @objc private func showClipsPicker() {
+        isClipsPickerActive = true
+            let alert = UIAlertController(title: "Select number of clips", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+            
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.frame = CGRect(x: 0, y: 50, width: 270, height: 150)
+            
+            // Pre-select current values
+            pickerView.selectRow(selectedClips, inComponent: 0, animated: false)
+            
+            alert.view.addSubview(pickerView)
+            
+            let selectAction = UIAlertAction(title: "Select", style: .default) { _ in
+                self.selectedClips = pickerView.selectedRow(inComponent: 0)
+                self.updateClipLabels()
+            }
+            
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                self.isClipsPickerActive = false  // Reset flag on cancel
+            }
+            
+            alert.addAction(selectAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+        }
+    
     @objc private func showTimePicker() {
+        isClipsPickerActive = false
             let alert = UIAlertController(title: "Select Time", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
             
             let pickerView = UIPickerView()
@@ -177,6 +213,10 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             
             present(alert, animated: true, completion: nil)
         }
+    
+    private func updateClipLabels(){
+        numberOfClipsDisplayLabel.text = String(selectedClips)
+    }
         
         private func updateTimeLabels() {
             minuitesLabel.text = String(format: "%02d min", selectedMinutes)
@@ -185,11 +225,14 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         
         // MARK: - UIPickerView DataSource & Delegate
         func numberOfComponents(in pickerView: UIPickerView) -> Int {
-            return 2 // One for minutes, one for seconds
+            return isClipsPickerActive ? 1 : 2// One for minutes, one for seconds
         }
         
         func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return component == 0 ? minutesRange.count : secondsRange.count
+            if isClipsPickerActive {
+                    return 100 // Adjust the maximum number of clips as needed
+                }
+                return component == 0 ? minutesRange.count : secondsRange.count
         }
         
         func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -494,19 +537,19 @@ func transcribeAudio(at audioURL: URL) {
            }
        }
    }
-    func setupSteppers() {
-        numberOfClipsStepper.minimumValue = 1
-        numberOfClipsStepper.maximumValue = 10
-        numberOfClipsStepper.stepValue = 1
-        numberOfClipsStepper.value = 1
-        numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
-
-        numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
-    }
-    
-    @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
-        numberOfClipsStepperLabel.text = "\(Int(sender.value))"
-    }
+//    func setupSteppers() {
+//        numberOfClipsStepper.minimumValue = 1
+//        numberOfClipsStepper.maximumValue = 10
+//        numberOfClipsStepper.stepValue = 1
+//        numberOfClipsStepper.value = 1
+//        numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
+//
+//        numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
+//    }
+//    
+//    @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
+//        numberOfClipsStepperLabel.text = "\(Int(sender.value))"
+//    }
     
     func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
@@ -713,7 +756,7 @@ func transcribeAudio(at audioURL: URL) {
                             print("No video available for clipping")
                             return
                         }
-                        let numberOfClips = Int(numberOfClipsStepper.value)
+                let numberOfClips = Int(numberOfClipsDisplayLabel.text!)!
                         if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
                             self.clipTimestamps = timestamps
                             exportClip(from: videoURL, timestamps: timestamps)
