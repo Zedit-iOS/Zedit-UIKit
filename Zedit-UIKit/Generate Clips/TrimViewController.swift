@@ -87,6 +87,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         nameLabel.text = projectNameTrim
 //        setupSteppers()
         //setupPickers()
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
                 switch authStatus {
@@ -139,22 +140,72 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 secondsLabel.addGestureRecognizer(secondsTap)
         numberOfClipsDisplayLabel.isUserInteractionEnabled = true
         numberOfClipsDisplayLabel.addGestureRecognizer(clipsTap)
+        styleViews()
+    }
+    
+    private func styleViews() {
+        // Set the main background color
+        view.backgroundColor = .black
+        
+        // Style video player views and slider view
+        let viewsToStyle = [videoSelectorView]
+        let cornerRadius: CGFloat = 12
+        let borderWidth: CGFloat = 1
+        let borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        let backgroundColor = UIColor(white: 0.15, alpha: 1.0) // Slightly lighter than black
+        
+        for view in viewsToStyle {
+            guard let view = view else { continue }
+            
+            // Set corner radius
+            view.layer.cornerRadius = cornerRadius
+            view.layer.masksToBounds = true
+            
+            // Set border
+            view.layer.borderWidth = borderWidth
+            view.layer.borderColor = borderColor
+            
+            // Set background color
+            view.backgroundColor = backgroundColor
+            
+            // Add padding for content inside
+            view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        }
+        
+        // Special handling for playerView: No left & right insets
+        
+        
+        // Ensure proper padding for video players
+        adjustVideoPlayerLayouts()
+    }
+    
+    private func adjustVideoPlayerLayouts() {
+        // Adjust the player view controllers to respect margins
+        if let playerView = playerViewController?.view {
+            playerView.frame = videoSelectorView.bounds.insetBy(dx: 8, dy: 8)
+        }
+        
     }
     
     private func setupLabels() {
         let labels = [minuitesLabel, secondsLabel, numberOfClipsDisplayLabel]
-            for label in labels {
-                label?.textAlignment = .center
-                label?.clipsToBounds = true
-                label?.font = UIFont.boldSystemFont(ofSize: 16)
-                label?.textColor = .white
-                
-                // Set fixed width constraint to fit "59 min" or "59 sec"
-                label?.translatesAutoresizingMaskIntoConstraints = false
-                label?.widthAnchor.constraint(equalToConstant: 60).isActive = true
-                label?.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            }
+        for label in labels {
+            label?.textAlignment = .center
+            label?.clipsToBounds = true
+            label?.font = UIFont.boldSystemFont(ofSize: 16)
+            label?.textColor = .white
+            label?.backgroundColor = UIColor.darkGray // Set background color
+            label?.layer.borderColor = UIColor.lightGray.cgColor // Set border color
+            label?.layer.borderWidth = 2 // Border thickness
+            label?.layer.cornerRadius = 5 // Rounded corners
+            label?.layer.masksToBounds = true
+            
+            // Set fixed width constraint to fit "59 min" or "59 sec"
+            label?.translatesAutoresizingMaskIntoConstraints = false
+            label?.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            label?.heightAnchor.constraint(equalToConstant: 30).isActive = true
         }
+    }
     
     @objc private func showClipsPicker() {
         isClipsPickerActive = true
@@ -242,7 +293,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     func setupTimelineControls() {
         // Create a container view above the scrubber
         let controlsContainer = UIView()
-        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
+        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0)
         controlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controlsContainer)
         
@@ -250,7 +301,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         NSLayoutConstraint.activate([
             controlsContainer.leftAnchor.constraint(equalTo: videoScrubberView.leftAnchor),
             controlsContainer.rightAnchor.constraint(equalTo: videoScrubberView.rightAnchor),
-            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubberView.topAnchor, constant: -5),
+            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubberView.topAnchor, constant: -12),
             controlsContainer.heightAnchor.constraint(equalToConstant: 40)
         ])
         

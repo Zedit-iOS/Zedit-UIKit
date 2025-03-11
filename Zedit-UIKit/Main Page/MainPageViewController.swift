@@ -70,14 +70,61 @@ class MainPageViewController: UIViewController {
                 setupGestureRecognizer()
                 generateThumbnails()
         setupTimelineControls()
+        styleViews()
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         
         
     }
     
+    private func styleViews() {
+        // Set the main background color
+        view.backgroundColor = .black
+        
+        // Style video player views and slider view
+        let viewsToStyle = [videoPreviewView]
+        let cornerRadius: CGFloat = 12
+        let borderWidth: CGFloat = 1
+        let borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        let backgroundColor = UIColor(white: 0.15, alpha: 1.0) // Slightly lighter than black
+        
+        for view in viewsToStyle {
+            guard let view = view else { continue }
+            
+            // Set corner radius
+            view.layer.cornerRadius = cornerRadius
+            view.layer.masksToBounds = true
+            
+            // Set border
+            view.layer.borderWidth = borderWidth
+            view.layer.borderColor = borderColor
+            
+            // Set background color
+            view.backgroundColor = backgroundColor
+            
+            // Add padding for content inside
+            view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        }
+        
+        // Special handling for playerView: No left & right insets
+        
+        
+        // Ensure proper padding for video players
+        adjustVideoPlayerLayouts()
+    }
+    
+    private func adjustVideoPlayerLayouts() {
+        // Adjust the player view controllers to respect margins
+        if let playerView = playerViewController?.view {
+            playerView.frame = videoPreviewView.bounds.insetBy(dx: 8, dy: 8)
+        }
+        
+    }
+
+    
     func setupTimelineControls() {
         // Create a container view above the scrubber
         let controlsContainer = UIView()
-        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
+        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0)
         controlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controlsContainer)
         
@@ -85,7 +132,7 @@ class MainPageViewController: UIViewController {
         NSLayoutConstraint.activate([
             controlsContainer.leftAnchor.constraint(equalTo: videoScrubber.leftAnchor),
             controlsContainer.rightAnchor.constraint(equalTo: videoScrubber.rightAnchor),
-            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubber.topAnchor, constant: -5),
+            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubber.topAnchor, constant: -25),
             controlsContainer.heightAnchor.constraint(equalToConstant: 40)
         ])
         

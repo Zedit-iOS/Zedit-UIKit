@@ -33,7 +33,7 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func setupTimelineControls() {
         // Create a container view above the scrubber
         let controlsContainer = UIView()
-        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
+        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0)
         controlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controlsContainer)
         
@@ -41,7 +41,7 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
         NSLayoutConstraint.activate([
             controlsContainer.leftAnchor.constraint(equalTo: videoScrubberView.leftAnchor),
             controlsContainer.rightAnchor.constraint(equalTo: videoScrubberView.rightAnchor),
-            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubberView.topAnchor, constant: -5),
+            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubberView.topAnchor, constant: 0),
             controlsContainer.heightAnchor.constraint(equalToConstant: 40)
         ])
         

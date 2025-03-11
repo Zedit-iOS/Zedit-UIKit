@@ -83,10 +83,12 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                 loadVideo(url: videoList[0])
             }
         }
+        navigationItem.title = projectNameColorGrade
         setupPlayheadIndicator()
         setupGestureRecognizer()
         generateThumbnails()
         setupTimelineControls()
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -434,8 +436,8 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         playerViewController?.view.frame = videoPlayer.bounds
         colorPlayerLayer?.frame = colorVideoPlayer.bounds
         playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = playerView.frame.minY + 93
-        playheadIndicator.frame.size.height = playerView.bounds.height
+        playheadIndicator.frame.origin.y = playerView.frame.minY + 132
+        playheadIndicator.frame.size.height = videoScrubberView.bounds.height
         adjustVideoPlayerLayouts()
     }
     
