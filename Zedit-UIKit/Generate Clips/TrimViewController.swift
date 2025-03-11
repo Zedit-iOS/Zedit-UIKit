@@ -142,7 +142,6 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 label?.clipsToBounds = true
                 label?.font = UIFont.boldSystemFont(ofSize: 16)
                 label?.textColor = .white
-                label?.backgroundColor = UIColor(white: 0.15, alpha: 1.0)
                 
                 // Set fixed width constraint to fit "59 min" or "59 sec"
                 label?.translatesAutoresizingMaskIntoConstraints = false
@@ -283,7 +282,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 
         // Position the playhead over the scrollView
         playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubberView.frame.minY + 15
+        playheadIndicator.frame.origin.y = videoScrubberView.frame.minY + 10
         playheadIndicator.frame.size.height = videoScrubberView.bounds.height
     }
     
