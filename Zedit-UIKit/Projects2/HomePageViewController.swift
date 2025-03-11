@@ -42,6 +42,31 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             onboardingVC.modalPresentationStyle = .fullScreen  // or .overFullScreen if you prefer transparency
             present(onboardingVC, animated: true)
         }
+        setupNavigationTitle()
+    }
+    
+    private func setupNavigationTitle() {
+        // Create the image view
+        let logoImageView = UIImageView(image: UIImage(named: "zedit_logo"))
+        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        logoImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true  // Adjust size as needed
+        logoImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+        // Create the label
+        let titleLabel = UILabel()
+        titleLabel.text = "edit"
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 50) // Adjust size if needed
+        titleLabel.textColor = .label  // Adapts to light/dark mode
+
+        // Stack view to arrange them horizontally
+        let titleStackView = UIStackView(arrangedSubviews: [logoImageView, titleLabel])
+        titleStackView.axis = .horizontal
+        titleStackView.spacing = 5 // Adjust spacing
+        titleStackView.alignment = .center
+
+        // Set the stack view as the title view
+        navigationItem.titleView = titleStackView
     }
     
     private func setupBackgroundImage() {
