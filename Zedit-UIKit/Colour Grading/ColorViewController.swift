@@ -18,31 +18,52 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var videoSelectorButton: UIButton!
     
     @IBOutlet weak var redSlider: UISlider!
-    @IBOutlet weak var redLabel: UILabel!
     @IBOutlet weak var greenSlider: UISlider!
-    @IBOutlet weak var greenLabel: UILabel!
     @IBOutlet weak var blueSlider: UISlider!
-    @IBOutlet weak var blueLabel: UILabel!
     @IBOutlet weak var contrastSlider: UISlider!
-    @IBOutlet weak var contrastLabel: UILabel!
+    
+    
+    @IBOutlet weak var redValueLabel: UILabel!
+    
+    @IBOutlet weak var greenValueLabel: UILabel!
+    
+    @IBOutlet weak var blueValueLabel: UILabel!
+    
+    
+    @IBOutlet weak var contrastValueLabel: UILabel!
+    
+    @IBOutlet weak var sliderView: UIView!
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    @IBOutlet weak var playerView: UIView!
+    
+    @IBOutlet weak var videoScrubberView: UIScrollView!
     
     var projectNameColorGrade = String()
     private var project: Project?
-    private var videoList: [URL] = []
-    private var player: AVPlayer?
-    private var playerViewController: AVPlayerViewController?
+    var videoList: [URL] = []
+    var player: AVPlayer?
+    var playerViewController: AVPlayerViewController?
     private var colorPlayerLayer: AVPlayerLayer?
     private var asset: AVAsset?
     private var context: CIContext?
     private var timeObserverToken: (observer: Any, player: AVPlayer)?
     private var isNavigatingBack = false
-    fileprivate var playerObserver: Any?
+    var playerObserver: Any?
+    var playPauseButton = UIButton(type: .system)
+    var timeLabel: UILabel!
+    var playheadIndicator: UIView!
+    var sliderIndicator: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVideoPlayers()
+        setupCollectionView()
         context = CIContext(options: nil)
         setupSliders()
+        styleViews()
+        configureSliderViewLayout()
         
         navigationController?.delegate = self
         
@@ -52,8 +73,22 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         if let videos = fetchVideos() {
             videoList = videos
-            setUpVideoSelector()
+            collectionView.reloadData()
+            print("Videos successfully loaded: \(videoList.count) videos found.")
+            
+            // Select first video from collection view by default
+            if !videoList.isEmpty {
+                let indexPath = IndexPath(item: 0, section: 0)
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                loadVideo(url: videoList[0])
+            }
         }
+        navigationItem.title = projectNameColorGrade
+        setupPlayheadIndicator()
+        setupGestureRecognizer()
+        generateThumbnails()
+        setupTimelineControls()
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -61,6 +96,146 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                 player?.replaceCurrentItem(with: nil)
                 player = nil
             }
+    }
+    
+    private func findAllStackViews(in view: UIView) -> [UIStackView] {
+        return view.subviews.compactMap { $0 as? UIStackView }
+    }
+
+    
+    private func configureSliderViewLayout() {
+        guard let sliderView = sliderView else { return }
+
+        if let sliderStackView = sliderView as? UIStackView {
+            sliderStackView.axis = .vertical
+            sliderStackView.distribution = .fillEqually
+            sliderStackView.alignment = .fill
+            sliderStackView.spacing = 12
+        } else {
+            let immediateStackViews = findAllStackViews(in: sliderView)
+            
+            let existingVerticalStackView = immediateStackViews.first(where: { $0.axis == .vertical })
+            
+            if let verticalStackView = existingVerticalStackView {
+                verticalStackView.axis = .vertical
+                verticalStackView.distribution = .fillEqually
+                verticalStackView.alignment = .fill
+                verticalStackView.spacing = 12
+                verticalStackView.translatesAutoresizingMaskIntoConstraints = false
+
+                NSLayoutConstraint.activate([
+                    verticalStackView.topAnchor.constraint(equalTo: sliderView.topAnchor, constant: 12),
+                    verticalStackView.leadingAnchor.constraint(equalTo: sliderView.leadingAnchor, constant: 12),
+                    verticalStackView.trailingAnchor.constraint(equalTo: sliderView.trailingAnchor, constant: -12),
+                    verticalStackView.bottomAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: -12)
+                ])
+            } else {
+                let horizontalStackViews = immediateStackViews.filter { $0.axis == .horizontal }
+
+                for horizontalStack in horizontalStackViews {
+                    horizontalStack.removeFromSuperview()
+                }
+
+                let newVerticalStackView = UIStackView(arrangedSubviews: horizontalStackViews)
+                newVerticalStackView.axis = .vertical
+                newVerticalStackView.distribution = .fillEqually
+                newVerticalStackView.alignment = .fill
+                newVerticalStackView.spacing = 12
+                newVerticalStackView.translatesAutoresizingMaskIntoConstraints = false
+
+                sliderView.addSubview(newVerticalStackView)
+
+                NSLayoutConstraint.activate([
+                    newVerticalStackView.topAnchor.constraint(equalTo: sliderView.topAnchor, constant: 12),
+                    newVerticalStackView.leadingAnchor.constraint(equalTo: sliderView.leadingAnchor, constant: 12),
+                    newVerticalStackView.trailingAnchor.constraint(equalTo: sliderView.trailingAnchor, constant: -12),
+                    newVerticalStackView.bottomAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: -12)
+                ])
+            }
+        }
+
+        let horizontalStacks = findAllStackViews(in: sliderView).filter { $0.axis == .horizontal }
+
+        for horizontalStack in horizontalStacks {
+            horizontalStack.distribution = .fill
+            horizontalStack.alignment = .center
+            horizontalStack.spacing = 8
+
+            for view in horizontalStack.arrangedSubviews {
+                if let slider = view as? UISlider {
+                    slider.setContentHuggingPriority(.defaultLow, for: .horizontal)
+                    slider.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+                } else if let label = view as? UILabel {
+                    label.setContentHuggingPriority(.required, for: .horizontal)
+                    label.setContentCompressionResistancePriority(.required, for: .horizontal)
+                    label.setContentCompressionResistancePriority(.required, for: .vertical)
+                    label.widthAnchor.constraint(equalToConstant: 60).isActive = true
+                    label.textAlignment = .right
+                }
+            }
+        }
+
+        let minimumHeight = CGFloat(horizontalStacks.count) * 40 + CGFloat(horizontalStacks.count - 1) * 12 + 24
+        sliderView.heightAnchor.constraint(greaterThanOrEqualToConstant: minimumHeight).isActive = true
+    }
+
+    
+    private func styleViews() {
+        // Set the main background color
+        view.backgroundColor = .black
+        
+        // Style video player views and slider view
+        let viewsToStyle = [videoPlayer, colorVideoPlayer, sliderView]
+        let cornerRadius: CGFloat = 12
+        let borderWidth: CGFloat = 1
+        let borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        let backgroundColor = UIColor(white: 0.15, alpha: 1.0) // Slightly lighter than black
+        
+        for view in viewsToStyle {
+            guard let view = view else { continue }
+            
+            // Set corner radius
+            view.layer.cornerRadius = cornerRadius
+            view.layer.masksToBounds = true
+            
+            // Set border
+            view.layer.borderWidth = borderWidth
+            view.layer.borderColor = borderColor
+            
+            // Set background color
+            view.backgroundColor = backgroundColor
+            
+            // Add padding for content inside
+            view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        }
+        
+        // Special handling for playerView: No left & right insets
+        if let playerView = playerView {
+            playerView.layer.cornerRadius = cornerRadius
+            playerView.layer.masksToBounds = true
+            playerView.layer.borderWidth = borderWidth
+            playerView.layer.borderColor = borderColor
+            playerView.backgroundColor = backgroundColor
+
+            // Set only top and bottom insets, no left and right
+            playerView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        }
+        
+        // Ensure proper padding for video players
+        adjustVideoPlayerLayouts()
+    }
+    
+    
+    // Add this method to ensure proper padding inside the player views
+    private func adjustVideoPlayerLayouts() {
+        // Adjust the player view controllers to respect margins
+        if let playerView = playerViewController?.view {
+            playerView.frame = videoPlayer.bounds.insetBy(dx: 8, dy: 8)
+        }
+        
+        if let colorLayer = colorPlayerLayer {
+            colorLayer.frame = colorVideoPlayer.bounds.insetBy(dx: 8, dy: 8)
+        }
     }
     
     @objc func backButtonTapped() {
@@ -80,30 +255,65 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func setupSliders() {
-        redSlider.minimumValue = 0
-        redSlider.maximumValue = 200
-        redSlider.value = 100
-        
-        greenSlider.minimumValue = 0
-        greenSlider.maximumValue = 200
-        greenSlider.value = 100
-        
-        blueSlider.minimumValue = 0
-        blueSlider.maximumValue = 200
-        blueSlider.value = 100
-        
-        contrastSlider.minimumValue = 0
-        contrastSlider.maximumValue = 150
-        contrastSlider.value = 50
+        setupSlider(slider: redSlider, min: 0, max: 200, value: 100, color: .red, label: redValueLabel)
+        setupSlider(slider: greenSlider, min: 0, max: 200, value: 100, color: .green, label: greenValueLabel)
+        setupSlider(slider: blueSlider, min: 0, max: 200, value: 100, color: .blue, label: blueValueLabel)
+        setupSlider(slider: contrastSlider, min: 0, max: 150, value: 50, color: .yellow, label: contrastValueLabel)
         
         redSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         greenSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         blueSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         contrastSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         
-        updateColorLabels()
+//        updateColorLabels()
     }
-    
+
+    // Helper function to configure each slider and label
+    private func setupSlider(slider: UISlider, min: Float, max: Float, value: Float, color: UIColor, label: UILabel) {
+        slider.minimumValue = min
+        slider.maximumValue = max
+        slider.value = value
+        
+        // Set slider track and thumb colors
+        slider.minimumTrackTintColor = color
+        slider.maximumTrackTintColor = color.withAlphaComponent(0.3) // Dimmed for contrast
+        slider.thumbTintColor = color
+        
+        // Set initial label value
+        let percentage = Int((value / max) * 100)
+        label.text = "\(percentage)%"
+    }
+
+    // Update label beside slider when value changes
+    @objc private func sliderValueChanged(_ sender: UISlider) {
+        let percentage = Int((sender.value / sender.maximumValue) * 100)
+        
+        switch sender {
+        case redSlider:
+            redValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case greenSlider:
+            greenValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case blueSlider:
+            blueValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        case contrastSlider:
+            contrastValueLabel.text = "\(percentage)%"
+            if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+                setupColorAdjustedVideo(with: url.url)
+            }
+        default:
+            break
+        }
+    }
+
     private func setupVideoPlayers() {
         let originalPlayer = AVPlayerViewController()
         originalPlayer.view.frame = videoPlayer.bounds
@@ -120,16 +330,12 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    private func loadVideo(url: URL) {
+    func loadVideo(url: URL) {
         
         asset = AVAsset(url: url)
-        let playerItem = AVPlayerItem(url: url)
-        
-        let mainPlayer = AVPlayer(playerItem: playerItem)
-        playerViewController?.player = mainPlayer
+        playVideo(url: url)
         
         setupColorAdjustedVideo(with: url)
-        mainPlayer.play()
         
         addPeriodicTimeObserver()
     }
@@ -211,24 +417,28 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    @objc private func sliderValueChanged() {
-        updateColorLabels()
-        if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
-            setupColorAdjustedVideo(with: url.url)
-        }
-    }
+//    @objc private func sliderValueChanged() {
+//        updateColorLabels()
+//        if let url = playerViewController?.player?.currentItem?.asset as? AVURLAsset {
+//            setupColorAdjustedVideo(with: url.url)
+//        }
+//    }
     
-    private func updateColorLabels() {
-        redLabel.text = String(format: "Red: %.1f%%", redSlider.value)
-        greenLabel.text = String(format: "Green: %.1f%%", greenSlider.value)
-        blueLabel.text = String(format: "Blue: %.1f%%", blueSlider.value)
-        contrastLabel.text = String(format: "Contrast: %.1f%%", contrastSlider.value)
-    }
+//    private func updateColorLabels() {
+//        redLabel.text = String(format: "Red: %.1f%%", redSlider.value)
+//        greenLabel.text = String(format: "Green: %.1f%%", greenSlider.value)
+//        blueLabel.text = String(format: "Blue: %.1f%%", blueSlider.value)
+//        contrastLabel.text = String(format: "Contrast: %.1f%%", contrastSlider.value)
+//    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         playerViewController?.view.frame = videoPlayer.bounds
         colorPlayerLayer?.frame = colorVideoPlayer.bounds
+        playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
+        playheadIndicator.frame.origin.y = playerView.frame.minY + 132
+        playheadIndicator.frame.size.height = videoScrubberView.bounds.height
+        adjustVideoPlayerLayouts()
     }
     
     deinit {
