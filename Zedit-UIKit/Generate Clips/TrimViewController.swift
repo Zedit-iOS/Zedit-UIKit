@@ -17,18 +17,38 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
+    private var isClipsPickerActive = false
+    
+    
+    @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var videoSelectorView: UIView!
     @IBOutlet weak var videoSelectorButton: UIButton!
     
     @IBOutlet weak var generateButton: UIButton!
-    @IBOutlet weak var numberOfClipsStepper: UIStepper!
-    @IBOutlet weak var numberOfClipsStepperLabel: UILabel!
+
+    @IBOutlet weak var numberOfClipsDisplayLabel: UILabel!
+    
     @IBOutlet weak var clippingFocusSegmentedControl: UISegmentedControl!
     
-    @IBOutlet weak var minutesPicker: UIPickerView!
-    @IBOutlet weak var secondsPicker: UIPickerView!
+    @IBOutlet weak var minuitesLabel: UILabel!
+    
+    
+    @IBOutlet weak var secondsLabel: UILabel!
+    
+    private var playPauseButton = UIButton(type: .system)
+    private var timeLabel: UILabel!
+    
+    
+    @IBOutlet weak var videoScrubberView: UIScrollView!
+    
+    var playheadIndicator: UIView!
+    var sliderIndicator: UIView!
+    
+    private var selectedMinutes: Int = 0
+        private var selectedSeconds: Int = 0
+    private var selectedClips: Int = 0
     
     private let minutesRange = Array(0...59)
     private let secondsRange = Array(0...59)
@@ -37,26 +57,27 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     fileprivate var playerObserver: Any?
     
-    private func setupPickers(  ) {
-        minutesPicker.delegate = self
-        minutesPicker.dataSource = self // Add dataSource
-        secondsPicker.delegate = self 
-        secondsPicker.dataSource = self // Add dataSource
-    }
-    
-    // Add required UIPickerViewDataSource methods
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
-        return String(format: "%02d", value)
-    }
+//    private func setupPickers(  ) {
+//        minutesPicker.delegate = self
+//        minutesPicker.dataSource = self // Add dataSource
+//        secondsPicker.delegate = self 
+//        secondsPicker.dataSource = self // Add dataSource
+//    }
+//    
+//    // Add required UIPickerViewDataSource methods
+//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//        return 1
+//    }
+//    
+//    
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        return pickerView == minutesPicker ? minutesRange.count : secondsRange.count
+//    }
+//    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        let value = pickerView == minutesPicker ? minutesRange[row] : secondsRange[row]
+//        return String(format: "%02d", value)
+//    }
     let trimSeguePreviewIdentifier = "preview"
     var player: AVPlayer?
     var playerViewController: AVPlayerViewController?
@@ -64,8 +85,9 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLabel.text = projectNameTrim
-        setupSteppers()
-        setupPickers()
+//        setupSteppers()
+        //setupPickers()
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         
         SFSpeechRecognizer.requestAuthorization { authStatus in
                 switch authStatus {
@@ -79,17 +101,375 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     fatalError("Unknown authorization status")
                 }
             }
-        
+        setupCollectionView()
         if let project = getProject(projectName: projectNameTrim) {
-            // Aggregate videos from all subfolders
-            videoList = project.subfolders.flatMap { $0.videoURLS }
-            setUpButton()
-        }
+                videoList = project.subfolders.flatMap { $0.videoURLS }
+                collectionView.reloadData()
+                print("Videos successfully loaded: \(videoList.count) videos found.")
+                
+                // Select first video from collection view by default
+                if !videoList.isEmpty {
+                    let indexPath = IndexPath(item: 0, section: 0)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                    playVideo(url: videoList[0])
+                }
+            } else {
+                print("Failed to load project.")
+            }
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
+        
+        setupPlayheadIndicator()
+        setupGestureRecognizer()
+        generateThumbnails()
+        setupTimelineControls()
+        updateTimeLabels()
+                
+                // Add tap gesture to open picker popup
+                let minutesTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
+                let secondsTap = UITapGestureRecognizer(target: self, action: #selector(showTimePicker))
+        let clipsTap = UITapGestureRecognizer(target: self, action: #selector(showClipsPicker))
+        setupLabels()
+                
+                minuitesLabel.isUserInteractionEnabled = true
+                secondsLabel.isUserInteractionEnabled = true
+                minuitesLabel.addGestureRecognizer(minutesTap)
+                secondsLabel.addGestureRecognizer(secondsTap)
+        numberOfClipsDisplayLabel.isUserInteractionEnabled = true
+        numberOfClipsDisplayLabel.addGestureRecognizer(clipsTap)
+        styleViews()
     }
+    
+    private func styleViews() {
+        // Set the main background color
+        view.backgroundColor = .black
+        
+        // Style video player views and slider view
+        let viewsToStyle = [videoSelectorView]
+        let cornerRadius: CGFloat = 12
+        let borderWidth: CGFloat = 1
+        let borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        let backgroundColor = UIColor(white: 0.15, alpha: 1.0) // Slightly lighter than black
+        
+        for view in viewsToStyle {
+            guard let view = view else { continue }
+            
+            // Set corner radius
+            view.layer.cornerRadius = cornerRadius
+            view.layer.masksToBounds = true
+            
+            // Set border
+            view.layer.borderWidth = borderWidth
+            view.layer.borderColor = borderColor
+            
+            // Set background color
+            view.backgroundColor = backgroundColor
+            
+            // Add padding for content inside
+            view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        }
+        
+        // Special handling for playerView: No left & right insets
+        
+        
+        // Ensure proper padding for video players
+        adjustVideoPlayerLayouts()
+    }
+    
+    private func adjustVideoPlayerLayouts() {
+        // Adjust the player view controllers to respect margins
+        if let playerView = playerViewController?.view {
+            playerView.frame = videoSelectorView.bounds.insetBy(dx: 8, dy: 8)
+        }
+        
+    }
+    
+    private func setupLabels() {
+        let labels = [minuitesLabel, secondsLabel, numberOfClipsDisplayLabel]
+        for label in labels {
+            label?.textAlignment = .center
+            label?.clipsToBounds = true
+            label?.font = UIFont.boldSystemFont(ofSize: 16)
+            label?.textColor = .white
+            label?.backgroundColor = UIColor.darkGray // Set background color
+            label?.layer.borderColor = UIColor.lightGray.cgColor // Set border color
+            label?.layer.borderWidth = 2 // Border thickness
+            label?.layer.cornerRadius = 5 // Rounded corners
+            label?.layer.masksToBounds = true
+            
+            // Set fixed width constraint to fit "59 min" or "59 sec"
+            label?.translatesAutoresizingMaskIntoConstraints = false
+            label?.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            label?.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        }
+    }
+    
+    @objc private func showClipsPicker() {
+        isClipsPickerActive = true
+            let alert = UIAlertController(title: "Select number of clips", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+            
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.frame = CGRect(x: 0, y: 50, width: 270, height: 150)
+            
+            // Pre-select current values
+            pickerView.selectRow(selectedClips, inComponent: 0, animated: false)
+            
+            alert.view.addSubview(pickerView)
+            
+            let selectAction = UIAlertAction(title: "Select", style: .default) { _ in
+                self.selectedClips = pickerView.selectedRow(inComponent: 0)
+                self.updateClipLabels()
+            }
+            
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                self.isClipsPickerActive = false  // Reset flag on cancel
+            }
+            
+            alert.addAction(selectAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+        }
+    
+    @objc private func showTimePicker() {
+        isClipsPickerActive = false
+            let alert = UIAlertController(title: "Select Time", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+            
+            let pickerView = UIPickerView()
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.frame = CGRect(x: 0, y: 50, width: 270, height: 150)
+            
+            // Pre-select current values
+            pickerView.selectRow(selectedMinutes, inComponent: 0, animated: false)
+            pickerView.selectRow(selectedSeconds, inComponent: 1, animated: false)
+            
+            alert.view.addSubview(pickerView)
+            
+            let selectAction = UIAlertAction(title: "Select", style: .default) { _ in
+                self.selectedMinutes = pickerView.selectedRow(inComponent: 0)
+                self.selectedSeconds = pickerView.selectedRow(inComponent: 1)
+                self.updateTimeLabels()
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            alert.addAction(selectAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+        }
+    
+    private func updateClipLabels(){
+        numberOfClipsDisplayLabel.text = String(selectedClips)
+    }
+        
+        private func updateTimeLabels() {
+            minuitesLabel.text = String(format: "%02d min", selectedMinutes)
+            secondsLabel.text = String(format: "%02d sec", selectedSeconds)
+        }
+        
+        // MARK: - UIPickerView DataSource & Delegate
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return isClipsPickerActive ? 1 : 2// One for minutes, one for seconds
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            if isClipsPickerActive {
+                    return 100 // Adjust the maximum number of clips as needed
+                }
+                return component == 0 ? minutesRange.count : secondsRange.count
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return String(format: "%02d", row)
+        }
+    
+    func setupTimelineControls() {
+        // Create a container view above the scrubber
+        let controlsContainer = UIView()
+        controlsContainer.backgroundColor = UIColor(white: 0.1, alpha: 0)
+        controlsContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controlsContainer)
+        
+        // Position the container above the scrubber
+        NSLayoutConstraint.activate([
+            controlsContainer.leftAnchor.constraint(equalTo: videoScrubberView.leftAnchor),
+            controlsContainer.rightAnchor.constraint(equalTo: videoScrubberView.rightAnchor),
+            controlsContainer.bottomAnchor.constraint(equalTo: videoScrubberView.topAnchor, constant: -12),
+            controlsContainer.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        
+        // Create play/pause button
+        let playPauseButton = UIButton(type: .system)
+        playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        playPauseButton.tintColor = .white
+        playPauseButton.translatesAutoresizingMaskIntoConstraints = false
+        playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
+        controlsContainer.addSubview(playPauseButton)
+        
+        // Create time label
+        let timeLabel = UILabel()
+        timeLabel.text = "00:00 / 00:00"
+        timeLabel.textColor = .white
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium)
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        controlsContainer.addSubview(timeLabel)
+        
+        // Position controls
+        NSLayoutConstraint.activate([
+            playPauseButton.leftAnchor.constraint(equalTo: controlsContainer.leftAnchor, constant: 15),
+            playPauseButton.centerYAnchor.constraint(equalTo: controlsContainer.centerYAnchor),
+            playPauseButton.widthAnchor.constraint(equalToConstant: 40),
+            playPauseButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            timeLabel.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 15),
+            timeLabel.centerYAnchor.constraint(equalTo: controlsContainer.centerYAnchor)
+        ])
+        
+        // Store references
+        self.playPauseButton = playPauseButton
+        self.timeLabel = timeLabel
+    }
+
+    @objc func togglePlayPause() {
+        guard let player = player else { return }
+        
+        if player.rate == 0 {
+            player.play()
+            playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        } else {
+            player.pause()
+            playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        }
+    }
+
+    func updateTimeDisplay() {
+        guard let player = player,
+              let currentItem = player.currentItem,
+              let timeLabel = timeLabel else { return }
+        
+        let currentTime = player.currentTime().seconds
+        let duration = currentItem.duration.seconds
+        
+        if !currentTime.isNaN && !duration.isNaN {
+            let currentTimeString = formatTime(seconds: currentTime)
+            let durationString = formatTime(seconds: duration)
+            timeLabel.text = "\(currentTimeString) / \(durationString)"
+        }
+    }
+
+    func formatTime(seconds: Double) -> String {
+        let totalSeconds = Int(seconds.rounded())
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // Position the playhead over the scrollView
+        playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
+        playheadIndicator.frame.origin.y = videoScrubberView.frame.minY + 10
+        playheadIndicator.frame.size.height = videoScrubberView.bounds.height
+    }
+    
+    func setupCollectionView() {
+            collectionView.delegate = self
+            collectionView.dataSource = self
+        collectionView.register(TrimCollectionViewCell.self, forCellWithReuseIdentifier: "TrimCell")
+            
+            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                layout.scrollDirection = .horizontal
+                layout.minimumInteritemSpacing = 8
+                layout.minimumLineSpacing = 8
+                layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
+            }
+        }
+    
+    func setupSwipeGesture() {
+            let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+            swipeLeft.direction = .left
+        videoScrubberView.addGestureRecognizer(swipeLeft)
+        }
+    
+    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+            guard let player = player, let duration = player.currentItem?.duration.seconds else { return }
+            let currentTime = player.currentTime().seconds
+            let newTime = CMTime(seconds: min(currentTime + 5, duration), preferredTimescale: 600)
+            player.seek(to: newTime)
+        }
+    
+
+    
+    func generateThumbnails() {
+        guard let firstVideo = videoList.first else { return }
+        let asset = AVAsset(url: firstVideo)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+
+        let duration = Int(CMTimeGetSeconds(asset.duration))  // Total seconds of video
+        let interval = 1  // Generate one thumbnail per second
+
+        var times = [NSValue]()
+        for i in 0..<duration {
+            let cmTime = CMTime(seconds: Double(i) * Double(interval), preferredTimescale: 600)
+            times.append(NSValue(time: cmTime))
+        }
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            var xOffset: CGFloat = self.videoScrubberView.frame.midX - (self.playheadIndicator.frame.width/2)// Start at playhead position
+            let thumbnailWidth: CGFloat = 60  // Thumbnail width
+            let spacing: CGFloat = 1  // Space between thumbnails
+
+            imageGenerator.generateCGImagesAsynchronously(forTimes: times) { requestedTime, image, actualTime, result, error in
+                if let image = image, error == nil {
+                    DispatchQueue.main.async {
+                        let thumbnailImage = UIImage(cgImage: image)
+                        let imageView = UIImageView(image: thumbnailImage)
+                        imageView.frame = CGRect(x: xOffset, y: 0, width: thumbnailWidth, height: self.videoScrubberView.bounds.height)
+                        
+                        self.videoScrubberView.addSubview(imageView)
+                        xOffset += thumbnailWidth + spacing  // Move x position with spacing
+
+                        self.videoScrubberView.contentSize = CGSize(width: xOffset, height: self.videoScrubberView.bounds.height)
+                        
+                        // Align scroll position so playhead points to the first frame
+                        if xOffset == self.playheadIndicator.frame.origin.x {
+                            self.videoScrubberView.contentOffset.x = xOffset - (self.videoScrubberView.frame.width / 2)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @objc func backButtonTapped(){
+        self.navigationController?.popToRootViewController(animated: false)
+    }
+    
+    func setupGestureRecognizer() {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        videoScrubberView.addGestureRecognizer(panGesture)
+        }
+        
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: videoScrubberView)
+        let newOffset = videoScrubberView.contentOffset.x - translation.x
+        
+        videoScrubberView.contentOffset.x = max(0, min(newOffset, videoScrubberView.contentSize.width - videoScrubberView.bounds.width))
+        
+        gesture.setTranslation(.zero, in: videoScrubberView)
+        
+        updatePlayheadPosition()
+    }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -98,6 +478,38 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 player = nil
             }
     }
+    
+    func setupPlayheadIndicator() {
+        playheadIndicator = UIView()
+        playheadIndicator.backgroundColor = .yellow
+        playheadIndicator.frame = CGRect(x: videoScrubberView.frame.midX - 1, y: videoScrubberView.frame.origin.y, width: 2, height: videoScrubberView.bounds.height)
+        
+        self.view.addSubview(playheadIndicator)
+        self.view.bringSubviewToFront(playheadIndicator)
+    }
+    
+    
+    func updatePlayheadPosition() {
+        guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+        
+        let maxOffset = videoScrubberView.contentSize.width - videoScrubberView.bounds.width
+        let progress = min(max(videoScrubberView.contentOffset.x / maxOffset, 0), 1) // Normalize
+        let newTime = CMTime(seconds: duration * Double(progress), preferredTimescale: 600)
+        
+        player?.seek(to: newTime)
+    }
+    // MARK: - Sync Slider with Video
+    @objc func sliderValueChanged(_ sender: UISlider) {
+            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+            let newTime = CMTime(seconds: duration * Double(sender.value), preferredTimescale: 600)
+            player?.seek(to: newTime)
+        }
+    
+    func observePlayerTime() {
+            player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main) { [weak self] time in
+                self?.updatePlayheadPosition()
+            }
+        }
 
     
     func extractAudioAndTranscribe(from videoURL: URL) {
@@ -176,19 +588,19 @@ func transcribeAudio(at audioURL: URL) {
            }
        }
    }
-    func setupSteppers() {
-        numberOfClipsStepper.minimumValue = 1
-        numberOfClipsStepper.maximumValue = 10
-        numberOfClipsStepper.stepValue = 1
-        numberOfClipsStepper.value = 1
-        numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
-
-        numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
-    }
-    
-    @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
-        numberOfClipsStepperLabel.text = "\(Int(sender.value))"
-    }
+//    func setupSteppers() {
+//        numberOfClipsStepper.minimumValue = 1
+//        numberOfClipsStepper.maximumValue = 10
+//        numberOfClipsStepper.stepValue = 1
+//        numberOfClipsStepper.value = 1
+//        numberOfClipsStepperLabel.text = "\(Int(numberOfClipsStepper.value))"
+//
+//        numberOfClipsStepper.addTarget(self, action: #selector(numberOfClipsStepperChanged(_:)), for: .valueChanged)
+//    }
+//    
+//    @objc func numberOfClipsStepperChanged(_ sender: UIStepper) {
+//        numberOfClipsStepperLabel.text = "\(Int(sender.value))"
+//    }
     
     func getProject(projectName: String) -> Project? {
         let fileManager = FileManager.default
@@ -251,23 +663,36 @@ func transcribeAudio(at audioURL: URL) {
     }
     
 
-    private func playVideo(url: URL) {
-        if player != nil{
-            player?.replaceCurrentItem(with: nil)
-            player = nil
+    func playVideo(url: URL) {
+        // Remove any existing time observers
+        if let observer = playerObserver {
+            player?.removeTimeObserver(observer)
+            playerObserver = nil
         }
-        player = AVPlayer(url: url)
-        let resetPlayer                  = {
-            self.player?.seek(to: CMTime.zero)
-                    self.player?.play()
-                }
-        playerObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.currentItem, queue: nil) { notification in resetPlayer() }
-        playerViewController = AVPlayerViewController()
-        playerViewController?.player = player
-        playerViewController?.showsPlaybackControls = true
         
+        // Reset or create a new player
+        if player == nil {
+            player = AVPlayer(url: url)
+        } else {
+            let playerItem = AVPlayerItem(url: url)
+            player?.replaceCurrentItem(with: playerItem)
+        }
+        
+        print("Attempting to play: \(url)")
+        
+        // Reset the player view controller
+        if playerViewController == nil {
+            playerViewController = AVPlayerViewController()
+            playerViewController?.showsPlaybackControls = false // Hide default controls
+        }
+        
+        // Assign the player to the view controller
+        playerViewController?.player = player
+        
+        // Remove any existing subviews in videoPreviewView
         videoSelectorView.subviews.forEach { $0.removeFromSuperview() }
         
+        // Add AVPlayerViewController view to the container
         if let playerVC = playerViewController {
             addChild(playerVC)
             playerVC.view.frame = videoSelectorView.bounds
@@ -275,7 +700,37 @@ func transcribeAudio(at audioURL: URL) {
             playerVC.didMove(toParent: self)
         }
         
-        player?.play()
+        // Add a new time observer
+        playerObserver = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 600), queue: .main, using: { [weak self] time in
+            guard let self = self else { return }
+            
+            // Update time label
+            self.updateTimeDisplay()
+            
+            // Update playhead position based on current time
+            if let duration = self.player?.currentItem?.duration.seconds, duration > 0 {
+                let progress = time.seconds / duration
+                
+                // Calculate scrubber content offset based on video progress
+                if self.videoScrubberView.contentSize.width > self.videoScrubberView.bounds.width {
+                    let maxOffset = self.videoScrubberView.contentSize.width - self.videoScrubberView.bounds.width
+                    let newOffset = CGFloat(progress) * maxOffset
+                    
+                    // Only update if significantly different to avoid jerky updates
+                    if abs(self.videoScrubberView.contentOffset.x - newOffset) > 2.0 {
+                        self.videoScrubberView.contentOffset.x = newOffset
+                    }
+                }
+            }
+        })
+        
+        // Update play/pause button state
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        
+        // Play after a slight delay to ensure UI updates first
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.player?.play()
+        }
     }
     
     func generateClips() {
@@ -285,7 +740,7 @@ func transcribeAudio(at audioURL: URL) {
         }
         
 
-        let minimumClipDuration = minutesPicker.selectedRow(inComponent: 0)*60 + secondsPicker.selectedRow(inComponent: 0)
+        let minimumClipDuration = Int(minuitesLabel.text!)!*60 + Int(secondsLabel.text!)!
         processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
         
         let finalSceneRanges = scenes.map { $0.start...$0.end }
@@ -347,11 +802,41 @@ func transcribeAudio(at audioURL: URL) {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
             if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
-                generateClips()
+                //generateClips()
+                guard let videoURL = videoList.first else {
+                            print("No video available for clipping")
+                            return
+                        }
+                let numberOfClips = Int(numberOfClipsDisplayLabel.text!)!
+                        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                            self.clipTimestamps = timestamps
+                            exportClip(from: videoURL, timestamps: timestamps)
+                        } else {
+                            print("Failed to generate clip timestamps")
+                        }
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
     }
+    
+    // New helper function to generate even clip timestamps.
+    func generateEvenClipTimestamps(for videoURL: URL, numberOfClips: Int) -> [Double]? {
+        let asset = AVAsset(url: videoURL)
+        let durationSeconds = CMTimeGetSeconds(asset.duration)
+        guard durationSeconds > 0, numberOfClips > 0 else { return nil }
+        
+        // Calculate the clip duration (each clip will be of equal duration).
+        let clipDuration = durationSeconds / Double(numberOfClips)
+        
+        // Build timestamps array. We start at 0, then add clipDuration repeatedly.
+        // Ensure we include the final timestamp.
+        var timestamps: [Double] = []
+        for i in 0...numberOfClips {
+            timestamps.append(Double(i) * clipDuration)
+        }
+        return timestamps
+    }
+
     
     @IBAction func cancelButtonTapped(_ sender: UIButton) {
         let alertController = UIAlertController(
@@ -437,5 +922,26 @@ extension TrimViewController {
 //        } else {
 //            self.view.frame.origin.y = 0
 //        }
+    }
+}
+
+extension TrimViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return videoList.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrimCell", for: indexPath) as? TrimCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        let videoURL = videoList[indexPath.item]
+        cell.configure(with: videoURL)
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedVideo = videoList[indexPath.item]
+        print("Playing video from collection: \(selectedVideo)")
+        playVideo(url: selectedVideo)
     }
 }
