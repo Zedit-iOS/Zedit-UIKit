@@ -540,6 +540,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     self.transcribeAudio(at: audioOutputURL)
                 case .failed:
                     print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                    self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: videoURL)
                 case .cancelled:
                     print("Audio export cancelled")
                 default:
@@ -565,6 +566,7 @@ func transcribeAudio(at audioURL: URL) {
            if let error = error {
                
                print("Transcription error: \(error.localizedDescription)")
+               self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: audioURL)
                return
            }
            
@@ -583,7 +585,7 @@ func transcribeAudio(at audioURL: URL) {
                    }
                    print(formattedTimestamps)
                    let timestamps = formattedTimestamps.map { $0.key }
-                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges)
+                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges, videoURL: audioURL)
                }
            }
        }
@@ -740,7 +742,9 @@ func transcribeAudio(at audioURL: URL) {
         }
         
 
-        let minimumClipDuration = Int(minuitesLabel.text!)!*60 + Int(secondsLabel.text!)!
+        let minutes = Int(minuitesLabel.text ?? "") ?? 1
+        let seconds = Int(secondsLabel.text ?? "") ?? 15
+        let minimumClipDuration = (minutes * 60) + seconds
         processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
         
         let finalSceneRanges = scenes.map { $0.start...$0.end }
@@ -802,18 +806,12 @@ func transcribeAudio(at audioURL: URL) {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
             if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
-                //generateClips()
+                
                 guard let videoURL = videoList.first else {
                             print("No video available for clipping")
                             return
                         }
-                let numberOfClips = Int(numberOfClipsDisplayLabel.text!)!
-                        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
-                            self.clipTimestamps = timestamps
-                            exportClip(from: videoURL, timestamps: timestamps)
-                        } else {
-                            print("Failed to generate clip timestamps")
-                        }
+                generateClips()
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
@@ -868,44 +866,38 @@ func transcribeAudio(at audioURL: URL) {
     }
     }
     
-    func getResults(timestamps: [String], sceneRanges: [[Double]]) {
-        let apiURL = URL(string: "https://gvnn439j-8000.inc1.devtunnels.ms/getClipTimeStamps")!
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    func getResults(timestamps: [String], sceneRanges: [[Double]], videoURL: URL) {
+        let llm = LLM()
+        let timeout: TimeInterval = 60 // 1 minute
+        var result: String?
+        let queue = DispatchQueue.global(qos: .userInitiated)
+        let group = DispatchGroup()
         
-        let payload = [
-            "transcript": timestamps,
-            "sceneChanges": sceneRanges
-        ] as [String : Any]
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: payload)
-            request.httpBody = jsonData
-            
-            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                if let error = error {
-                    print("API Error: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    do {
-                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
-                           let videoURL = self?.videoList.first {
-                            DispatchQueue.main.async {
-                                self?.clipTimestamps = timestamps
-                                self?.exportClip(from: videoURL, timestamps: timestamps)
-                            }
-                        }
-                    } catch {
-                        print("JSON parsing error: \(error)")
-                    }
-                }
+
+        group.enter()
+        queue.async {
+            do {
+                result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
+            } catch {
+                print("LLM execution failed: \(error.localizedDescription)")
             }
-            task.resume()
-        } catch {
-            print("JSON serialization error: \(error)")
+            group.leave()
+        }
+
+        let waitResult = group.wait(timeout: .now() + timeout)
+
+        if waitResult == .timedOut {
+            print("LLM execution timed out, proceeding with generateEvenClipTimestamps")
+        } else if let result = result {
+            print(result)
+        }
+
+        let numberOfClips = Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1
+        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+            self.clipTimestamps = timestamps
+            exportClip(from: videoURL, timestamps: timestamps)
+        } else {
+            print("Failed to generate clip timestamps")
         }
     }
 }

@@ -19,14 +19,28 @@ class LLM {
     private var cancellable: Set<AnyCancellable> = []
     
     init() {
-        let path = Bundle.main.path(forResource: "", ofType: "gguf") ?? ""
+        let path = Bundle.main.path(forResource: "ds", ofType: "gguf") ?? ""
         swiftLlama = (try? SwiftLlama(modelPath: path))!
     }
     
     func run(for userMessage: String)-> String {
         result = ""
         let prompt = Prompt(type: .llama3,
-                            systemPrompt: "You are proffesional video clipper, where you just provide the list of timestamps where the video can be clipped by analyzing the data provided. 2 data is provided, first is the list of timestamps of scene changes according to OpenCV and second is the transcript with the timestamps. Provide the final result in list of timestamps where the video can be clipped dont provide any other text than this example: [0, 0.320, 2.34, 3]]. Also don't hallucinate",
+                            systemPrompt: """
+        Given this video transcript and scene changes, identify the optimal clip segments. 
+        The scene changes are provided as a list of timestamps, and the transcript is provided as a list of timestamp-text pairs. 
+        Return a list of timestamps where the video can be clipped.
+
+        RULES:
+        1. Do not cut dialogues abruptly.
+        2. Do not return the scene ranges as they are; analyze them properly.
+        3. Return only a list of numbers representing seconds in the format [num1, num2, num3] without explanations.
+        4. Your output must reflect the actual input data provided below, not just example values.
+
+        VERY IMPORTANT: DIALOGUE SHOULD CUT ABRUPTLY!!
+
+        Output: 
+    """,
                             userMessage: userMessage)
         Task {
             switch usingStream {
@@ -46,4 +60,5 @@ class LLM {
         }
         return result
     }
+    
 }

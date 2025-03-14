@@ -84,6 +84,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		E18228242D84141800DB86F0 /* models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = models; sourceTree = "<group>"; };
 		E1FD21D82D63932C0034F916 /* Projects2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Projects2; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -194,6 +195,7 @@
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				E18228242D84141800DB86F0 /* models */,
 				E1FD21D62D62F8B80034F916 /* opencv2.framework */,
 				379605532CEB203900C11189 /* Colour Grading */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
@@ -235,6 +237,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				E18228242D84141800DB86F0 /* models */,
 				E1FD21D82D63932C0034F916 /* Projects2 */,
 			);
 			name = "Zedit-UIKit";
