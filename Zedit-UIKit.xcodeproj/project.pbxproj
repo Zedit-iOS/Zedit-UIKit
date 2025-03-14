@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B12D26C50200F125B1 /* opencv2.framework */; };
 		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
 		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
+		37758C632D8409A200E929DF /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 37758C622D8409A200E929DF /* SwiftLlama */; };
+		37758C652D8409E700E929DF /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37758C642D8409E700E929DF /* opencv2.framework */; };
+		37758C672D840A1400E929DF /* LLMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37758C662D840A1400E929DF /* LLMFunctions.swift */; };
 		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
 		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
 		3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605682CEB203900C11189 /* ProjectsTableViewController.swift */; };
@@ -27,7 +29,6 @@
 		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
 		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
 		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
-		3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377215B82D26C74300F125B1 /* opencv2.xcframework */; };
 		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
 		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
 		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
@@ -36,14 +37,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		377215B12D26C50200F125B1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		377215B32D26C54800F125B1 /* CVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVWrapper.h; sourceTree = "<group>"; };
 		377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		377215B52D26C5DE00F125B1 /* CVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CVWrapper.mm; sourceTree = "<group>"; };
 		377215B72D26C67100F125B1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		377215B82D26C74300F125B1 /* opencv2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = opencv2.xcframework; path = ../opencv2.xcframework; sourceTree = "<group>"; };
 		377215BA2D26C77600F125B1 /* CVFuntions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFuntions.hpp; sourceTree = "<group>"; };
 		377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
+		37758C5C2D8408CC00E929DF /* SwiftLlama */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SwiftLlama; sourceTree = "<group>"; };
+		37758C642D8409E700E929DF /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		37758C662D840A1400E929DF /* LLMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMFunctions.swift; sourceTree = "<group>"; };
 		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
 		379605542CEB203900C11189 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		379605552CEB203900C11189 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
@@ -75,8 +77,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3796AC952D2E05920053A998 /* opencv2.xcframework in Frameworks */,
-				377215B22D26C50200F125B1 /* opencv2.framework in Frameworks */,
+				37758C652D8409E700E929DF /* opencv2.framework in Frameworks */,
+				37758C632D8409A200E929DF /* SwiftLlama in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +98,7 @@
 			children = (
 				379605542CEB203900C11189 /* Project.swift */,
 				379605552CEB203900C11189 /* safe+extension.swift */,
+				37758C662D840A1400E929DF /* LLMFunctions.swift */,
 			);
 			path = "Data Model and Common Functions";
 			sourceTree = "<group>";
@@ -152,7 +155,7 @@
 		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				377215B82D26C74300F125B1 /* opencv2.xcframework */,
+				37758C642D8409E700E929DF /* opencv2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,7 +172,7 @@
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				377215B12D26C50200F125B1 /* opencv2.framework */,
+				37758C5C2D8408CC00E929DF /* SwiftLlama */,
 				379605532CEB203900C11189 /* Colour Grading */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
 				3796055A2CEB203900C11189 /* Export Videos */,
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
+				37758C672D840A1400E929DF /* LLMFunctions.swift in Sources */,
 				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
 				3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */,
 				3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */,
@@ -442,6 +446,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -455,6 +460,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -482,6 +488,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Zedit-UIKit",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
@@ -495,6 +502,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -531,6 +539,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		37758C622D8409A200E929DF /* SwiftLlama */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftLlama;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E1BC32A82CCF78BE0026C60F /* Project object */;
 }
