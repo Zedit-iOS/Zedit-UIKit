@@ -877,7 +877,7 @@ func transcribeAudio(at audioURL: URL) {
         group.enter()
         queue.async {
             do {
-                result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
+                //result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
             } catch {
                 print("LLM execution failed: \(error.localizedDescription)")
             }
