@@ -207,8 +207,12 @@ class MainPageViewController: UIViewController {
 
         // Position the playhead over the scrollView
         playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 106
-        playheadIndicator.frame.size.height = videoScrubber.bounds.height
+            
+            // Align the playhead's bottom with the scrubber view's bottom
+            playheadIndicator.frame.origin.y = videoScrubber.frame.maxY - playheadIndicator.frame.height
+
+            // Set the height of the playhead indicator to match the scrubber view
+            playheadIndicator.frame.size.height = videoScrubber.bounds.height
     }
     
     func setupCollectionView() {
