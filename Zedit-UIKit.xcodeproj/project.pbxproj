@@ -1,0 +1,620 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 377215B52D26C5DE00F125B1 /* CVWrapper.mm */; };
+		377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */; };
+		3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605572CEB203900C11189 /* ExportVideoCollectionView.swift */; };
+		3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605632CEB203900C11189 /* MyProjectViewController.swift */; };
+		3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605682CEB203900C11189 /* ProjectsTableViewController.swift */; };
+		3796056D2CEB203900C11189 /* ExportVideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */; };
+		3796056E2CEB203900C11189 /* TrimVideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */; };
+		3796056F2CEB203900C11189 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605542CEB203900C11189 /* Project.swift */; };
+		379605702CEB203900C11189 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605602CEB203900C11189 /* MainPageViewController.swift */; };
+		379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605672CEB203900C11189 /* ProjectsTableViewCell.swift */; };
+		379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */; };
+		379605732CEB203900C11189 /* safe+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605552CEB203900C11189 /* safe+extension.swift */; };
+		379605742CEB203900C11189 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605592CEB203900C11189 /* ExportViewController.swift */; };
+		379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */; };
+		379605762CEB203900C11189 /* ColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605522CEB203900C11189 /* ColorViewController.swift */; };
+		379605772CEB203900C11189 /* TrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055E2CEB203900C11189 /* TrimViewController.swift */; };
+		379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379605662CEB203900C11189 /* CreateProjectViewController.swift */; };
+		379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */; };
+		3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */; };
+		E18228062D83E8E500DB86F0 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = E18228052D83E8E500DB86F0 /* llama */; };
+		E182281A2D83F0CB00DB86F0 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = E18228192D83F0CB00DB86F0 /* llama */; };
+		E182281D2D840A3300DB86F0 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = E182281C2D840A3300DB86F0 /* SwiftLlama */; };
+		E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */; };
+		E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */; };
+		E1BC32BB2CCF78BE0026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BA2CCF78BE0026C60F /* Base */; };
+		E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BC2CCF78C10026C60F /* Assets.xcassets */; };
+		E1BC32C02CCF78C10026C60F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E1BC32BF2CCF78C10026C60F /* Base */; };
+		E1EB196A2D794EFF00E08BF9 /* MainPageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */; };
+		E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */; };
+		E1EB197A2D7F351C00E08BF9 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19792D7F351C00E08BF9 /* ColorCollectionViewCell.swift */; };
+		E1EB197C2D7F355D00E08BF9 /* collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB197B2D7F355900E08BF9 /* collection.swift */; };
+		E1EB19852D81D71300E08BF9 /* LLMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */; };
+		E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D22D62F8510034F916 /* opencv2.framework */; };
+		E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D62D62F8B80034F916 /* opencv2.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		377215B32D26C54800F125B1 /* CVWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CVWrapper.h; sourceTree = "<group>"; };
+		377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zedit-UIKit-Bridging-Header.h"; sourceTree = "<group>"; };
+		377215B52D26C5DE00F125B1 /* CVWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CVWrapper.mm; sourceTree = "<group>"; };
+		377215B72D26C67100F125B1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		377215BA2D26C77600F125B1 /* CVFuntions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CVFuntions.hpp; sourceTree = "<group>"; };
+		377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CVFunctions.cpp; sourceTree = "<group>"; };
+		379605522CEB203900C11189 /* ColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorViewController.swift; sourceTree = "<group>"; };
+		379605542CEB203900C11189 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		379605552CEB203900C11189 /* safe+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "safe+extension.swift"; sourceTree = "<group>"; };
+		379605572CEB203900C11189 /* ExportVideoCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionView.swift; sourceTree = "<group>"; };
+		379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportVideoCollectionViewCell.swift; sourceTree = "<group>"; };
+		379605592CEB203900C11189 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
+		3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionView.swift; sourceTree = "<group>"; };
+		3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewCollectionViewCell.swift; sourceTree = "<group>"; };
+		3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimVideoPreviewViewController.swift; sourceTree = "<group>"; };
+		3796055E2CEB203900C11189 /* TrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimViewController.swift; sourceTree = "<group>"; };
+		379605602CEB203900C11189 /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
+		379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectCollectionViewController.swift; sourceTree = "<group>"; };
+		379605632CEB203900C11189 /* MyProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewController.swift; sourceTree = "<group>"; };
+		379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProjectViewControllerCell.swift; sourceTree = "<group>"; };
+		379605662CEB203900C11189 /* CreateProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectViewController.swift; sourceTree = "<group>"; };
+		379605672CEB203900C11189 /* ProjectsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewCell.swift; sourceTree = "<group>"; };
+		379605682CEB203900C11189 /* ProjectsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsTableViewController.swift; sourceTree = "<group>"; };
+		E192DDBC2D0851B6006D8F6A /* Zedit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zedit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		E1BC32BA2CCF78BE0026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E1BC32BC2CCF78C10026C60F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E1BC32BF2CCF78C10026C60F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E1BC32C12CCF78C10026C60F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageCollectionViewCell.swift; sourceTree = "<group>"; };
+		E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimCollectionViewCell.swift; sourceTree = "<group>"; };
+		E1EB19792D7F351C00E08BF9 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
+		E1EB197B2D7F355900E08BF9 /* collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collection.swift; sourceTree = "<group>"; };
+		E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMFunctions.swift; sourceTree = "<group>"; };
+		E1FD21D22D62F8510034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Downloads/opencv2.framework; sourceTree = "<group>"; };
+		E1FD21D62D62F8B80034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		E18228242D84141800DB86F0 /* models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = models; sourceTree = "<group>"; };
+		E1FD21D82D63932C0034F916 /* Projects2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Projects2; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E1BC32AD2CCF78BE0026C60F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E182281A2D83F0CB00DB86F0 /* llama in Frameworks */,
+				E18228062D83E8E500DB86F0 /* llama in Frameworks */,
+				E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */,
+				E182281D2D840A3300DB86F0 /* SwiftLlama in Frameworks */,
+				E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		379605532CEB203900C11189 /* Colour Grading */ = {
+			isa = PBXGroup;
+			children = (
+				E1EB197B2D7F355900E08BF9 /* collection.swift */,
+				379605522CEB203900C11189 /* ColorViewController.swift */,
+				E1EB19792D7F351C00E08BF9 /* ColorCollectionViewCell.swift */,
+			);
+			path = "Colour Grading";
+			sourceTree = "<group>";
+		};
+		379605562CEB203900C11189 /* Data Model and Common Functions */ = {
+			isa = PBXGroup;
+			children = (
+				E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */,
+				379605542CEB203900C11189 /* Project.swift */,
+				379605552CEB203900C11189 /* safe+extension.swift */,
+			);
+			path = "Data Model and Common Functions";
+			sourceTree = "<group>";
+		};
+		3796055A2CEB203900C11189 /* Export Videos */ = {
+			isa = PBXGroup;
+			children = (
+				379605572CEB203900C11189 /* ExportVideoCollectionView.swift */,
+				379605582CEB203900C11189 /* ExportVideoCollectionViewCell.swift */,
+				379605592CEB203900C11189 /* ExportViewController.swift */,
+			);
+			path = "Export Videos";
+			sourceTree = "<group>";
+		};
+		3796055F2CEB203900C11189 /* Generate Clips */ = {
+			isa = PBXGroup;
+			children = (
+				3796055B2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift */,
+				3796055C2CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift */,
+				3796055D2CEB203900C11189 /* TrimVideoPreviewViewController.swift */,
+				3796055E2CEB203900C11189 /* TrimViewController.swift */,
+				E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */,
+			);
+			path = "Generate Clips";
+			sourceTree = "<group>";
+		};
+		379605612CEB203900C11189 /* Main Page */ = {
+			isa = PBXGroup;
+			children = (
+				379605602CEB203900C11189 /* MainPageViewController.swift */,
+				E1EB19692D794EFF00E08BF9 /* MainPageCollectionViewCell.swift */,
+			);
+			path = "Main Page";
+			sourceTree = "<group>";
+		};
+		379605652CEB203900C11189 /* Projects Page */ = {
+			isa = PBXGroup;
+			children = (
+				379605622CEB203900C11189 /* CreateProjectCollectionViewController.swift */,
+				379605632CEB203900C11189 /* MyProjectViewController.swift */,
+				379605642CEB203900C11189 /* MyProjectViewControllerCell.swift */,
+			);
+			path = "Projects Page";
+			sourceTree = "<group>";
+		};
+		379605692CEB203900C11189 /* Table View Projects */ = {
+			isa = PBXGroup;
+			children = (
+				379605662CEB203900C11189 /* CreateProjectViewController.swift */,
+				379605672CEB203900C11189 /* ProjectsTableViewCell.swift */,
+				379605682CEB203900C11189 /* ProjectsTableViewController.swift */,
+			);
+			path = "Table View Projects";
+			sourceTree = "<group>";
+		};
+		E192DDBD2D0EDA12006D8F6A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E1FD21D22D62F8510034F916 /* opencv2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E1BC32A72CCF78BE0026C60F = {
+			isa = PBXGroup;
+			children = (
+				E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */,
+				E192DDBC2D0851B6006D8F6A /* Zedit.app */,
+				E192DDBD2D0EDA12006D8F6A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				E18228242D84141800DB86F0 /* models */,
+				E1FD21D62D62F8B80034F916 /* opencv2.framework */,
+				379605532CEB203900C11189 /* Colour Grading */,
+				379605562CEB203900C11189 /* Data Model and Common Functions */,
+				3796055A2CEB203900C11189 /* Export Videos */,
+				3796055F2CEB203900C11189 /* Generate Clips */,
+				379605612CEB203900C11189 /* Main Page */,
+				E1FD21D82D63932C0034F916 /* Projects2 */,
+				379605652CEB203900C11189 /* Projects Page */,
+				379605692CEB203900C11189 /* Table View Projects */,
+				E1BC32B32CCF78BE0026C60F /* AppDelegate.swift */,
+				E1BC32B52CCF78BE0026C60F /* SceneDelegate.swift */,
+				E1BC32B92CCF78BE0026C60F /* Main.storyboard */,
+				E1BC32BC2CCF78C10026C60F /* Assets.xcassets */,
+				E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */,
+				E1BC32C12CCF78C10026C60F /* Info.plist */,
+				377215B32D26C54800F125B1 /* CVWrapper.h */,
+				377215BA2D26C77600F125B1 /* CVFuntions.hpp */,
+				377215B52D26C5DE00F125B1 /* CVWrapper.mm */,
+				377215B42D26C5DE00F125B1 /* Zedit-UIKit-Bridging-Header.h */,
+				377215BB2D26C7CB00F125B1 /* CVFunctions.cpp */,
+				377215B72D26C67100F125B1 /* PrefixHeader.pch */,
+			);
+			path = "Zedit-UIKit";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E1BC32AF2CCF78BE0026C60F /* Zedit-UIKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1BC32C42CCF78C10026C60F /* Build configuration list for PBXNativeTarget "Zedit-UIKit" */;
+			buildPhases = (
+				E1BC32AC2CCF78BE0026C60F /* Sources */,
+				E1BC32AD2CCF78BE0026C60F /* Frameworks */,
+				E1BC32AE2CCF78BE0026C60F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E18228242D84141800DB86F0 /* models */,
+				E1FD21D82D63932C0034F916 /* Projects2 */,
+			);
+			name = "Zedit-UIKit";
+			productName = "Zedit-UIKit";
+			productReference = E192DDBC2D0851B6006D8F6A /* Zedit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E1BC32A82CCF78BE0026C60F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					E1BC32AF2CCF78BE0026C60F = {
+						CreatedOnToolsVersion = 15.4;
+						LastSwiftMigration = 1610;
+					};
+				};
+			};
+			buildConfigurationList = E1BC32AB2CCF78BE0026C60F /* Build configuration list for PBXProject "Zedit-UIKit" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E1BC32A72CCF78BE0026C60F;
+			packageReferences = (
+				E18228042D83E8E500DB86F0 /* XCRemoteSwiftPackageReference "llama.cpp" */,
+				E182281B2D840A3300DB86F0 /* XCRemoteSwiftPackageReference "SwiftLlama" */,
+			);
+			productRefGroup = E1BC32A72CCF78BE0026C60F;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1BC32AF2CCF78BE0026C60F /* Zedit-UIKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E1BC32AE2CCF78BE0026C60F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1BC32BD2CCF78C10026C60F /* Assets.xcassets in Resources */,
+				E1BC32C02CCF78C10026C60F /* Base in Resources */,
+				E1BC32BB2CCF78BE0026C60F /* Base in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E1BC32AC2CCF78BE0026C60F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1BC32B42CCF78BE0026C60F /* AppDelegate.swift in Sources */,
+				E1BC32B62CCF78BE0026C60F /* SceneDelegate.swift in Sources */,
+				E1EB196A2D794EFF00E08BF9 /* MainPageCollectionViewCell.swift in Sources */,
+				3796056A2CEB203900C11189 /* ExportVideoCollectionView.swift in Sources */,
+				3796056B2CEB203900C11189 /* MyProjectViewController.swift in Sources */,
+				3796056C2CEB203900C11189 /* ProjectsTableViewController.swift in Sources */,
+				3796056D2CEB203900C11189 /* ExportVideoCollectionViewCell.swift in Sources */,
+				3796056E2CEB203900C11189 /* TrimVideoPreviewViewController.swift in Sources */,
+				3796056F2CEB203900C11189 /* Project.swift in Sources */,
+				379605702CEB203900C11189 /* MainPageViewController.swift in Sources */,
+				377215BC2D26C7CB00F125B1 /* CVFunctions.cpp in Sources */,
+				E1EB197C2D7F355D00E08BF9 /* collection.swift in Sources */,
+				379605712CEB203900C11189 /* ProjectsTableViewCell.swift in Sources */,
+				379605722CEB203900C11189 /* CreateProjectCollectionViewController.swift in Sources */,
+				379605732CEB203900C11189 /* safe+extension.swift in Sources */,
+				377215B62D26C5DE00F125B1 /* CVWrapper.mm in Sources */,
+				E1EB197A2D7F351C00E08BF9 /* ColorCollectionViewCell.swift in Sources */,
+				379605742CEB203900C11189 /* ExportViewController.swift in Sources */,
+				379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */,
+				E1EB19852D81D71300E08BF9 /* LLMFunctions.swift in Sources */,
+				E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */,
+				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
+				379605772CEB203900C11189 /* TrimViewController.swift in Sources */,
+				379605782CEB203900C11189 /* CreateProjectViewController.swift in Sources */,
+				379605792CEB203900C11189 /* TrimVideoPreviewCollectionViewCell.swift in Sources */,
+				3796057A2CEB203900C11189 /* TrimVideoPreviewCollectionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E1BC32B92CCF78BE0026C60F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1BC32BA2CCF78BE0026C60F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E1BC32BE2CCF78C10026C60F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E1BC32BF2CCF78C10026C60F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E1BC32C22CCF78C10026C60F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E1BC32C32CCF78C10026C60F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E1BC32C52CCF78C10026C60F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/**",
+					"$(SRCROOT)/**",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit2;
+				PRODUCT_NAME = Zedit;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E1BC32C62CCF78C10026C60F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G7G9Q58G56;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/Zedit-UIKit/**",
+					"$(SRCROOT)/**",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Zedit-UIKit/PrefixHeader.pch";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Zedit-UIKit/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app requires access to the camera to take photos and videos.";
+				INFOPLIST_KEY_NSDownloadsFolderUsageDescription = "This app requires usage of downloads";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app requires access to the microphone to record audio.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "This app requires access to speech recognition to transcribe audio from videos.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit2;
+				PRODUCT_NAME = Zedit;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E1BC32AB2CCF78BE0026C60F /* Build configuration list for PBXProject "Zedit-UIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1BC32C22CCF78C10026C60F /* Debug */,
+				E1BC32C32CCF78C10026C60F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1BC32C42CCF78C10026C60F /* Build configuration list for PBXNativeTarget "Zedit-UIKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1BC32C52CCF78C10026C60F /* Debug */,
+				E1BC32C62CCF78C10026C60F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E18228042D83E8E500DB86F0 /* XCRemoteSwiftPackageReference "llama.cpp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ggml-org/llama.cpp.git";
+			requirement = {
+				kind = revision;
+				revision = 96b69121033d2b6b951d1b6b1b43f8b4f97dac99;
+			};
+		};
+		E182281B2D840A3300DB86F0 /* XCRemoteSwiftPackageReference "SwiftLlama" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Avinash96-gthb/SwiftLlama.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E18228052D83E8E500DB86F0 /* llama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E18228042D83E8E500DB86F0 /* XCRemoteSwiftPackageReference "llama.cpp" */;
+			productName = llama;
+		};
+		E18228192D83F0CB00DB86F0 /* llama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E18228042D83E8E500DB86F0 /* XCRemoteSwiftPackageReference "llama.cpp" */;
+			productName = llama;
+		};
+		E182281C2D840A3300DB86F0 /* SwiftLlama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E182281B2D840A3300DB86F0 /* XCRemoteSwiftPackageReference "SwiftLlama" */;
+			productName = SwiftLlama;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E1BC32A82CCF78BE0026C60F /* Project object */;
+}
