@@ -38,7 +38,6 @@
 		E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */; };
 		E1EB197A2D7F351C00E08BF9 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19792D7F351C00E08BF9 /* ColorCollectionViewCell.swift */; };
 		E1EB197C2D7F355D00E08BF9 /* collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB197B2D7F355900E08BF9 /* collection.swift */; };
-		E1EB19852D81D71300E08BF9 /* LLMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */; };
 		E1FD21D32D62F8510034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D22D62F8510034F916 /* opencv2.framework */; };
 		E1FD21D72D62F8B80034F916 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1FD21D62D62F8B80034F916 /* opencv2.framework */; };
 /* End PBXBuildFile section */
@@ -78,12 +77,12 @@
 		E1EB196F2D7D862800E08BF9 /* TrimCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1EB19792D7F351C00E08BF9 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1EB197B2D7F355900E08BF9 /* collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collection.swift; sourceTree = "<group>"; };
-		E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMFunctions.swift; sourceTree = "<group>"; };
 		E1FD21D22D62F8510034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../Downloads/opencv2.framework; sourceTree = "<group>"; };
 		E1FD21D62D62F8B80034F916 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		37F8D8B92D84366500EEE4E3 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
 		E1FD21D82D63932C0034F916 /* Projects2 */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Projects2; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -116,7 +115,6 @@
 		379605562CEB203900C11189 /* Data Model and Common Functions */ = {
 			isa = PBXGroup;
 			children = (
-				E1EB19842D81D70E00E08BF9 /* LLMFunctions.swift */,
 				379605542CEB203900C11189 /* Project.swift */,
 				379605552CEB203900C11189 /* safe+extension.swift */,
 			);
@@ -194,6 +192,7 @@
 		E1BC32B22CCF78BE0026C60F /* Zedit-UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				37F8D8B92D84366500EEE4E3 /* Models */,
 				E1FD21D62D62F8B80034F916 /* opencv2.framework */,
 				379605532CEB203900C11189 /* Colour Grading */,
 				379605562CEB203900C11189 /* Data Model and Common Functions */,
@@ -235,6 +234,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				37F8D8B92D84366500EEE4E3 /* Models */,
 				E1FD21D82D63932C0034F916 /* Projects2 */,
 			);
 			name = "Zedit-UIKit";
@@ -317,7 +317,6 @@
 				E1EB197A2D7F351C00E08BF9 /* ColorCollectionViewCell.swift in Sources */,
 				379605742CEB203900C11189 /* ExportViewController.swift in Sources */,
 				379605752CEB203900C11189 /* MyProjectViewControllerCell.swift in Sources */,
-				E1EB19852D81D71300E08BF9 /* LLMFunctions.swift in Sources */,
 				E1EB19702D7D862800E08BF9 /* TrimCollectionViewCell.swift in Sources */,
 				379605762CEB203900C11189 /* ColorViewController.swift in Sources */,
 				379605772CEB203900C11189 /* TrimViewController.swift in Sources */,
@@ -476,7 +475,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G7G9Q58G56;
+				DEVELOPMENT_TEAM = K75YG36RDS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/Zedit-UIKit/**",
@@ -501,7 +500,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.srmist.zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
@@ -519,7 +518,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G7G9Q58G56;
+				DEVELOPMENT_TEAM = K75YG36RDS;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)/**",
 					"$(PROJECT_DIR)/Zedit-UIKit/**",
@@ -544,7 +543,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.Zedit2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.srmist.zedit;
 				PRODUCT_NAME = Zedit;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Zedit-UIKit/Zedit-UIKit-Bridging-Header.h";
