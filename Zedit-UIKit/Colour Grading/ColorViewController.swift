@@ -89,6 +89,30 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         generateThumbnails()
         setupTimelineControls()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
+        colorVideoPlayer.translatesAutoresizingMaskIntoConstraints = false
+        videoScrubberView.translatesAutoresizingMaskIntoConstraints = false
+                   
+           // Ensure playheadIndicator is added to the view hierarchy and brought to front
+           if playheadIndicator.superview == nil {
+               self.view.addSubview(playheadIndicator)
+           }
+           self.view.bringSubviewToFront(playheadIndicator)
+                   
+           // Set up constraints for playheadIndicator, including a width constraint
+           NSLayoutConstraint.activate([
+               // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
+            playheadIndicator.topAnchor.constraint(equalTo: colorVideoPlayer.bottomAnchor, constant: 10),
+               
+               // Center playheadIndicator horizontally with videoScrubber
+               playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubberView.centerXAnchor),
+               
+               // Match the height of playheadIndicator to the height of videoScrubber
+               playheadIndicator.heightAnchor.constraint(equalTo: videoScrubberView.heightAnchor),
+               
+               // Set a fixed width for playheadIndicator
+               playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
+           ])
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -249,7 +273,6 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             self.isNavigatingBack = true
             self.navigationController?.popViewController(animated: true)
         }))
-        
         alert.addAction(UIAlertAction(title: "No", style: .cancel))
         present(alert, animated: true)
     }
@@ -436,11 +459,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         playerViewController?.view.frame = videoPlayer.bounds
         colorPlayerLayer?.frame = colorVideoPlayer.bounds
         playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-            
-            // Align the playhead's bottom with the scrubber view's bottom
-        playheadIndicator.frame.origin.y = videoScrubberView.frame.maxY - playheadIndicator.frame.height
-
-            // Set the height of the playhead indicator to match the scrubber view
+        playheadIndicator.frame.origin.y = playerView.frame.minY + 132
         playheadIndicator.frame.size.height = videoScrubberView.bounds.height
         adjustVideoPlayerLayouts()
     }
@@ -620,6 +639,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             asset: composition,
             presetName: AVAssetExportPresetHighestQuality) else { return }
         
+
         // Determine the output URL
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let projectFolder = documentsDirectory.appendingPathComponent(projectNameColorGrade)

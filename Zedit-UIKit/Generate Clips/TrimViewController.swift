@@ -141,6 +141,30 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         numberOfClipsDisplayLabel.isUserInteractionEnabled = true
         numberOfClipsDisplayLabel.addGestureRecognizer(clipsTap)
         styleViews()
+        playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
+           videoSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        videoScrubberView.translatesAutoresizingMaskIntoConstraints = false
+                   
+           // Ensure playheadIndicator is added to the view hierarchy and brought to front
+           if playheadIndicator.superview == nil {
+               self.view.addSubview(playheadIndicator)
+           }
+           self.view.bringSubviewToFront(playheadIndicator)
+                   
+           // Set up constraints for playheadIndicator, including a width constraint
+           NSLayoutConstraint.activate([
+               // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
+               playheadIndicator.topAnchor.constraint(equalTo: videoSelectorView.bottomAnchor, constant: 10),
+               
+               // Center playheadIndicator horizontally with videoScrubber
+               playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubberView.centerXAnchor),
+               
+               // Match the height of playheadIndicator to the height of videoScrubber
+               playheadIndicator.heightAnchor.constraint(equalTo: videoScrubberView.heightAnchor),
+               
+               // Set a fixed width for playheadIndicator
+               playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
+           ])
     }
     
     private func styleViews() {
@@ -376,11 +400,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 
         // Position the playhead over the scrollView
         playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-            
-            // Align the playhead's bottom with the scrubber view's bottom
-        playheadIndicator.frame.origin.y = videoScrubberView.frame.maxY - playheadIndicator.frame.height
-
-            // Set the height of the playhead indicator to match the scrubber view
+        playheadIndicator.frame.origin.y = videoScrubberView.frame.minY + 10
         playheadIndicator.frame.size.height = videoScrubberView.bounds.height
     }
     
@@ -388,6 +408,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             collectionView.delegate = self
             collectionView.dataSource = self
         collectionView.register(TrimCollectionViewCell.self, forCellWithReuseIdentifier: "TrimCell")
+        collectionView.backgroundColor = .black
             
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = .horizontal
@@ -475,6 +496,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     }
 
     
+
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
             if player != nil{
@@ -491,6 +513,27 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         self.view.addSubview(playheadIndicator)
         self.view.bringSubviewToFront(playheadIndicator)
     }
+        
+        private func updateTimeLabels() {
+            minuitesLabel.text = String(format: "%02d min", selectedMinutes)
+            secondsLabel.text = String(format: "%02d sec", selectedSeconds)
+        }
+        
+        // MARK: - UIPickerView DataSource & Delegate
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return isClipsPickerActive ? 1 : 2// One for minutes, one for seconds
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            if isClipsPickerActive {
+                    return 100 // Adjust the maximum number of clips as needed
+                }
+                return component == 0 ? minutesRange.count : secondsRange.count
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return String(format: "%02d", row)
+        }
     
     
     func updatePlayheadPosition() {
@@ -544,6 +587,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     self.transcribeAudio(at: audioOutputURL)
                 case .failed:
                     print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
+                    self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: videoURL)
                 case .cancelled:
                     print("Audio export cancelled")
                 default:
@@ -569,6 +613,7 @@ func transcribeAudio(at audioURL: URL) {
            if let error = error {
                
                print("Transcription error: \(error.localizedDescription)")
+               self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: audioURL)
                return
            }
            
@@ -587,7 +632,7 @@ func transcribeAudio(at audioURL: URL) {
                    }
                    print(formattedTimestamps)
                    let timestamps = formattedTimestamps.map { $0.key }
-                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges)
+                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges, videoURL: audioURL)
                }
            }
        }
@@ -744,7 +789,10 @@ func transcribeAudio(at audioURL: URL) {
         }
         
 
-        let minimumClipDuration = Int(minuitesLabel.text!)!*60 + Int(secondsLabel.text!)!
+
+        let minutes = Int(minuitesLabel.text ?? "") ?? 1
+        let seconds = Int(secondsLabel.text ?? "") ?? 15
+        let minimumClipDuration = (minutes * 60) + seconds
         processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
         
         let finalSceneRanges = scenes.map { $0.start...$0.end }
@@ -806,18 +854,14 @@ func transcribeAudio(at audioURL: URL) {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
             if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
-                //generateClips()
+
+                
+
                 guard let videoURL = videoList.first else {
                             print("No video available for clipping")
                             return
                         }
-                let numberOfClips = Int(numberOfClipsDisplayLabel.text!)!
-                        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
-                            self.clipTimestamps = timestamps
-                            exportClip(from: videoURL, timestamps: timestamps)
-                        } else {
-                            print("Failed to generate clip timestamps")
-                        }
+                generateClips()
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
@@ -848,7 +892,6 @@ func transcribeAudio(at audioURL: URL) {
             message: "Are you sure you want to cancel and go back?",
             preferredStyle: .alert
         )
-        
         alertController.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
             self.performSegue(withIdentifier: "cancel", sender: nil)
         })
@@ -872,44 +915,38 @@ func transcribeAudio(at audioURL: URL) {
     }
     }
     
-    func getResults(timestamps: [String], sceneRanges: [[Double]]) {
-        let apiURL = URL(string: "https://gvnn439j-8000.inc1.devtunnels.ms/getClipTimeStamps")!
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    func getResults(timestamps: [String], sceneRanges: [[Double]], videoURL: URL) {
+        let llm = LLM()
+        let timeout: TimeInterval = 60 // 1 minute
+        var result: String?
+        let queue = DispatchQueue.global(qos: .userInitiated)
+        let group = DispatchGroup()
         
-        let payload = [
-            "transcript": timestamps,
-            "sceneChanges": sceneRanges
-        ] as [String : Any]
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: payload)
-            request.httpBody = jsonData
-            
-            let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-                if let error = error {
-                    print("API Error: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    do {
-                        if let timestamps = try JSONSerialization.jsonObject(with: data) as? [Double],
-                           let videoURL = self?.videoList.first {
-                            DispatchQueue.main.async {
-                                self?.clipTimestamps = timestamps
-                                self?.exportClip(from: videoURL, timestamps: timestamps)
-                            }
-                        }
-                    } catch {
-                        print("JSON parsing error: \(error)")
-                    }
-                }
+
+        group.enter()
+        queue.async {
+            do {
+                //result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
+            } catch {
+                print("LLM execution failed: \(error.localizedDescription)")
             }
-            task.resume()
-        } catch {
-            print("JSON serialization error: \(error)")
+            group.leave()
+        }
+
+        let waitResult = group.wait(timeout: .now() + timeout)
+
+        if waitResult == .timedOut {
+            print("LLM execution timed out, proceeding with generateEvenClipTimestamps")
+        } else if let result = result {
+            print(result)
+        }
+
+        let numberOfClips = Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1
+        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+            self.clipTimestamps = timestamps
+            exportClip(from: videoURL, timestamps: timestamps)
+        } else {
+            print("Failed to generate clip timestamps")
         }
     }
 }
