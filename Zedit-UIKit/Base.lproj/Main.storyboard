@@ -20,14 +20,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="project" id="71M-M2-Fer" customClass="ProjectsTableViewCell" customModule="Zedit" customModuleProvider="target">
-                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="43.666667938232422"/>
+                                <rect key="frame" x="20" y="55.333332061767578" width="353" height="42.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="71M-M2-Fer" id="Kpv-LC-8tS">
-                                    <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="353" height="42.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHv-zq-cQ6">
-                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="21.666666666666671"/>
+                                            <rect key="frame" x="20" y="11.000000000000002" width="313" height="20.666666666666671"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -73,62 +73,62 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="5w4-Rm-Ldq">
                                 <rect key="frame" x="0.0" y="59" width="516" height="759"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" ambiguous="YES" image="zedit_logo" translatesAutoresizingMaskIntoConstraints="NO" id="rxc-Uz-cty">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rxc-Uz-cty">
                                         <rect key="frame" x="0.0" y="0.0" width="516" height="65.666666666666671"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Welcome to Zedit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQO-Ls-LOK">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Zedit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQO-Ls-LOK">
                                         <rect key="frame" x="0.0" y="65.666666666666671" width="516" height="33.666666666666671"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GvS-Es-3O3">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GvS-Es-3O3">
                                         <rect key="frame" x="0.0" y="96.666666666666671" width="516" height="25.666666666666671"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="43" id="X9x-92-WsX"/>
                                         </constraints>
                                         <imageReference key="image" image="diamond.circle" catalog="system" symbolScale="large"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Generate clips using AI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cft-go-4am">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Generate clips using AI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cft-go-4am">
                                         <rect key="frame" x="0.0" y="119.66666666666664" width="516" height="20.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cIS-C4-qH8">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cIS-C4-qH8">
                                         <rect key="frame" x="0.0" y="138.33333333333334" width="519.33333333333337" height="27"/>
                                         <imageReference key="image" image="photo.badge.plus" catalog="system" symbolScale="large"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Import or capture videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fYM-ss-VIy">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Import or capture videos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fYM-ss-VIy">
                                         <rect key="frame" x="0.0" y="160.33333333333334" width="516" height="20.333333333333343"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="500" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Zh-Nc-iB0">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="7Zh-Nc-iB0">
                                         <rect key="frame" x="0.0" y="180.66666666666663" width="516" height="483"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="37.666666666666664" id="UCw-QO-zOW"/>
                                         </constraints>
                                         <imageReference key="image" image="circle_gradient" symbolScale="large"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" ambiguous="YES" text="Enhance the video clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwg-aN-jVT">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="Enhance the video clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwg-aN-jVT">
                                         <rect key="frame" x="0.0" y="663.66666666666663" width="516" height="20.333333333333371"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Dl-7n-KbR">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5Dl-7n-KbR">
                                         <rect key="frame" x="0.0" y="678" width="516" height="29.666666666666629"/>
                                         <imageReference key="image" image="square.and.arrow.up" catalog="system" symbolScale="large"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" ambiguous="YES" text="Export the generated clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZBj-V6-Ap5">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Export the generated clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZBj-V6-Ap5">
                                         <rect key="frame" x="0.0" y="704.33333333333337" width="516" height="20.333333333333371"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bfu-88-AM9">
+                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bfu-88-AM9">
                                         <rect key="frame" x="0.0" y="724.66666666666663" width="516" height="34.333333333333371"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Get Started"/>
@@ -483,14 +483,14 @@
                                         <rect key="frame" x="0.0" y="526" width="389" height="106.66666666666663"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cQ7-Qo-20m">
-                                                <rect key="frame" x="0.0" y="5" width="743.66666666666663" height="30"/>
+                                                <rect key="frame" x="0.0" y="5" width="747.66666666666663" height="30"/>
                                                 <subviews>
                                                     <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="46X-qj-rSO">
-                                                        <rect key="frame" x="-2" y="0.0" width="706.33333333333337" height="31"/>
+                                                        <rect key="frame" x="-2" y="0.0" width="710.33333333333337" height="31"/>
                                                         <color key="tintColor" systemColor="systemRedColor"/>
                                                     </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DeY-fw-Fjy">
-                                                        <rect key="frame" x="702.33333333333337" y="0.0" width="41.333333333333371" height="30"/>
+                                                        <rect key="frame" x="706.33333333333337" y="0.0" width="41.333333333333371" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -498,14 +498,14 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GDq-uG-vRo">
-                                                <rect key="frame" x="-35" y="152.66666666666663" width="734.33333333333337" height="30"/>
+                                                <rect key="frame" x="-35" y="152.66666666666663" width="738.33333333333337" height="30"/>
                                                 <subviews>
                                                     <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="aQp-M3-Tut">
-                                                        <rect key="frame" x="-2" y="0.0" width="697" height="31"/>
+                                                        <rect key="frame" x="-2" y="0.0" width="701" height="31"/>
                                                         <color key="tintColor" systemColor="systemGreenColor"/>
                                                     </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2p-zc-uIp">
-                                                        <rect key="frame" x="693" y="0.0" width="41.333333333333371" height="30"/>
+                                                        <rect key="frame" x="697" y="0.0" width="41.333333333333371" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -513,14 +513,14 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L1w-9I-kEo">
-                                                <rect key="frame" x="0.0" y="114.66666666666663" width="722.33333333333337" height="30"/>
+                                                <rect key="frame" x="0.0" y="114.66666666666663" width="726.33333333333337" height="30"/>
                                                 <subviews>
                                                     <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="5j7-sV-UGR">
-                                                        <rect key="frame" x="-2" y="0.0" width="685" height="31"/>
+                                                        <rect key="frame" x="-2" y="0.0" width="689" height="31"/>
                                                         <color key="tintColor" systemColor="systemBlueColor"/>
                                                     </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZSh-YJ-GcG">
-                                                        <rect key="frame" x="681" y="0.0" width="41.333333333333371" height="30"/>
+                                                        <rect key="frame" x="685" y="0.0" width="41.333333333333371" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -528,14 +528,14 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="280" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QUE-2H-mLQ">
-                                                <rect key="frame" x="0.0" y="40" width="715.66666666666663" height="30"/>
+                                                <rect key="frame" x="0.0" y="40" width="719.66666666666663" height="30"/>
                                                 <subviews>
                                                     <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="tsj-um-VnZ">
-                                                        <rect key="frame" x="-2" y="0.0" width="678.33333333333337" height="31"/>
+                                                        <rect key="frame" x="-2" y="0.0" width="682.33333333333337" height="31"/>
                                                         <color key="tintColor" systemColor="systemYellowColor"/>
                                                     </slider>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQU-mT-CAK">
-                                                        <rect key="frame" x="674.33333333333337" y="0.0" width="41.333333333333371" height="30"/>
+                                                        <rect key="frame" x="678.33333333333337" y="0.0" width="41.333333333333371" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1223,7 +1223,6 @@
         <image name="photo.badge.plus" catalog="system" width="128" height="97"/>
         <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <image name="video.fill" catalog="system" width="128" height="81"/>
-        <image name="zedit_logo" width="80" height="80"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
