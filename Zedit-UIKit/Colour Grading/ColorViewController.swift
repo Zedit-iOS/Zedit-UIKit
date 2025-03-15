@@ -89,6 +89,30 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         generateThumbnails()
         setupTimelineControls()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
+        colorVideoPlayer.translatesAutoresizingMaskIntoConstraints = false
+        videoScrubberView.translatesAutoresizingMaskIntoConstraints = false
+                   
+           // Ensure playheadIndicator is added to the view hierarchy and brought to front
+           if playheadIndicator.superview == nil {
+               self.view.addSubview(playheadIndicator)
+           }
+           self.view.bringSubviewToFront(playheadIndicator)
+                   
+           // Set up constraints for playheadIndicator, including a width constraint
+           NSLayoutConstraint.activate([
+               // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
+            playheadIndicator.topAnchor.constraint(equalTo: colorVideoPlayer.bottomAnchor, constant: 10),
+               
+               // Center playheadIndicator horizontally with videoScrubber
+               playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubberView.centerXAnchor),
+               
+               // Match the height of playheadIndicator to the height of videoScrubber
+               playheadIndicator.heightAnchor.constraint(equalTo: videoScrubberView.heightAnchor),
+               
+               // Set a fixed width for playheadIndicator
+               playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
+           ])
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)

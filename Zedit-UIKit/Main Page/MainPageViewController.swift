@@ -72,6 +72,32 @@ class MainPageViewController: UIViewController {
         setupTimelineControls()
         styleViews()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+            
+            // Add playheadIndicator to the appropriate superview if not already added
+        playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
+           videoPreviewView.translatesAutoresizingMaskIntoConstraints = false
+           videoScrubber.translatesAutoresizingMaskIntoConstraints = false
+                   
+           // Ensure playheadIndicator is added to the view hierarchy and brought to front
+           if playheadIndicator.superview == nil {
+               self.view.addSubview(playheadIndicator)
+           }
+           self.view.bringSubviewToFront(playheadIndicator)
+                   
+           // Set up constraints for playheadIndicator, including a width constraint
+           NSLayoutConstraint.activate([
+               // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
+               playheadIndicator.topAnchor.constraint(equalTo: videoPreviewView.bottomAnchor, constant: 20),
+               
+               // Center playheadIndicator horizontally with videoScrubber
+               playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubber.centerXAnchor),
+               
+               // Match the height of playheadIndicator to the height of videoScrubber
+               playheadIndicator.heightAnchor.constraint(equalTo: videoScrubber.heightAnchor),
+               
+               // Set a fixed width for playheadIndicator
+               playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
+           ])
         
         
     }
@@ -202,19 +228,19 @@ class MainPageViewController: UIViewController {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        // Position the playhead over the scrollView
-        playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubber.frame.minY + 106
-        playheadIndicator.frame.size.height = videoScrubber.bounds.height
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//        // Position the playhead over the scrollView
+//        playheadIndicator.frame.origin.x = videoScrubber.frame.midX - (playheadIndicator.frame.width / 2)
+//        playheadIndicator.frame.size.height = videoScrubber.bounds.height
+//    }
     
     func setupCollectionView() {
             collectionView.delegate = self
             collectionView.dataSource = self
             collectionView.register(MainPageCollectionViewCell.self, forCellWithReuseIdentifier: "HomeCell")
+        collectionView.backgroundColor = .black
             
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = .horizontal

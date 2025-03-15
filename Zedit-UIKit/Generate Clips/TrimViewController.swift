@@ -141,6 +141,30 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         numberOfClipsDisplayLabel.isUserInteractionEnabled = true
         numberOfClipsDisplayLabel.addGestureRecognizer(clipsTap)
         styleViews()
+        playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
+           videoSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        videoScrubberView.translatesAutoresizingMaskIntoConstraints = false
+                   
+           // Ensure playheadIndicator is added to the view hierarchy and brought to front
+           if playheadIndicator.superview == nil {
+               self.view.addSubview(playheadIndicator)
+           }
+           self.view.bringSubviewToFront(playheadIndicator)
+                   
+           // Set up constraints for playheadIndicator, including a width constraint
+           NSLayoutConstraint.activate([
+               // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
+               playheadIndicator.topAnchor.constraint(equalTo: videoSelectorView.bottomAnchor, constant: 10),
+               
+               // Center playheadIndicator horizontally with videoScrubber
+               playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubberView.centerXAnchor),
+               
+               // Match the height of playheadIndicator to the height of videoScrubber
+               playheadIndicator.heightAnchor.constraint(equalTo: videoScrubberView.heightAnchor),
+               
+               // Set a fixed width for playheadIndicator
+               playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
+           ])
     }
     
     private func styleViews() {
@@ -384,6 +408,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             collectionView.delegate = self
             collectionView.dataSource = self
         collectionView.register(TrimCollectionViewCell.self, forCellWithReuseIdentifier: "TrimCell")
+        collectionView.backgroundColor = .black
             
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = .horizontal

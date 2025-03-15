@@ -51,6 +51,9 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 print("Error setting up AVAudioSession: \(error.localizedDescription)")
             }
         updateVideoPreviewView()
+        view.backgroundColor = .black
+        projectNameTextField.backgroundColor = .black
+        projectNameTextField.textColor = .white
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -133,11 +136,11 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             videoPlayerView.isUserInteractionEnabled = true // Disable tap selection
         } else {
             // No video → Setup placeholder UI
-            videoPlayerView.backgroundColor = UIColor.systemGray5
+            videoPlayerView.backgroundColor = UIColor.darkGray
                     
                     // Create the placeholder view and add it to the videoPlayerView
                     let placeholderView = UIView(frame: videoPlayerView.bounds)
-                    placeholderView.backgroundColor = UIColor.systemGray5
+            placeholderView.backgroundColor = UIColor.darkGray
                     placeholderView.layer.cornerRadius = 10
                     placeholderView.clipsToBounds = true
                     placeholderView.translatesAutoresizingMaskIntoConstraints = false

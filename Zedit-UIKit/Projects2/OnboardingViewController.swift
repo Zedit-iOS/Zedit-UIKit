@@ -35,6 +35,12 @@ class OnboardingViewController: UIViewController {
             $0?.translatesAutoresizingMaskIntoConstraints = false
         }
         
+        welcomeLabel.textColor = .white
+        generateClipsLabel.textColor = .white
+        importClipsLabel.textColor = .white
+        enhanceLabel.textColor = .white
+        exportLabel.textColor = .white
+        
         // MARK: - Configure the Main Logo & Welcome Label
         // Make the main logo flexible (allow it to grow) and the welcome label fixed.
         logo.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -107,6 +113,7 @@ class OnboardingViewController: UIViewController {
         
         // Fix the height of the Get Started button.
         getStartedButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        view.backgroundColor = .black
     }
 
 

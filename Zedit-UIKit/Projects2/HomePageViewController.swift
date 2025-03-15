@@ -43,6 +43,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             present(onboardingVC, animated: true)
         }
         setupNavigationTitle()
+        view.backgroundColor = .black
+        RecentProjectsCollectionView.backgroundColor = .black
     }
     
     private func setupNavigationTitle() {
@@ -57,7 +59,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let titleLabel = UILabel()
         titleLabel.text = "edit"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 50) // Adjust size if needed
-        titleLabel.textColor = .label  // Adapts to light/dark mode
+        titleLabel.textColor = .white  // Adapts to light/dark mode
 
         // Stack view to arrange them horizontally
         let titleStackView = UIStackView(arrangedSubviews: [logoImageView, titleLabel])

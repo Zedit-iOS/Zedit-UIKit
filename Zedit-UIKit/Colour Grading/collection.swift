@@ -115,6 +115,7 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
             collectionView.delegate = self
             collectionView.dataSource = self
         collectionView.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: "ColorCell")
+        collectionView.backgroundColor = .black
             
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = .horizontal
