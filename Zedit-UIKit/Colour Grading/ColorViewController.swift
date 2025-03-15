@@ -273,7 +273,6 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             self.isNavigatingBack = true
             self.navigationController?.popViewController(animated: true)
         }))
-        
         alert.addAction(UIAlertAction(title: "No", style: .cancel))
         present(alert, animated: true)
     }
@@ -640,6 +639,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             asset: composition,
             presetName: AVAssetExportPresetHighestQuality) else { return }
         
+
         // Determine the output URL
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let projectFolder = documentsDirectory.appendingPathComponent(projectNameColorGrade)

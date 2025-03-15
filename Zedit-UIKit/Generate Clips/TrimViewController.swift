@@ -496,6 +496,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     }
 
     
+
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
             if player != nil{
@@ -512,6 +513,27 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         self.view.addSubview(playheadIndicator)
         self.view.bringSubviewToFront(playheadIndicator)
     }
+        
+        private func updateTimeLabels() {
+            minuitesLabel.text = String(format: "%02d min", selectedMinutes)
+            secondsLabel.text = String(format: "%02d sec", selectedSeconds)
+        }
+        
+        // MARK: - UIPickerView DataSource & Delegate
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return isClipsPickerActive ? 1 : 2// One for minutes, one for seconds
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            if isClipsPickerActive {
+                    return 100 // Adjust the maximum number of clips as needed
+                }
+                return component == 0 ? minutesRange.count : secondsRange.count
+        }
+        
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return String(format: "%02d", row)
+        }
     
     
     func updatePlayheadPosition() {
@@ -767,6 +789,7 @@ func transcribeAudio(at audioURL: URL) {
         }
         
 
+
         let minutes = Int(minuitesLabel.text ?? "") ?? 1
         let seconds = Int(secondsLabel.text ?? "") ?? 15
         let minimumClipDuration = (minutes * 60) + seconds
@@ -831,7 +854,9 @@ func transcribeAudio(at audioURL: URL) {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
             if let destinationVC = segue.destination as? TrimVideoPreviewViewController {
+
                 
+
                 guard let videoURL = videoList.first else {
                             print("No video available for clipping")
                             return
@@ -867,7 +892,6 @@ func transcribeAudio(at audioURL: URL) {
             message: "Are you sure you want to cancel and go back?",
             preferredStyle: .alert
         )
-        
         alertController.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
             self.performSegue(withIdentifier: "cancel", sender: nil)
         })

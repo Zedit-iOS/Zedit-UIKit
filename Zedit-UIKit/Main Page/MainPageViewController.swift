@@ -169,7 +169,6 @@ class MainPageViewController: UIViewController {
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
         playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
         controlsContainer.addSubview(playPauseButton)
-        
         // Create time label
         let timeLabel = UILabel()
         timeLabel.text = "00:00 / 00:00"
@@ -228,6 +227,7 @@ class MainPageViewController: UIViewController {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
+
 //    override func viewDidLayoutSubviews() {
 //        super.viewDidLayoutSubviews()
 //
@@ -241,7 +241,7 @@ class MainPageViewController: UIViewController {
             collectionView.dataSource = self
             collectionView.register(MainPageCollectionViewCell.self, forCellWithReuseIdentifier: "HomeCell")
         collectionView.backgroundColor = .black
-            
+          
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = .horizontal
                 layout.minimumInteritemSpacing = 8
@@ -492,7 +492,6 @@ class MainPageViewController: UIViewController {
             playerViewController = AVPlayerViewController()
             playerViewController?.showsPlaybackControls = false // Hide default controls
         }
-        
         // Assign the player to the view controller
         playerViewController?.player = player
         
