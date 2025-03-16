@@ -721,11 +721,10 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HZY-oA-iJg">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="HZY-oA-iJg">
                                         <rect key="frame" x="0.0" y="38" width="377" height="62.333333333333343"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="62.333333333333343" id="BEu-nt-XEX"/>
                                             <constraint firstAttribute="height" constant="60" id="evi-oj-3QU"/>
                                         </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="HqD-C5-p3V">
@@ -1130,7 +1129,7 @@
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Finish"/>
                                         <connections>
-                                            <segue destination="kRb-Nx-sD7" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="1l5-fn-ncZ"/>
+                                            <segue destination="kRb-Nx-sD7" kind="unwind" identifier="unwindPreview" unwindAction="myUnwindActionWithUnwindSegue:" id="1l5-fn-ncZ"/>
                                         </connections>
                                     </button>
                                 </subviews>

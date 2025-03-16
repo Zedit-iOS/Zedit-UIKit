@@ -232,6 +232,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             // Add padding for content inside
             view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         }
+        videoPlayer.isUserInteractionEnabled = false
         
         // Special handling for playerView: No left & right insets
         if let playerView = playerView {

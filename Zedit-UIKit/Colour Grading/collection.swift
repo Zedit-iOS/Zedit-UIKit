@@ -112,18 +112,29 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func setupCollectionView() {
-            collectionView.delegate = self
-            collectionView.dataSource = self
+        collectionView.collectionViewLayout = generateLayout()
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: "ColorCell")
         collectionView.backgroundColor = .black
-            
-            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                layout.scrollDirection = .horizontal
-                layout.minimumInteritemSpacing = 8
-                layout.minimumLineSpacing = 8
-                layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
-            }
-        }
+    }
+
+    
+    func generateLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(60),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(60),
+                                               heightDimension: .fractionalHeight(1.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(8)
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 8
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        return UICollectionViewCompositionalLayout(section: section)
+    }
     
     func setupSwipeGesture() {
             let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))

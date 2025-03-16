@@ -101,6 +101,20 @@ class MainPageViewController: UIViewController {
         
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateVideoList()
+        collectionView.reloadData()
+    }
+
+    func updateVideoList() {
+        if let project = getProject(projectName: projectname) {
+            videoListHome = project.subfolders.flatMap { $0.videoURLS }
+            print("Updated video count: \(videoListHome.count)")
+        } else {
+            print("Failed to update project")
+        }
+    }
     
     private func styleViews() {
         // Set the main background color
@@ -237,18 +251,30 @@ class MainPageViewController: UIViewController {
 //    }
     
     func setupCollectionView() {
-            collectionView.delegate = self
-            collectionView.dataSource = self
-            collectionView.register(MainPageCollectionViewCell.self, forCellWithReuseIdentifier: "HomeCell")
+        collectionView.collectionViewLayout = generateLayout()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(MainPageCollectionViewCell.self, forCellWithReuseIdentifier: "HomeCell")
         collectionView.backgroundColor = .black
-          
-            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                layout.scrollDirection = .horizontal
-                layout.minimumInteritemSpacing = 8
-                layout.minimumLineSpacing = 8
-                layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
-            }
-        }
+    }
+
+    
+    func generateLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(60),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(60),
+                                               heightDimension: .fractionalHeight(1.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(8)
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 8
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+
 
 
     
@@ -558,20 +584,44 @@ class MainPageViewController: UIViewController {
     
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
         if unwindSegue.identifier == "generateUnwind",
-           let sourceVC = unwindSegue.source as? TrimViewController {
-            projectname = sourceVC.projectNameTrim
+               let sourceVC = unwindSegue.source as? TrimViewController {
+                projectname = sourceVC.projectNameTrim
+                
+            } else if unwindSegue.identifier == "ExportCancel",
+                      let sourceVC = unwindSegue.source as? ExportViewController {
+                projectname = sourceVC.projectname
+                print("Returned from ExportViewController without making changes.")
+                
+            } else if unwindSegue.identifier == "unwindPreview",
+                      let sourceVC = unwindSegue.source as? TrimVideoPreviewViewController {
+                projectname = sourceVC.trimPreviewProjectName
+            }
+            
+            videoListHome.removeAll()
+            
             if let project = getProject(projectName: projectname) {
                 videoListHome = project.subfolders.flatMap { $0.videoURLS }
-                setUpButton()
-                print("Data updated:", videoListHome)
+            
+                
+                // 5. Reload collection view with fresh data
+                collectionView.collectionViewLayout.invalidateLayout()
+                collectionView.reloadData()
+                print("Videos successfully loaded: \(videoListHome.count) videos found.")
+                
+                // 6. (Optional) Select & play the first video
+                if let firstVideo = videoListHome.first {
+                    let indexPath = IndexPath(item: 0, section: 0)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
+                    playVideo(url: firstVideo)
+                }
+                
+            } else {
+                print("Failed to load project.")
             }
-        } else if unwindSegue.identifier == "ExportCancel",
-                  let sourceVC = unwindSegue.source as? ExportViewController {
-            print("Returned from ExportViewController without making changes.")
-        } else {
-            print("Cancelled without changes.")
-        }
+        
+        print("Unwind action complete.")
     }
+
 }
 
 

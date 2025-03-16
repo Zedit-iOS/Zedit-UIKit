@@ -165,6 +165,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                // Set a fixed width for playheadIndicator
                playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
            ])
+        playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
     }
     
     private func styleViews() {
@@ -194,6 +195,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             
             // Add padding for content inside
             view.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+            view.isUserInteractionEnabled = false
         }
         
         // Special handling for playerView: No left & right insets
@@ -405,18 +407,29 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     }
     
     func setupCollectionView() {
-            collectionView.delegate = self
-            collectionView.dataSource = self
+        collectionView.collectionViewLayout = generateLayout()
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.register(TrimCollectionViewCell.self, forCellWithReuseIdentifier: "TrimCell")
         collectionView.backgroundColor = .black
-            
-            if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                layout.scrollDirection = .horizontal
-                layout.minimumInteritemSpacing = 8
-                layout.minimumLineSpacing = 8
-                layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
-            }
-        }
+    }
+
+    
+    func generateLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(60),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(60),
+                                               heightDimension: .fractionalHeight(1.0))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(8)
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 8
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        section.orthogonalScrollingBehavior = .continuous
+        
+        return UICollectionViewCompositionalLayout(section: section)
+    }
     
     func setupSwipeGesture() {
             let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
@@ -861,7 +874,9 @@ func transcribeAudio(at audioURL: URL) {
                             print("No video available for clipping")
                             return
                         }
-                generateClips()
+                //generateClips()
+                var timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1)!
+                exportClip(from: videoURL, timestamps: timestamps)
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
@@ -926,7 +941,7 @@ func transcribeAudio(at audioURL: URL) {
         group.enter()
         queue.async {
             do {
-                //result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
+                result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
             } catch {
                 print("LLM execution failed: \(error.localizedDescription)")
             }
