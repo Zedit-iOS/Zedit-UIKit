@@ -14,6 +14,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     var videoList: [URL] = []
     var projectNameTrim = String()
+    var videoURL: URL?
     private var scenes: [SceneRange] = []
     private var transcriptionTimestamps: [TimeInterval: String] = [:]
     private var clipTimestamps: [Double] = []
@@ -600,7 +601,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     self.transcribeAudio(at: audioOutputURL)
                 case .failed:
                     print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
-                    self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: videoURL)
+                    self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: videoURL, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
                 case .cancelled:
                     print("Audio export cancelled")
                 default:
@@ -612,44 +613,45 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         }
     }
 
-func transcribeAudio(at audioURL: URL) {
-       guard let recognizer = SFSpeechRecognizer() else {
-           print("Speech recognizer not available")
-           return
-       }
-       let request = SFSpeechURLRecognitionRequest(url: audioURL)
-       request.shouldReportPartialResults = false
+    func transcribeAudio(at audioURL: URL) {
+        guard let recognizer = SFSpeechRecognizer() else {
+            print("Speech recognizer not available")
+            return
+        }
+        let request = SFSpeechURLRecognitionRequest(url: audioURL)
+        request.shouldReportPartialResults = false
 
-       recognizer.recognitionTask(with: request) { [weak self] result, error in
-           guard let self = self else { return }
-           
-           if let error = error {
-               
-               print("Transcription error: \(error.localizedDescription)")
-               self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: audioURL)
-               return
-           }
-           
-           if let result = result, result.isFinal {
-               DispatchQueue.main.async {
-                   for segment in result.bestTranscription.segments {
-                       let word = segment.substring
-                       let timestamp = segment.timestamp
-                       self.transcriptionTimestamps[timestamp] = word
-                   }
-                   let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
-                   var formattedTimestamps: [String: String] = [:]
-                   for (key, value) in sortedTimestamps {
-                       let timestampString = String(format: "%02d:%02d:%02d", Int(key) / 3600, (Int(key) % 3600) / 60, Int(key) % 60)
-                       formattedTimestamps[timestampString] = value.replacingOccurrences(of: "\'", with: "")
-                   }
-                   print(formattedTimestamps)
-                   let timestamps = formattedTimestamps.map { $0.key }
-                   self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges, videoURL: audioURL)
-               }
-           }
-       }
-   }
+        recognizer.recognitionTask(with: request) { [weak self] result, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Transcription error: \(error.localizedDescription)")
+                // Use the original video URL for fallback
+                self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: self.videoURL!, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
+                return
+            }
+            
+            if let result = result, result.isFinal {
+                DispatchQueue.main.async {
+                    for segment in result.bestTranscription.segments {
+                        let word = segment.substring
+                        let timestamp = segment.timestamp
+                        self.transcriptionTimestamps[timestamp] = word
+                    }
+                    let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
+                    var formattedTimestamps: [String: String] = [:]
+                    for (key, value) in sortedTimestamps {
+                        let timestampString = String(format: "%02d:%02d:%02d", Int(key) / 3600, (Int(key) % 3600) / 60, Int(key) % 60)
+                        formattedTimestamps[timestampString] = value.replacingOccurrences(of: "\'", with: "")
+                    }
+                    print(formattedTimestamps)
+                    let timestamps = formattedTimestamps.map { $0.key }
+                    // IMPORTANT: Pass the original video URL (self.videoURL) instead of audioURL
+                    self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges, videoURL: self.videoURL!, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
+                }
+            }
+        }
+    }
 //    func setupSteppers() {
 //        numberOfClipsStepper.minimumValue = 1
 //        numberOfClipsStepper.maximumValue = 10
@@ -801,8 +803,8 @@ func transcribeAudio(at audioURL: URL) {
             return
         }
         
-
-
+        self.videoURL = videoURL  // Save it as a property.
+        
         let minutes = Int(minuitesLabel.text ?? "") ?? 1
         let seconds = Int(secondsLabel.text ?? "") ?? 15
         let minimumClipDuration = (minutes * 60) + seconds
@@ -812,8 +814,10 @@ func transcribeAudio(at audioURL: URL) {
         flatSceneRanges = finalSceneRanges.map { range in
             [range.lowerBound, range.upperBound]
         }
+        print("Scenes are : \(flatSceneRanges)")
         extractAudioAndTranscribe(from: videoURL)
     }
+
     
     func exportClip(from videoURL: URL, timestamps: [Double]) {
         let asset = AVAsset(url: videoURL)
@@ -834,27 +838,42 @@ func transcribeAudio(at audioURL: URL) {
             }
         }
         
+        let videoDuration = asset.duration.seconds
+        
         for i in 0..<(timestamps.count - 1) {
-            let startTime = CMTime(seconds: timestamps[i], preferredTimescale: 600)
-            let endTime = CMTime(seconds: timestamps[i + 1], preferredTimescale: 600)
+            // Ensure the times are within the asset's duration.
+            let startTimeValue = min(timestamps[i], videoDuration)
+            let endTimeValue = min(timestamps[i + 1], videoDuration)
             
-            let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
-            exportSession?.outputFileType = .mp4
+            let startTime = CMTime(seconds: startTimeValue, preferredTimescale: 600)
+            let endTime = CMTime(seconds: endTimeValue, preferredTimescale: 600)
+            
+            // Verify that the time range is valid.
+            if CMTimeCompare(startTime, endTime) >= 0 {
+                print("Invalid time range for clip \(i): startTime (\(startTimeValue)) >= endTime (\(endTimeValue))")
+                continue
+            }
+            
+            guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality) else {
+                print("Failed to create export session for clip \(i)")
+                continue
+            }
+            exportSession.outputFileType = .mp4
             
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyyMMdd_HHmm"
+            dateFormatter.dateFormat = "yyyyMMdd_HHmmss"
             let currentTimeString = dateFormatter.string(from: Date())
             let outputURL = clipsDirectory.appendingPathComponent("clip_\(i)_\(currentTimeString).mp4")
             
-            exportSession?.outputURL = outputURL
-            exportSession?.timeRange = CMTimeRange(start: startTime, end: endTime)
+            exportSession.outputURL = outputURL
+            exportSession.timeRange = CMTimeRange(start: startTime, end: endTime)
             
-            exportSession?.exportAsynchronously {
-                switch exportSession?.status {
+            exportSession.exportAsynchronously {
+                switch exportSession.status {
                 case .completed:
                     print("Clip \(i) exported successfully to: \(outputURL)")
                 case .failed:
-                    print("Failed to export clip \(i): \(String(describing: exportSession?.error))")
+                    print("Failed to export clip \(i): \(String(describing: exportSession.error))")
                 case .cancelled:
                     print("Export cancelled for clip \(i)")
                 default:
@@ -863,6 +882,7 @@ func transcribeAudio(at audioURL: URL) {
             }
         }
     }
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == trimSeguePreviewIdentifier {
@@ -874,9 +894,9 @@ func transcribeAudio(at audioURL: URL) {
                             print("No video available for clipping")
                             return
                         }
-                //generateClips()
-                var timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1)!
-                exportClip(from: videoURL, timestamps: timestamps)
+                generateClips()
+//                var timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1)!
+//                exportClip(from: videoURL, timestamps: timestamps)
                 destinationVC.trimPreviewProjectName = projectNameTrim
             }
         }
@@ -916,54 +936,68 @@ func transcribeAudio(at audioURL: URL) {
         present(alertController, animated: true, completion: nil)
     }
     
-    func processVideoForScenes(videoPath: String, minimumClipDuration:Int) {
-    let scenesArray = NSMutableArray()
-    
-        if let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: Double(minimumClipDuration)) {
-        if error.hasError {
+    func processVideoForScenes(videoPath: String, minimumClipDuration: Int) {
+        let scenesArray = NSMutableArray()
+        let error = CV.detectSceneChanges(videoPath, scenes: scenesArray, minDuration: Double(minimumClipDuration))
+        
+        if let error = error, error.hasError {
             print("Error detecting scenes: \(error.message ?? "")")
             return
         }
         
         let scenes = scenesArray.compactMap { $0 as? SceneRange }
         self.scenes = scenes
+        print("Detected scenes: \(scenes)") // Debug output to verify scenes are detected.
     }
-    }
-    
-    func getResults(timestamps: [String], sceneRanges: [[Double]], videoURL: URL) {
-        let llm = LLM()
-        let timeout: TimeInterval = 60 // 1 minute
-        var result: String?
-        let queue = DispatchQueue.global(qos: .userInitiated)
-        let group = DispatchGroup()
-        
 
-        group.enter()
-        queue.async {
+
+    func getResults(
+        timestamps: [String],
+        sceneRanges: [[Double]],
+        videoURL: URL,
+        numberOfClipsDisplayText: String
+    ) {
+        Task {
             do {
-                result = try llm.run(for: "the timestamps are: \(timestamps) and scene ranges are: \(sceneRanges)")
+                if let extractedTimestamps = try await getClipTimestamps(
+                    timestamps: timestamps,
+                    sceneRanges: sceneRanges,
+                    videoURL: videoURL
+                ) {
+                    let sortedTimestamps = extractedTimestamps.sorted()
+                    print("Extracted timestamps: \(sortedTimestamps)")
+                    if sortedTimestamps.count >= 2 {
+                        exportClip(from: videoURL, timestamps: sortedTimestamps)
+                    } else {
+                        print("Not enough timestamps extracted. Falling back.")
+                        let numberOfClips = Int(numberOfClipsDisplayText) ?? 1
+                        if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                            exportClip(from: videoURL, timestamps: fallbackTimestamps)
+                        } else {
+                            print("Failed to generate fallback clip timestamps.")
+                        }
+                    }
+                } else {
+                    // Fallback if extraction returned nil.
+                    let numberOfClips = Int(numberOfClipsDisplayText) ?? 1
+                    if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                        exportClip(from: videoURL, timestamps: fallbackTimestamps)
+                    } else {
+                        print("Failed to generate fallback clip timestamps.")
+                    }
+                }
             } catch {
-                print("LLM execution failed: \(error.localizedDescription)")
+                print("Error running LLM: \(error)")
+                let numberOfClips = Int(numberOfClipsDisplayText) ?? 1
+                if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                    exportClip(from: videoURL, timestamps: fallbackTimestamps)
+                } else {
+                    print("Failed to generate fallback clip timestamps.")
+                }
             }
-            group.leave()
-        }
-
-        let waitResult = group.wait(timeout: .now() + timeout)
-
-        if waitResult == .timedOut {
-            print("LLM execution timed out, proceeding with generateEvenClipTimestamps")
-        } else if let result = result {
-            print(result)
-        }
-
-        let numberOfClips = Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1
-        if let timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
-            self.clipTimestamps = timestamps
-            exportClip(from: videoURL, timestamps: timestamps)
-        } else {
-            print("Failed to generate clip timestamps")
         }
     }
+
 }
 
 
