@@ -28,6 +28,7 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
         let selectedVideo = videoList[indexPath.item]
         print("Playing video from collection: \(selectedVideo)")
         loadVideo(url: selectedVideo)
+        generateThumbnails(for: selectedVideo)
     }
     
     func setupTimelineControls() {
@@ -151,9 +152,8 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
     
 
     
-    func generateThumbnails() {
-        guard let firstVideo = videoList.first else { return }
-        let asset = AVAsset(url: firstVideo)
+    func generateThumbnails(for videoURL:URL) {
+        let asset = AVAsset(url: videoURL)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
 

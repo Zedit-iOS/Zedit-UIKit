@@ -23,6 +23,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewWillAppear(_ animated: Bool) {
         addPulsatingAnimation(to: createProjectsButton)
+        loadProjects()
     }
     
     override func viewDidLoad() {
@@ -47,18 +48,21 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         RecentProjectsCollectionView.backgroundColor = .black
     }
     
+    
+    
+    
     private func setupNavigationTitle() {
         // Create the image view
         let logoImageView = UIImageView(image: UIImage(named: "zedit_logo"))
         logoImageView.contentMode = .scaleAspectFit
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
-        logoImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true  // Adjust size as needed
-        logoImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        logoImageView.widthAnchor.constraint(equalToConstant: 28).isActive = true  // Adjust size as needed
+        logoImageView.heightAnchor.constraint(equalToConstant: 28).isActive = true
 
         // Create the label
         let titleLabel = UILabel()
         titleLabel.text = "edit"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 50) // Adjust size if needed
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 28) // Adjust size if needed
         titleLabel.textColor = .white  // Adapts to light/dark mode
 
         // Stack view to arrange them horizontally
@@ -239,6 +243,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             self.deleteProject(at: indexPath)
+            self.loadProjects()
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

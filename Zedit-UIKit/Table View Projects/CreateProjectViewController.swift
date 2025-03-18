@@ -25,7 +25,8 @@ class CreateProjectViewController: UIViewController, UINavigationControllerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVideoPreviewView()
-        saveProjectButton.isEnabled = false  // Disable button initially
+        saveProjectButton.isEnabled = false// Disable button initially
+        saveProjectButton.backgroundColor = .blue
         nameExistsLabel.isHidden = true  // Hide the label initially
         projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboard(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)

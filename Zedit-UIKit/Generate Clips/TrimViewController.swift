@@ -125,7 +125,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         
         setupPlayheadIndicator()
         setupGestureRecognizer()
-        generateThumbnails()
+        generateThumbnails(for: videoList.first!)
         setupTimelineControls()
         updateTimeLabels()
                 
@@ -447,9 +447,8 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
 
     
-    func generateThumbnails() {
-        guard let firstVideo = videoList.first else { return }
-        let asset = AVAsset(url: firstVideo)
+    func generateThumbnails(for videoURL: URL) {
+        let asset = AVAsset(url: videoURL)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
 
@@ -462,8 +461,11 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             times.append(NSValue(time: cmTime))
         }
 
+        // Optionally, clear previous thumbnails if needed:
+        // self.videoScrubberView.subviews.forEach { $0.removeFromSuperview() }
+
         DispatchQueue.global(qos: .userInitiated).async {
-            var xOffset: CGFloat = self.videoScrubberView.frame.midX - (self.playheadIndicator.frame.width/2)// Start at playhead position
+            var xOffset: CGFloat = self.videoScrubberView.frame.midX - (self.playheadIndicator.frame.width / 2)
             let thumbnailWidth: CGFloat = 60  // Thumbnail width
             let spacing: CGFloat = 1  // Space between thumbnails
 
@@ -488,6 +490,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             }
         }
     }
+
 
     @objc func backButtonTapped(){
         self.navigationController?.popToRootViewController(animated: false)
@@ -575,33 +578,75 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     func extractAudioAndTranscribe(from videoURL: URL) {
         let asset = AVAsset(url: videoURL)
-        let audioTrack = asset.tracks(withMediaType: .audio).first
-
-    
-        guard let track = audioTrack else {
+        guard let track = asset.tracks(withMediaType: .audio).first else {
             print("No audio track found in video.")
             return
         }
-
+        
         let composition = AVMutableComposition()
-        let audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
-
+        guard let audioCompositionTrack = composition.addMutableTrack(withMediaType: .audio,
+                                                                       preferredTrackID: kCMPersistentTrackID_Invalid) else {
+            print("Could not create audio composition track.")
+            return
+        }
+        
         do {
-            try audioCompositionTrack?.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration), of: track, at: .zero)
+            try audioCompositionTrack.insertTimeRange(CMTimeRange(start: .zero, duration: asset.duration),
+                                                      of: track,
+                                                      at: .zero)
             
-            let audioOutputURL = videoURL.deletingPathExtension().appendingPathExtension("m4a") // Change file extension to m4a
-            let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A)
-            exportSession?.outputURL = audioOutputURL
-            exportSession?.outputFileType = .m4a
+            let audioOutputURL = videoURL.deletingPathExtension().appendingPathExtension("m4a")
+            // Remove any existing file
+            try? FileManager.default.removeItem(at: audioOutputURL)
             
-            exportSession?.exportAsynchronously {
-                switch exportSession?.status {
+            guard let exportSession = AVAssetExportSession(asset: composition,
+                                                           presetName: AVAssetExportPresetAppleM4A) else {
+                print("Could not create export session.")
+                return
+            }
+            exportSession.outputURL = audioOutputURL
+            exportSession.outputFileType = .m4a
+            
+            exportSession.exportAsynchronously {
+                switch exportSession.status {
                 case .completed:
                     print("Audio extracted successfully to: \(audioOutputURL)")
+                    
+                    // 1. Check file existence and size
+                    if FileManager.default.fileExists(atPath: audioOutputURL.path) {
+                        do {
+                            let fileAttributes = try FileManager.default.attributesOfItem(atPath: audioOutputURL.path)
+                            if let fileSize = fileAttributes[.size] as? UInt64, fileSize > 0 {
+                                print("Audio file exists and size: \(fileSize) bytes")
+                            } else {
+                                print("File exists but has zero size.")
+                            }
+                        } catch {
+                            print("Failed to get file attributes: \(error.localizedDescription)")
+                        }
+                    } else {
+                        print("Audio file does not exist at \(audioOutputURL.path)")
+                    }
+                    
+                    // 2. Validate the exported audio asset
+                    if self.validateAudioAsset(at: audioOutputURL) {
+                        print("Audio asset validation passed.")
+                    } else {
+                        print("Audio asset validation failed.")
+                    }
+                    
+                    // 3. Test decoding of the audio file
+                    self.testAudioDecoding(url: audioOutputURL)
+                    
+                    // 4. Proceed with transcription
                     self.transcribeAudio(at: audioOutputURL)
+                    
                 case .failed:
-                    print("Failed to export audio: \(exportSession?.error?.localizedDescription ?? "Unknown error")")
-                    self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: videoURL, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
+                    print("Failed to export audio: \(exportSession.error?.localizedDescription ?? "Unknown error")")
+                    self.getResults(timestamps: [],
+                                    sceneRanges: self.flatSceneRanges,
+                                    videoURL: videoURL,
+                                    numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
                 case .cancelled:
                     print("Audio export cancelled")
                 default:
@@ -613,21 +658,85 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         }
     }
 
+    func validateAudioAsset(at url: URL) -> Bool {
+        let asset = AVAsset(url: url)
+        let audioTracks = asset.tracks(withMediaType: .audio)
+        
+        guard !audioTracks.isEmpty else {
+            print("No audio tracks found in the file.")
+            return false
+        }
+        
+        // Print out some details about the audio track
+        if let track = audioTracks.first {
+            for case let desc as CMAudioFormatDescription in track.formatDescriptions {
+                if let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(desc)?.pointee {
+                    print("Sample rate: \(asbd.mSampleRate)")
+                    print("Channels: \(asbd.mChannelsPerFrame)")
+                }
+            }
+        }
+        
+        return true
+    }
+
+    func testAudioDecoding(url: URL) {
+        let asset = AVAsset(url: url)
+        guard let track = asset.tracks(withMediaType: .audio).first else {
+            print("No audio track found for decoding.")
+            return
+        }
+        
+        do {
+            let assetReader = try AVAssetReader(asset: asset)
+            // Request uncompressed linear PCM output for testing
+            let outputSettings: [String: Any] = [
+                AVFormatIDKey: kAudioFormatLinearPCM,
+                AVSampleRateKey: 44100,
+                AVNumberOfChannelsKey: 1
+            ]
+            let trackOutput = AVAssetReaderTrackOutput(track: track, outputSettings: outputSettings)
+            assetReader.add(trackOutput)
+            
+            assetReader.startReading()
+            var sampleCount = 0
+            while let sampleBuffer = trackOutput.copyNextSampleBuffer() {
+                sampleCount += 1
+                CMSampleBufferInvalidate(sampleBuffer)
+            }
+            
+            if sampleCount > 0 {
+                print("Audio file decoded successfully with \(sampleCount) samples read.")
+            } else {
+                print("No audio samples could be read from the file.")
+            }
+        } catch {
+            print("Failed to create AVAssetReader: \(error.localizedDescription)")
+        }
+    }
+
+
     func transcribeAudio(at audioURL: URL) {
+        // Ensure that the speech recognizer is available and authorized
         guard let recognizer = SFSpeechRecognizer() else {
             print("Speech recognizer not available")
             return
         }
+        
         let request = SFSpeechURLRecognitionRequest(url: audioURL)
         request.shouldReportPartialResults = false
+        request.requiresOnDeviceRecognition = true
 
         recognizer.recognitionTask(with: request) { [weak self] result, error in
             guard let self = self else { return }
             
             if let error = error {
                 print("Transcription error: \(error.localizedDescription)")
-                // Use the original video URL for fallback
-                self.getResults(timestamps: [], sceneRanges: self.flatSceneRanges, videoURL: self.videoURL!, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
+                // Fallback using the original video URL
+                self.getResults(timestamps: [],
+                                sceneRanges: self.flatSceneRanges,
+                                videoURL: self.videoURL!,
+                                numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
                 return
             }
             
@@ -641,17 +750,23 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     let sortedTimestamps = self.transcriptionTimestamps.sorted { $0.key < $1.key }
                     var formattedTimestamps: [String: String] = [:]
                     for (key, value) in sortedTimestamps {
-                        let timestampString = String(format: "%02d:%02d:%02d", Int(key) / 3600, (Int(key) % 3600) / 60, Int(key) % 60)
+                        let timestampString = String(format: "%02d:%02d:%02d",
+                                                     Int(key) / 3600,
+                                                     (Int(key) % 3600) / 60,
+                                                     Int(key) % 60)
                         formattedTimestamps[timestampString] = value.replacingOccurrences(of: "\'", with: "")
                     }
                     print(formattedTimestamps)
                     let timestamps = formattedTimestamps.map { $0.key }
-                    // IMPORTANT: Pass the original video URL (self.videoURL) instead of audioURL
-                    self.getResults(timestamps: timestamps, sceneRanges: self.flatSceneRanges, videoURL: self.videoURL!, numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
+                    self.getResults(timestamps: timestamps,
+                                    sceneRanges: self.flatSceneRanges,
+                                    videoURL: self.videoURL!,
+                                    numberOfClipsDisplayText: self.numberOfClipsDisplayLabel.text ?? "1")
                 }
             }
         }
     }
+
 //    func setupSteppers() {
 //        numberOfClipsStepper.minimumValue = 1
 //        numberOfClipsStepper.maximumValue = 10
@@ -988,7 +1103,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                 }
             } catch {
                 print("Error running LLM: \(error)")
-                let numberOfClips = Int(numberOfClipsDisplayText) ?? 1
+                let numberOfClips = Int(numberOfClipsDisplayLabel.text ?? "1") ?? 1
                 if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
                     exportClip(from: videoURL, timestamps: fallbackTimestamps)
                 } else {
@@ -1033,5 +1148,6 @@ extension TrimViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let selectedVideo = videoList[indexPath.item]
         print("Playing video from collection: \(selectedVideo)")
         playVideo(url: selectedVideo)
+        generateThumbnails(for: selectedVideo)
     }
 }

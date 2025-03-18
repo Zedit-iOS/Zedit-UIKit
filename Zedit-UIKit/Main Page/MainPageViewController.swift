@@ -9,7 +9,7 @@
 import UIKit
 import AVKit
 
-class MainPageViewController: UIViewController {
+class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var videoSelector: UIButton!
     @IBOutlet weak var videoPreviewView: UIView!
@@ -19,6 +19,7 @@ class MainPageViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     fileprivate var playerObserver: Any?
+    var wasPlayingBeforePan = false
     
 //    private var playPauseButton: UIButton!
 //    private var timeLabel: UILabel!
@@ -68,7 +69,7 @@ class MainPageViewController: UIViewController {
         
         setupPlayheadIndicator()
                 setupGestureRecognizer()
-                generateThumbnails()
+        generateThumbnails(for: videoListHome.first!)
         setupTimelineControls()
         styleViews()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
@@ -219,6 +220,7 @@ class MainPageViewController: UIViewController {
         }
     }
 
+
     func updateTimeDisplay() {
         guard let player = player,
               let currentItem = player.currentItem,
@@ -281,7 +283,7 @@ class MainPageViewController: UIViewController {
     func setupSwipeGesture() {
             let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
             swipeLeft.direction = .left
-            videoScrubber.addGestureRecognizer(swipeLeft)
+        videoScrubber.addGestureRecognizer(swipeLeft)
         }
     
     @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
@@ -291,11 +293,18 @@ class MainPageViewController: UIViewController {
             player.seek(to: newTime)
         }
     
+    func updateScrubberForTime(_ time: Double) {
+            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+            // The effective timeline width is the scrollable area.
+            let effectiveWidth = videoScrubber.contentSize.width - videoScrubber.frame.width
+            let progress = time / duration
+            let newOffsetX = progress * effectiveWidth
+            videoScrubber.setContentOffset(CGPoint(x: newOffsetX, y: 0), animated: true)
+        }
 
     
-    func generateThumbnails() {
-        guard let firstVideo = videoListHome.first else { return }
-        let asset = AVAsset(url: firstVideo)
+    func generateThumbnails(for videoURL:URL) {
+        let asset = AVAsset(url: videoURL)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
 
@@ -341,8 +350,10 @@ class MainPageViewController: UIViewController {
     
     func setupGestureRecognizer() {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-            videoScrubber.addGestureRecognizer(panGesture)
+        videoScrubber.addGestureRecognizer(panGesture)
         }
+        
+        // Allow simultaneous recognition so that the swipe gesture isn't blocked by the scroll view's pan gestures
         
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: videoScrubber)
@@ -355,15 +366,6 @@ class MainPageViewController: UIViewController {
         updatePlayheadPosition()
     }
     
-    //    func setUpSliderConstraints() {
-//            videoSlider.translatesAutoresizingMaskIntoConstraints = false
-//            NSLayoutConstraint.activate([
-//                videoSlider.centerXAnchor.constraint(equalTo: videoScrubber.centerXAnchor),
-//                videoSlider.widthAnchor.constraint(equalTo: videoScrubber.widthAnchor, multiplier: 0.9),
-//                videoSlider.centerYAnchor.constraint(equalTo: videoScrubber.centerYAnchor),
-//                videoSlider.heightAnchor.constraint(equalToConstant: 30)
-//            ])
-//        }
         
         // MARK: - Playhead Indicator
     func setupPlayheadIndicator() {
@@ -385,11 +387,13 @@ class MainPageViewController: UIViewController {
         
         player?.seek(to: newTime)
     }
+    
+    
     // MARK: - Sync Slider with Video
     @objc func sliderValueChanged(_ sender: UISlider) {
-            guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
-            let newTime = CMTime(seconds: duration * Double(sender.value), preferredTimescale: 600)
-            player?.seek(to: newTime)
+        guard let duration = player?.currentItem?.duration.seconds, duration > 0 else { return }
+        let newTime = CMTime(seconds: duration * Double(sender.value), preferredTimescale: 600)
+        player?.seek(to: newTime)
         }
     
     func observePlayerTime() {
@@ -644,5 +648,6 @@ extension MainPageViewController: UICollectionViewDelegate, UICollectionViewData
         let selectedVideo = videoListHome[indexPath.item]
         print("Playing video from collection: \(selectedVideo)")
         playVideo(url: selectedVideo)
+        generateThumbnails(for: selectedVideo)
     }
 }

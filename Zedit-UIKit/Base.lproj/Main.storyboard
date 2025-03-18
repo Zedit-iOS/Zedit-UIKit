@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -202,8 +203,8 @@
                                         <rect key="frame" x="0.0" y="79.333333333333343" width="373" height="34.333333333333343"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recent Projects" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iu-i7-bBK">
-                                                <rect key="frame" x="0.0" y="0.0" width="228" height="34.333333333333336"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="189" height="34.333333333333336"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -227,27 +228,13 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeCell" id="wFl-27-hbA" customClass="HomePageCollectionViewCell" customModule="Zedit" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="128" height="125.66666666666667"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Hw8-KS-4K7">
-                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="125.66666666666667"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Caa-4z-XtB">
-                                                            <rect key="frame" x="43.333333333333329" y="52.666666666666664" width="41.333333333333329" height="20.333333333333336"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="Caa-4z-XtB" firstAttribute="centerX" secondItem="Hw8-KS-4K7" secondAttribute="centerX" id="9ZB-oY-eHq"/>
-                                                        <constraint firstItem="Caa-4z-XtB" firstAttribute="centerY" secondItem="Hw8-KS-4K7" secondAttribute="centerY" id="Uzp-Y1-dOt"/>
-                                                        <constraint firstItem="Caa-4z-XtB" firstAttribute="top" secondItem="Hw8-KS-4K7" secondAttribute="top" constant="52.66666666666697" id="n13-WV-C4H"/>
-                                                    </constraints>
                                                 </collectionViewCellContentView>
                                                 <connections>
-                                                    <outlet property="projectNameLabel" destination="Caa-4z-XtB" id="aBV-oW-cOx"/>
                                                     <segue destination="9Lp-0K-qM7" kind="show" identifier="HomeMain" id="41F-4h-AHy"/>
                                                 </connections>
                                             </collectionViewCell>
@@ -382,7 +369,7 @@
                                         <rect key="frame" x="0.0" y="680.66666666666663" width="393" height="34.333333333333371"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Create Project">
-                                            <color key="baseBackgroundColor" systemColor="systemGreenColor"/>
+                                            <color key="baseBackgroundColor" systemColor="systemBlueColor"/>
                                         </buttonConfiguration>
                                         <connections>
                                             <segue destination="9Lp-0K-qM7" kind="show" identifier="Create" id="qwn-dj-PL0"/>
@@ -863,8 +850,12 @@
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DoN-na-mnG">
                                         <rect key="frame" x="0.0" y="670.66666666666663" width="393" height="34.333333333333371"/>
+                                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                        <color key="tintColor" name="AccentColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Create Project"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Create Project">
+                                            <color key="baseForegroundColor" systemColor="systemBlueColor"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <action selector="createProjectButtonTapped:" destination="p1X-mA-ZK7" eventType="touchUpInside" id="Etw-p9-jMX"/>
                                         </connections>
@@ -1222,6 +1213,9 @@
         <image name="photo.badge.plus" catalog="system" width="128" height="97"/>
         <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <image name="video.fill" catalog="system" width="128" height="81"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

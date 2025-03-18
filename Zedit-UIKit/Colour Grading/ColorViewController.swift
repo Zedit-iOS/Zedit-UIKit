@@ -86,7 +86,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         navigationItem.title = projectNameColorGrade
         setupPlayheadIndicator()
         setupGestureRecognizer()
-        generateThumbnails()
+        generateThumbnails(for: videoList.first!)
         setupTimelineControls()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
