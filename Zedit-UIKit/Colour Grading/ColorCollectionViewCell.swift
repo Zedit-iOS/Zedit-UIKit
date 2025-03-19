@@ -17,6 +17,8 @@ class ColorCollectionViewCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 3
         return imageView
     }()
     private let waveformStackView: UIStackView = {

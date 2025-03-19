@@ -140,6 +140,8 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
             separatorView.frame = CGRect(x: separatorX, y: 0, width: defaultSeparatorWidth, height: separatorHeight)
         }
     }
+
+
         
         // Keep the separator updated when scrolling occurs.
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -366,6 +368,8 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
                     DispatchQueue.main.async {
                         let thumbnailImage = UIImage(cgImage: image)
                         let imageView = UIImageView(image: thumbnailImage)
+                        imageView.layer.borderColor = UIColor.lightGray.cgColor
+                        imageView.layer.borderWidth = 3
                         imageView.frame = CGRect(x: xOffset, y: 0, width: thumbnailWidth, height: self.videoScrubber.bounds.height)
                         
                         self.videoScrubber.addSubview(imageView)

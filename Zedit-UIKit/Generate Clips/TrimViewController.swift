@@ -513,6 +513,8 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                     DispatchQueue.main.async {
                         let thumbnailImage = UIImage(cgImage: image)
                         let imageView = UIImageView(image: thumbnailImage)
+                        imageView.layer.borderColor = UIColor.lightGray.cgColor
+                        imageView.layer.borderWidth = 3
                         imageView.frame = CGRect(x: xOffset, y: 0, width: thumbnailWidth, height: self.videoScrubberView.bounds.height)
                         
                         self.videoScrubberView.addSubview(imageView)

@@ -35,8 +35,17 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidLoad()
         self.setupSearchController()
         navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationItem.title = "My Projects"
-        navigationItem.rightBarButtonItem = deleteBarButton
+           
+           // Set navigation bar background color and title text color
+           if let navBar = navigationController?.navigationBar {
+               navBar.barTintColor = .black        // Sets the background color
+               navBar.tintColor = .white           // Sets the color for bar button items
+               navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+               navBar.isTranslucent = false        // Optional: removes translucency for a solid color
+           }
+           
+           navigationItem.title = "My Projects"
+           navigationItem.rightBarButtonItem = deleteBarButton
         
         projectsCollectionView.dataSource = self
         projectsCollectionView.delegate = self
@@ -238,18 +247,29 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
 
 
      
-    private func setupSearchController(){
+    private func setupSearchController() {
         self.searchController.searchResultsUpdater = self
         self.searchController.obscuresBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = true
-        self.searchController.searchBar.placeholder = "Search Projects"
+
+        // Set placeholder text with white color
+        let placeholderText = "Search Projects"
+        let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
+        self.searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
+        
+        // Optionally, set the text color to white as well
+        self.searchController.searchBar.searchTextField.textColor = .white
+
+        // Add a white border around the search bar text field
+        self.searchController.searchBar.searchTextField.layer.borderColor = UIColor.white.cgColor
+        self.searchController.searchBar.searchTextField.layer.borderWidth = 1.0
+        self.searchController.searchBar.searchTextField.layer.cornerRadius = 8.0
+
         self.navigationItem.searchController = searchController
         self.definesPresentationContext = false
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        
-        
     }
-    
+
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text
