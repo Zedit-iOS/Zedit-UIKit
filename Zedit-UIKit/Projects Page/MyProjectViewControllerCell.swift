@@ -11,6 +11,7 @@ import AVFoundation
 class MyProjectViewControllerCell: UICollectionViewCell {
 
     private var customSelected: Bool = false
+    private var currentProject: Project? 
     
     override var isSelected: Bool {
         get { return customSelected }
@@ -28,15 +29,18 @@ class MyProjectViewControllerCell: UICollectionViewCell {
     }
 
     private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 12, weight: .bold)
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = UIColor.black.withAlphaComponent(0.6) // Background for readability
-        return label
-    }()
-
+            let label = UILabel()
+            label.numberOfLines = 2  // Two rows for the info
+            label.textAlignment = .left
+            label.font = .systemFont(ofSize: 12, weight: .bold)
+            label.textColor = .white
+            // Background for readability
+            label.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+    
+    
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "trash"), for: .normal)
@@ -76,6 +80,14 @@ class MyProjectViewControllerCell: UICollectionViewCell {
         super.init(coder: coder)
         setupUI()
     }
+    
+    override func layoutSubviews() {
+            super.layoutSubviews()
+            // Reapply title label formatting with the finalized label bounds.
+            if let project = currentProject {
+                updateTitleLabel(with: project)
+            }
+        }
 
     private func setupUI() {
         contentView.addSubview(titleLabel)
@@ -85,10 +97,9 @@ class MyProjectViewControllerCell: UICollectionViewCell {
 
         // Constraints for the title label at the bottom
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30) // Height for the label
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1),
+            titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
 
         // Layout for delete button at top-right
@@ -116,51 +127,132 @@ class MyProjectViewControllerCell: UICollectionViewCell {
     }
 
     func update(with project: Project) {
-        // Set project title
-        titleLabel.text = project.name
-
-        // Generate thumbnail and set it as backgroundView
-        if let originalVideosSubfolder = project.subfolders.first(where: {
-            $0.name == "Original Videos"
-        }),
-           let firstVideoURL = originalVideosSubfolder.videoURLS.first{
-            generateThumbnail(from: firstVideoURL) { [weak self] image in
-                DispatchQueue.main.async {
-                    if let thumbnail = image {
-                        let imageView = UIImageView(image: thumbnail)
-                        imageView.contentMode = .scaleAspectFill
-                        imageView.clipsToBounds = true
-                        self?.backgroundView = imageView
-                    } else {
-                        // Set a default background if thumbnail generation fails
-                        self?.backgroundView = UIImageView(image: UIImage(named: "placeholder"))
+            // Store the project so we can update later on layoutSubviews
+            currentProject = project
+            
+            // Generate thumbnail from the first video in the "Original Videos" subfolder.
+            if let originalVideosSubfolder = project.subfolders.first(where: { $0.name == "Original Videos" }),
+               let firstVideoURL = originalVideosSubfolder.videoURLS.first {
+                generateThumbnail(from: firstVideoURL) { [weak self] image in
+                    DispatchQueue.main.async {
+                        if let thumbnail = image {
+                            let imageView = UIImageView(image: thumbnail)
+                            imageView.contentMode = .scaleAspectFill
+                            imageView.clipsToBounds = true
+                            self?.backgroundView = imageView
+                        } else {
+                            self?.backgroundView = UIImageView(image: UIImage(named: "placeholder"))
+                        }
                     }
                 }
+            } else {
+                backgroundView = UIImageView(image: UIImage(named: "placeholder"))
             }
-        } else {
-            // Set a default placeholder background if no video exists
-            backgroundView = UIImageView(image: UIImage(named: "placeholder"))
+            
+            // Update titleLabel initially.
+            updateTitleLabel(with: project)
         }
-    }
-
+        
+        private func updateTitleLabel(with project: Project) {
+            // Format the creation date.
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            let dateCreatedString = dateFormatter.string(from: project.dateCreated)
+            
+            let daysAgo = Calendar.current.dateComponents([.day], from: project.dateCreated, to: Date()).day ?? 0
+            let clipsCount = project.subfolders.first(where: { $0.name == "Clips" })?.videoURLS.count ?? 0
+            
+            let text = " \(project.name)\t\(dateCreatedString) \n \(clipsCount) clips\t\(daysAgo) days ago "
+            
+            // Use the titleLabel's finalized bounds for tab stop location.
+            let labelWidth = titleLabel.bounds.width > 0 ? titleLabel.bounds.width : (contentView.frame.width - 16)
+            
+            let paragraphStyle = NSMutableParagraphStyle()
+            let tabStop = NSTextTab(textAlignment: .right, location: labelWidth, options: [:])
+            paragraphStyle.tabStops = [tabStop]
+            paragraphStyle.defaultTabInterval = labelWidth
+            paragraphStyle.lineBreakMode = .byTruncatingTail
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .paragraphStyle: paragraphStyle,
+                .foregroundColor: UIColor.white,
+                .font: UIFont.systemFont(ofSize: 12, weight: .bold)
+            ]
+            
+            titleLabel.attributedText = NSAttributedString(string: text, attributes: attributes)
+        }
+    
+    
     private func generateThumbnail(from url: URL, completion: @escaping (UIImage?) -> Void) {
-        let asset = AVAsset(url: url)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        imageGenerator.appliesPreferredTrackTransform = true
-
-        let time = CMTime(seconds: 1.0, preferredTimescale: 600)
-
-        DispatchQueue.global().async {
-            do {
-                let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
-                let thumbnail = UIImage(cgImage: cgImage)
-                completion(thumbnail)
-            } catch {
-                print("Error generating thumbnail: \(error.localizedDescription)")
-                completion(nil)
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            
+            // Get video duration in seconds.
+            let durationSeconds = CMTimeGetSeconds(asset.duration)
+            var firstThumbnail: UIImage?
+            
+            DispatchQueue.global().async {
+                // Iterate through the video at 1-second intervals.
+                // If the duration is 0 or invalid, try once at 0 seconds.
+                let step = durationSeconds > 0 ? 1.0 : durationSeconds
+                let endTime = durationSeconds > 0 ? durationSeconds : 0.0
+                
+                for currentSecond in stride(from: 0.0, through: endTime, by: step) {
+                    let time = CMTime(seconds: currentSecond, preferredTimescale: 600)
+                    do {
+                        let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
+                        let thumbnail = UIImage(cgImage: cgImage)
+                        
+                        if firstThumbnail == nil {
+                            firstThumbnail = thumbnail
+                        }
+                        
+                        // Check if the thumbnail is not entirely black.
+                        if !self.isImageEntirelyBlack(thumbnail) {
+                            DispatchQueue.main.async {
+                                completion(thumbnail)
+                            }
+                            return
+                        }
+                    } catch {
+                        print("Error generating thumbnail at \(currentSecond) seconds: \(error.localizedDescription)")
+                    }
+                }
+                // If all frames are entirely black (or errors occurred), return the first thumbnail (even if black)
+                DispatchQueue.main.async {
+                    completion(firstThumbnail)
+                }
             }
         }
-    }
+        
+        /// Helper method to determine if an image is entirely black using an average color calculation.
+        private func isImageEntirelyBlack(_ image: UIImage) -> Bool {
+            guard let ciImage = CIImage(image: image) else { return false }
+            let extent = ciImage.extent
+            let filter = CIFilter(name: "CIAreaAverage", parameters: [
+                kCIInputImageKey: ciImage,
+                kCIInputExtentKey: CIVector(cgRect: extent)
+            ])
+            guard let outputImage = filter?.outputImage else { return false }
+            
+            var bitmap = [UInt8](repeating: 0, count: 4)
+            let context = CIContext(options: nil)
+            context.render(outputImage,
+                           toBitmap: &bitmap,
+                           rowBytes: 4,
+                           bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+                           format: .RGBA8,
+                           colorSpace: CGColorSpaceCreateDeviceRGB())
+            let red = CGFloat(bitmap[0]) / 255.0
+            let green = CGFloat(bitmap[1]) / 255.0
+            let blue = CGFloat(bitmap[2]) / 255.0
+            
+            // Calculate the average brightness.
+            let brightness = (red + green + blue) / 3.0
+            // Consider the image "entirely black" if the brightness is very low.
+            return brightness < 0.05
+        }
 
     func showDeleteButton(_ show: Bool, deleteAction: @escaping () -> Void) {
         deleteButton.isHidden = !show

@@ -40,6 +40,8 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var videoScrubberView: UIScrollView!
     
+    public var separatorView: UIView!
+    
     var projectNameColorGrade = String()
     private var project: Project?
     var videoList: [URL] = []
@@ -113,6 +115,14 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                // Set a fixed width for playheadIndicator
                playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
            ])
+        separatorView = UIView()
+        separatorView.backgroundColor = .gray  // Use desired color
+                collectionView.addSubview(separatorView)
+                
+                // Optionally, schedule an update after the current run loop cycle
+                DispatchQueue.main.async {
+                    self.updateSeparatorFrame()
+                }
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -306,6 +316,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         // Set initial label value
         let percentage = Int((value / max) * 100)
         label.text = "\(percentage)%"
+        label.textColor = .white
     }
 
     // Update label beside slider when value changes

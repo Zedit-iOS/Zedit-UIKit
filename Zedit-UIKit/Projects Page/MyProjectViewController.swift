@@ -56,6 +56,8 @@ class MyProjectViewController: UIViewController, UICollectionViewDataSource, UIC
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSelection))
             tapGesture.cancelsTouchesInView = false
             projectsCollectionView.addGestureRecognizer(tapGesture)
+        view.backgroundColor = .black
+        projectsCollectionView.backgroundColor = .black
     }
     
     @objc private func handleTapOutsideSelection(_ gesture: UITapGestureRecognizer) {

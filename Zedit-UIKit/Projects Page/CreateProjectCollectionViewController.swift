@@ -64,24 +64,21 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 player = nil
             }
     }
+    
+    
     private func setDefaultProjectName() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateString = dateFormatter.string(from: Date())
-        
         var projectNumber = 1
         var projectName: String
         let existingProjectNames = retrieveProjects().map { $0.name }
         
         repeat {
-            projectName = "\(dateString)-project-\(projectNumber)"
+            projectName = "project \(projectNumber)"
             projectNumber += 1
         } while existingProjectNames.contains(projectName)
         
         projectNameTextField.text = projectName
         textFieldDidChange(projectNameTextField) // Trigger validation
     }
-    
     private func loadProjects() {
         // Clear the existing data in the collection view to avoid duplicates
         if !projects.isEmpty {
@@ -98,6 +95,14 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         createProjectButton.isEnabled = false
         nameExistsLabel.isHidden = true
         projectNameTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        selectProjectButton.translatesAutoresizingMaskIntoConstraints = false
+        selectProjectButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        selectProjectButton.backgroundColor = .lightGray.withAlphaComponent(0)
+        selectProjectButton.tintColor = .lightGray.withAlphaComponent(0)
+                
+                // Configure createProjectButton appearance.
+                createProjectButton.setTitle("create project", for: .normal)
+                createProjectButton.setTitleColor(.white, for: .normal)
     }
     
     private func setupNotifications() {
@@ -133,6 +138,11 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             // Video is selected → Setup AVPlayer
             playVideo(url: videoURL)
             selectProjectButton.isHidden = false
+            selectProjectButton.translatesAutoresizingMaskIntoConstraints = false
+            selectProjectButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            selectProjectButton.backgroundColor = .lightGray.withAlphaComponent(0)
+            selectProjectButton.tintColor = .lightGray.withAlphaComponent(0)
+            selectProjectButton.titleLabel?.textColor = .blue
             videoPlayerView.isUserInteractionEnabled = true // Disable tap selection
         } else {
             // No video → Setup placeholder UI

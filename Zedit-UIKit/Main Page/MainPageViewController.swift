@@ -20,6 +20,7 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     fileprivate var playerObserver: Any?
     var wasPlayingBeforePan = false
+    var separatorView: UIView!
     
 //    private var playPauseButton: UIButton!
 //    private var timeLabel: UILabel!
@@ -99,15 +100,53 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
                // Set a fixed width for playheadIndicator
                playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
            ])
-        
+        separatorView = UIView()
+        separatorView.backgroundColor = .gray  // Use desired color
+                collectionView.addSubview(separatorView)
+                
+                // Optionally, schedule an update after the current run loop cycle
+                DispatchQueue.main.async {
+                    self.updateSeparatorFrame()
+                }
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateVideoList()
+        updateSeparatorFrame()
         collectionView.reloadData()
     }
-
+    func updateSeparatorFrame() {
+        // Attempt to get both first and second cells.
+        guard let firstCell = collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) else { return }
+        
+        let leftMargin: CGFloat = 6.0
+        let rightMargin: CGFloat = 6.0
+        let defaultSeparatorWidth: CGFloat = 2.0  // fallback width if we can’t compute one from second cell
+        
+        let separatorHeight = collectionView.bounds.height
+        
+        // If the second cell is available, compute the separator width so that there’s exactly 6px gap on each side.
+        if let secondCell = collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) {
+            let idealLeft = firstCell.frame.maxX + leftMargin
+            let idealRight = secondCell.frame.minX - rightMargin
+            let computedWidth = idealRight - idealLeft
+            let finalWidth = computedWidth > 0 ? computedWidth : defaultSeparatorWidth
+            
+            separatorView.frame = CGRect(x: idealLeft, y: 0, width: finalWidth, height: separatorHeight)
+        } else {
+            // Fallback: position using the first cell only.
+            let separatorX = firstCell.frame.maxX + leftMargin
+            separatorView.frame = CGRect(x: separatorX, y: 0, width: defaultSeparatorWidth, height: separatorHeight)
+        }
+    }
+        
+        // Keep the separator updated when scrolling occurs.
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            updateSeparatorFrame()
+        }
+    
+    
     func updateVideoList() {
         if let project = getProject(projectName: projectname) {
             videoListHome = project.subfolders.flatMap { $0.videoURLS }
@@ -268,9 +307,9 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
         let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(60),
                                                heightDimension: .fractionalHeight(1.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(8)
+        group.interItemSpacing = .fixed(12)
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
+        section.interGroupSpacing = 12
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
         section.orthogonalScrollingBehavior = .continuous
         
@@ -405,7 +444,7 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
     
 //    override func viewWillAppear(_ animated: Bool) {
 //        super.viewWillAppear(animated)
-//        
+//
 //        if let project = getProject(projectName: projectname) {
 //            videoList = project.subfolders.flatMap { $0.videoURLS }
 //            print("Videos successfully loaded: \(videoList.count) videos found.")
@@ -422,7 +461,7 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
 //            } catch {
 //                print("Error setting up AVAudioSession: \(error.localizedDescription)")
 //            }
-//        
+//
 //        navigationItem.title = projectname
 //    }
     
