@@ -314,33 +314,5 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
         }
     }
     
-    func updateSeparatorFrame() {
-        // Attempt to get both first and second cells.
-        guard let firstCell = collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) else { return }
-        
-        let leftMargin: CGFloat = 6.0
-        let rightMargin: CGFloat = 6.0
-        let defaultSeparatorWidth: CGFloat = 2.0  // fallback width if we can’t compute one from second cell
-        
-        let separatorHeight = collectionView.bounds.height
-        
-        // If the second cell is available, compute the separator width so that there’s exactly 6px gap on each side.
-        if let secondCell = collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) {
-            let idealLeft = firstCell.frame.maxX + leftMargin
-            let idealRight = secondCell.frame.minX - rightMargin
-            let computedWidth = idealRight - idealLeft
-            let finalWidth = computedWidth > 0 ? computedWidth : defaultSeparatorWidth
-            
-            separatorView.frame = CGRect(x: idealLeft, y: 0, width: finalWidth, height: separatorHeight)
-        } else {
-            // Fallback: position using the first cell only.
-            let separatorX = firstCell.frame.maxX + leftMargin
-            separatorView.frame = CGRect(x: separatorX, y: 0, width: defaultSeparatorWidth, height: separatorHeight)
-        }
-    }
-        
-        // Keep the separator updated when scrolling occurs.
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            updateSeparatorFrame()
-        }
+    
 }

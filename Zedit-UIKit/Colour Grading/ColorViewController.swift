@@ -115,14 +115,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                // Set a fixed width for playheadIndicator
                playheadIndicator.widthAnchor.constraint(equalToConstant: 2)
            ])
-        separatorView = UIView()
-        separatorView.backgroundColor = .gray  // Use desired color
-                collectionView.addSubview(separatorView)
-                
-                // Optionally, schedule an update after the current run loop cycle
-                DispatchQueue.main.async {
-                    self.updateSeparatorFrame()
-                }
+        
     }
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
