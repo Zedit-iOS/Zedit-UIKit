@@ -97,9 +97,9 @@ class MyProjectViewControllerCell: UICollectionViewCell {
 
         // Constraints for the title label at the bottom
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1),
-            titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
+            titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1)
         ])
 
         // Layout for delete button at top-right
@@ -124,6 +124,7 @@ class MyProjectViewControllerCell: UICollectionViewCell {
 
         layer.cornerRadius = 8
         layer.masksToBounds = true
+        layer.borderWidth = 2
     }
 
     func update(with project: Project) {

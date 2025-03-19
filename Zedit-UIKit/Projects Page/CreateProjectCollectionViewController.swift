@@ -54,6 +54,9 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         view.backgroundColor = .black
         projectNameTextField.backgroundColor = .black
         projectNameTextField.textColor = .white
+        projectNameTextField.layer.borderColor = UIColor.white.cgColor
+        projectNameTextField.layer.borderWidth = 2
+        projectNameTextField.layer.cornerRadius = 8
     }
     
     override func viewWillDisappear(_ animated: Bool) {

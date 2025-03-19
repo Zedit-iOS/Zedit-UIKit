@@ -36,7 +36,7 @@ class HomePageCollectionViewCell: UICollectionViewCell {
     private func setupUI() {
             // Cell appearance
             layer.borderColor = UIColor.white.cgColor
-            layer.borderWidth = 3
+            layer.borderWidth = 2
             layer.cornerRadius = 8
             clipsToBounds = true
             backgroundColor = .clear  // Transparent so background image shows
@@ -77,9 +77,9 @@ class HomePageCollectionViewCell: UICollectionViewCell {
             // Constraints for Title Label.
             // Here we overlay the titleLabel near the bottom of the thumbnail.
             NSLayoutConstraint.activate([
-                titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
+                titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1),
                 titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -1),
-                titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
+                titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1)
             ])
         }
     
@@ -125,7 +125,7 @@ class HomePageCollectionViewCell: UICollectionViewCell {
             // Build the text with tab characters for separation:
             // Top line: project name (left) and date created (right)
             // Bottom line: clips count (left) and days ago (right)
-            let text = " \(project.name)\t\(dateCreatedString) \n \(clipsCount) clips\t\(daysAgo) days ago "
+            let text = " \(project.name) \t\(dateCreatedString)\n \(clipsCount) clips \t\(daysAgo) days ago"
             
             // Configure paragraph style with a tab stop for right alignment.
             let paragraphStyle = NSMutableParagraphStyle()

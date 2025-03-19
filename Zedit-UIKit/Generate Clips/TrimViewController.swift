@@ -766,7 +766,6 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         
         let request = SFSpeechURLRecognitionRequest(url: audioURL)
         request.shouldReportPartialResults = false
-        request.requiresOnDeviceRecognition = true
 
         recognizer.recognitionTask(with: request) { [weak self] result, error in
             guard let self = self else { return }
