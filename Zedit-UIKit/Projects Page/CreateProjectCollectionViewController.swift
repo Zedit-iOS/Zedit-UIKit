@@ -280,10 +280,6 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             self.presentPHPicker()
         })
         
-        actionSheet.addAction(UIAlertAction(title: "Documents", style: .default) { _ in
-            self.presentDocumentPicker()
-        })
-        
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         present(actionSheet, animated: true)
@@ -307,7 +303,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     private func presentDocumentPicker() {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.movie])
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.movie, .mpeg4Movie, .quickTimeMovie])
         documentPicker.delegate = self
         present(documentPicker, animated: true)
     }
