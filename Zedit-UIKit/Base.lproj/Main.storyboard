@@ -641,9 +641,9 @@
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="q5P-wW-fUr">
                                                 <rect key="frame" x="0.0" y="36.333333333333371" width="393" height="32"/>
                                                 <segments>
-                                                    <segment title="m4a"/>
+                                                    <segment title="mov"/>
                                                     <segment title="mp4"/>
-                                                    <segment title="mkv"/>
+                                                    <segment title="m4v"/>
                                                 </segments>
                                             </segmentedControl>
                                         </subviews>
@@ -660,9 +660,10 @@
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="260" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ckg-wV-PPr">
                                                 <rect key="frame" x="0.0" y="36.333333333333258" width="393" height="32"/>
                                                 <segments>
-                                                    <segment title="2560x1440"/>
-                                                    <segment title="1920x1080"/>
-                                                    <segment title="1280x720"/>
+                                                    <segment title="Low"/>
+                                                    <segment title="HD "/>
+                                                    <segment title="Full HD"/>
+                                                    <segment title="4K"/>
                                                 </segments>
                                             </segmentedControl>
                                         </subviews>
@@ -689,6 +690,8 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="iSz-Z5-uVJ" id="Vhd-uj-Au3"/>
+                        <outlet property="videoFormatSegmentedControl" destination="q5P-wW-fUr" id="qLG-a9-Yt8"/>
+                        <outlet property="videoResolutionSegmentedController" destination="Ckg-wV-PPr" id="YGA-EG-zm6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hZP-xH-NW9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
