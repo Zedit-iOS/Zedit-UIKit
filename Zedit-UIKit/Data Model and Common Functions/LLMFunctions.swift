@@ -36,7 +36,7 @@ class LLM {
             3. Return only a list of numbers representing seconds in the format [num1, num2, num3] without explanations.
             4. Your output must reflect the actual input data provided below, not just example values.
 
-            VERY IMPORTANT: DIALOGUE SHOULD CUT ABRUPTLY!!
+            VERY IMPORTANT: DIALOGUE SHOULD NOT CUT ABRUPTLY!!
 
             Output:
             """,

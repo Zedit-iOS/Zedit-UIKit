@@ -31,6 +31,7 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
         return label
     }()
     
@@ -93,6 +94,8 @@ class ExportVideoCollectionViewCell: UICollectionViewCell {
         
         layer.cornerRadius = 8
         layer.masksToBounds = true
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = 2
     }
     
     override var isSelected: Bool {
