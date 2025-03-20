@@ -190,7 +190,7 @@ class ExportViewController: UIViewController {
                     completion(outputURL, nil)
 
                     // Delete the exported file after completion
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 10) { // Delay deletion to ensure processing
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 100) { // Delay deletion to ensure processing
                         do {
                             try FileManager.default.removeItem(at: outputURL)
                             print("🗑️ Temporary file deleted: \(outputURL.path)")
