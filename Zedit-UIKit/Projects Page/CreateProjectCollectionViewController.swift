@@ -35,6 +35,8 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             }
         }
     private var loadingIndicator: UIActivityIndicatorView?
+    private var isLoading = false
+    
     
     var projects: [Project] = []
     
@@ -70,8 +72,11 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
     }
     
     private func showLoadingIndicator() {
+        isLoading = true
+        updateVideoPreviewView()
         DispatchQueue.main.async {
             print("started")
+            
             
             let indicator = UIActivityIndicatorView(style: .large)
             indicator.color = .white
@@ -95,6 +100,8 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             self.loadingIndicator?.stopAnimating()
             self.loadingIndicator?.removeFromSuperview()
             self.loadingIndicator = nil
+            self.isLoading = false
+            self.updateVideoPreviewView()
         }
     }
 //    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -186,7 +193,11 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             selectProjectButton.tintColor = .lightGray.withAlphaComponent(0)
             selectProjectButton.titleLabel?.textColor = .blue
             videoPlayerView.isUserInteractionEnabled = true // Disable tap selection
-        } else {
+        }
+        else if isLoading == true {
+            videoPlayerView.backgroundColor = UIColor.darkGray
+        }
+        else {
             // No video → Setup placeholder UI
             videoPlayerView.backgroundColor = UIColor.darkGray
                     
