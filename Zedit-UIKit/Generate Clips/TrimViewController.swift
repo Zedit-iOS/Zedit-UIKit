@@ -226,11 +226,11 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             label?.textAlignment = .center
             label?.clipsToBounds = true
             label?.font = UIFont.boldSystemFont(ofSize: 16)
-            label?.textColor = .white
-            label?.backgroundColor = UIColor.darkGray // Set background color
-            label?.layer.borderColor = UIColor.lightGray.cgColor // Set border color
-            label?.layer.borderWidth = 2 // Border thickness
-            label?.layer.cornerRadius = 5 // Rounded corners
+            label?.textColor = .blue
+//            label?.backgroundColor = UIColor.darkGray // Set background color
+//            label?.layer.borderColor = UIColor.lightGray.cgColor // Set border color
+//            label?.layer.borderWidth = 2 // Border thickness
+//            label?.layer.cornerRadius = 5 // Rounded corners
             label?.layer.masksToBounds = true
             
             // Set fixed width constraint to fit "59 min" or "59 sec"
@@ -1016,10 +1016,15 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                             print("No video available for clipping")
                             return
                         }
-                generateClips()
+//                generateClips()
 //                var timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1)!
 //                exportClip(from: videoURL, timestamps: timestamps)
                 destinationVC.trimPreviewProjectName = projectNameTrim
+                destinationVC.minuites = Int(minuitesLabel.text ?? "1") ?? 1
+                destinationVC.seconds = Int(secondsLabel.text ?? "1") ?? 1
+                destinationVC.numberOfClips = Int(numberOfClipsDisplayLabel.text ?? "1") ?? 1
+                destinationVC.videoToClip = videoList.first
+                
             }
         }
     }

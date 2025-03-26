@@ -34,6 +34,7 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
                 textFieldDidChange(projectNameTextField)
             }
         }
+    private var loadingIndicator: UIActivityIndicatorView?
     
     var projects: [Project] = []
     
@@ -68,6 +69,44 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
             }
     }
     
+    private func showLoadingIndicator() {
+        DispatchQueue.main.async {
+            print("started")
+            
+            let indicator = UIActivityIndicatorView(style: .large)
+            indicator.color = .white
+            indicator.translatesAutoresizingMaskIntoConstraints = false
+            indicator.hidesWhenStopped = true
+            
+            self.videoPlayerView.addSubview(indicator)
+            NSLayoutConstraint.activate([
+                indicator.centerXAnchor.constraint(equalTo: self.videoPlayerView.centerXAnchor),
+                indicator.centerYAnchor.constraint(equalTo: self.videoPlayerView.centerYAnchor)
+            ])
+            
+            indicator.startAnimating()
+            self.loadingIndicator = indicator
+        }
+    }
+
+    private func hideLoadingIndicator() {
+        print("stopped")
+        DispatchQueue.main.async {
+            self.loadingIndicator?.stopAnimating()
+            self.loadingIndicator?.removeFromSuperview()
+            self.loadingIndicator = nil
+        }
+    }
+//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+//        if keyPath == "status" {
+//            if let player = player, player.currentItem?.status == .readyToPlay {
+//                hideLoadingIndicator()
+//                DispatchQueue.main.async {
+//                    self.videoPlayerView.isUserInteractionEnabled = true // Re-enable interactions
+//                }
+//            }
+//        }
+//    }
     
     private func setDefaultProjectName() {
         var projectNumber = 1
@@ -403,14 +442,27 @@ extension CreateProjectCollectionViewController {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
+        print("picker dismissed check check check")
+        showLoadingIndicator()
+        
         guard let result = results.first else { return }
         
         if result.itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+           /* showLoadingIndicator()*/ // 🟢 Show loading BEFORE processing begins
+            
             result.itemProvider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
-                guard let self = self, let tempURL = url else { return }
+                guard let self = self, let tempURL = url else {
+                    print("stop1")
+                    self?.hideLoadingIndicator()
+                    return
+                }
                 
                 let fileManager = FileManager.default
-                guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+                guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    print("stop2")
+                    self.hideLoadingIndicator()
+                    return
+                }
                 
                 let destinationURL = documentsDirectory.appendingPathComponent(tempURL.lastPathComponent)
                 
@@ -421,86 +473,89 @@ extension CreateProjectCollectionViewController {
                     try fileManager.copyItem(at: tempURL, to: destinationURL)
                     
                     DispatchQueue.main.async {
+                        print("stop3")
+                        self.hideLoadingIndicator() // 🟢 Hide loading AFTER file is ready
                         self.selectedVideoURL = destinationURL
                         self.playVideo(url: destinationURL)
                     }
                 } catch {
                     print("Error saving video: \(error.localizedDescription)")
+                    self.hideLoadingIndicator()
                 }
             }
         }
     }
+
     
     private func playVideo(url: URL) {
-        // Clear any previous player and observer
-        if let player = player {
-            player.pause()
-            player.replaceCurrentItem(with: nil)
-            self.player = nil
-        }
-        
-        if let observer = playerObserver {
-            NotificationCenter.default.removeObserver(observer)
-            playerObserver = nil
-        }
-        
-        // Clean up any existing player view controller
-        if let existingPlayerVC = playerViewController {
-            existingPlayerVC.willMove(toParent: nil)
-            existingPlayerVC.view.removeFromSuperview()
-            existingPlayerVC.removeFromParent()
-            playerViewController = nil
-        }
-        
-        // Remove all subviews from the videoPlayerView
-        videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
-        
-        // Create a new player with the given URL
-        player = AVPlayer(url: url)
-        
-        // Create and configure the AVPlayerViewController
-        playerViewController = AVPlayerViewController()
-        playerViewController?.player = player
-        playerViewController?.showsPlaybackControls = true
-        
-        // Important: Set these properties to ensure controls are visible
-        playerViewController?.videoGravity = .resizeAspect
-        
-        // Add the player view controller as a child
-        if let playerVC = playerViewController {
-            // Add as a child view controller
-            addChild(playerVC)
+            // Clear any previous player and observer
+            if let player = player {
+                player.pause()
+                player.replaceCurrentItem(with: nil)
+                self.player = nil
+            }
             
-            // Configure the player view to fill the container
-            playerVC.view.frame = videoPlayerView.bounds
-            playerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            if let observer = playerObserver {
+                NotificationCenter.default.removeObserver(observer)
+                playerObserver = nil
+            }
             
-            // Add to view hierarchy
-            videoPlayerView.addSubview(playerVC.view)
+            // Clean up any existing player view controller
+            if let existingPlayerVC = playerViewController {
+                existingPlayerVC.willMove(toParent: nil)
+                existingPlayerVC.view.removeFromSuperview()
+                existingPlayerVC.removeFromParent()
+                playerViewController = nil
+            }
             
-            // Complete the parent-child relationship
-            playerVC.didMove(toParent: self)
+            // Remove all subviews from the videoPlayerView
+            videoPlayerView.subviews.forEach { $0.removeFromSuperview() }
             
-            // Enable user interaction
-            playerVC.view.isUserInteractionEnabled = true
-            videoPlayerView.isUserInteractionEnabled = true
+            // Create a new player with the given URL
+            player = AVPlayer(url: url)
+            
+            // Create and configure the AVPlayerViewController
+            playerViewController = AVPlayerViewController()
+            playerViewController?.player = player
+            playerViewController?.showsPlaybackControls = true
+            
+            // Important: Set these properties to ensure controls are visible
+            playerViewController?.videoGravity = .resizeAspect
+            
+            // Add the player view controller as a child
+            if let playerVC = playerViewController {
+                // Add as a child view controller
+                addChild(playerVC)
+                
+                // Configure the player view to fill the container
+                playerVC.view.frame = videoPlayerView.bounds
+                playerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                
+                // Add to view hierarchy
+                videoPlayerView.addSubview(playerVC.view)
+                
+                // Complete the parent-child relationship
+                playerVC.didMove(toParent: self)
+                
+                // Enable user interaction
+                playerVC.view.isUserInteractionEnabled = true
+                videoPlayerView.isUserInteractionEnabled = true
+            }
+            
+            // Set up loop playback
+            playerObserver = NotificationCenter.default.addObserver(
+                forName: .AVPlayerItemDidPlayToEndTime,
+                object: player?.currentItem,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.player?.seek(to: CMTime.zero)
+                self.player?.play()
+            }
+            
+            // Start playback
+            player?.play()
         }
-        
-        // Set up loop playback
-        playerObserver = NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime,
-            object: player?.currentItem,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            self.player?.seek(to: CMTime.zero)
-            self.player?.play()
-        }
-        
-        // Start playback
-        player?.play()
-    }
-
 }
 
 // MARK: - TextField and Keyboard Handling

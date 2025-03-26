@@ -13,9 +13,17 @@ class TrimVideoPreviewViewController: UIViewController {
     var playerViewController: AVPlayerViewController?
     var loadingIndicator: UIAlertController?
     var checkClipsTimer: Timer?
+    var videoToClip: URL?
+    var numberOfClips: Int = 1
+    var minuites: Int = 3
+    var seconds: Int = 5
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        generateClips(VideoURL: videoToClip!, minuites: minuites, seconds: seconds, numberOfClips: numberOfClips, projectName: trimPreviewProjectName)
         
         // Show the loading pop-up
         showLoadingIndicator()
