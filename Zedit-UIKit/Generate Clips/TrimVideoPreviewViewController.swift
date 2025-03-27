@@ -17,7 +17,10 @@ class TrimVideoPreviewViewController: UIViewController {
     var numberOfClips: Int = 1
     var minuites: Int = 3
     var seconds: Int = 5
-    
+    var isCreatingScenes = false
+    var isCreatingTimestamps = false
+    var isLLmProcessing = false
+    var isCreatingClips = false
     
     
     override func viewWillAppear(_ animated: Bool) {

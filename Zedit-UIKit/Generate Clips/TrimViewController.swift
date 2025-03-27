@@ -226,7 +226,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             label?.textAlignment = .center
             label?.clipsToBounds = true
             label?.font = UIFont.boldSystemFont(ofSize: 16)
-            label?.textColor = .blue
+            label?.textColor = .white
 //            label?.backgroundColor = UIColor.darkGray // Set background color
 //            label?.layer.borderColor = UIColor.lightGray.cgColor // Set border color
 //            label?.layer.borderWidth = 2 // Border thickness
