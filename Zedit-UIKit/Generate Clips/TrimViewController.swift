@@ -1016,7 +1016,6 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
                             print("No video available for clipping")
                             return
                         }
-//                generateClips()
 //                var timestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: Int(numberOfClipsDisplayLabel.text ?? " ") ?? 1)!
 //                exportClip(from: videoURL, timestamps: timestamps)
                 destinationVC.trimPreviewProjectName = projectNameTrim

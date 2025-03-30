@@ -117,10 +117,12 @@ class ExportViewController: UIViewController {
                             print("⚠️ Failed to delete temporary file after export: \(error.localizedDescription)")
                         }
                     }
+                    self.performSegue(withIdentifier: "ExportCancel", sender: self)
                 }
                 self.present(activityController, animated: true)
             }
         }
+        
     }
     
     func getSelectedFormat() -> AVFileType {

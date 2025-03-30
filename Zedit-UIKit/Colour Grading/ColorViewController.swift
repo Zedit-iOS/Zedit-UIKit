@@ -267,18 +267,24 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @objc func backButtonTapped() {
-        let alert = UIAlertController(
-            title: "Confirm Navigation",
-            message: "Are you sure you want to go back? Unsaved changes may be lost.",
-            preferredStyle: .alert
-        )
-        
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+        if redSlider.value == 100, blueSlider.value == 100, greenSlider.value == 100, contrastSlider.value == 50 {
             self.isNavigatingBack = true
             self.navigationController?.popViewController(animated: true)
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel))
-        present(alert, animated: true)
+        }
+        else {
+            let alert = UIAlertController(
+                title: "Unsaved Changes",
+                message: "You have unsaved changes if you go back you will lose them, do you wish to continue.",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { _ in
+                self.isNavigatingBack = true
+                self.navigationController?.popViewController(animated: true)
+            }))
+            alert.addAction(UIAlertAction(title: "No", style: .cancel))
+            present(alert, animated: true)
+        }
     }
     
     private func setupSliders() {
@@ -695,7 +701,9 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
                             message: "File exported to: \(outputURL.lastPathComponent)",
                             preferredStyle: .alert
                         )
-                        successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                        successAlert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                                self.navigationController?.popViewController(animated: true)
+                            })
                         self.present(successAlert, animated: true)
                     case .failed, .cancelled:
                         let errorAlert = UIAlertController(
