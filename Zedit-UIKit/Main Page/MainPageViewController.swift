@@ -114,6 +114,7 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
     func updateVideoList() {
         if let project = getProject(projectName: projectname) {
             videoListHome = project.subfolders.flatMap { $0.videoURLS }
+            playVideo(url: videoListHome.first!)
             print("Updated video count: \(videoListHome.count)")
         } else {
             print("Failed to update project")
