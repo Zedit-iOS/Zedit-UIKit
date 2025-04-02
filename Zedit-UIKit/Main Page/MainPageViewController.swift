@@ -61,10 +61,14 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
         }
 
         navigationItem.title = projectname
-        self.navigationItem.hidesBackButton = true
-        let backButton = UIBarButtonItem(
-            title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = backButton
+        let backButton = UIButton(type: .system)
+        backButton.setTitle(" Back", for: .normal)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = .systemBlue
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+
+        let barButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = barButtonItem
         playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
 
         setupPlayheadIndicator()

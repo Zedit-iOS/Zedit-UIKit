@@ -69,9 +69,14 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
         navigationController?.delegate = self
         
-        self.navigationItem.hidesBackButton = true
-        let backButton = UIBarButtonItem(title: " Back", style: .plain, target: self, action: #selector(backButtonTapped))
-        self.navigationItem.leftBarButtonItem = backButton
+        let backButton = UIButton(type: .system)
+        backButton.setTitle(" Back", for: .normal)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = .systemBlue
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+
+        let barButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = barButtonItem
         
         if let videos = fetchVideos() {
             videoList = videos
