@@ -32,7 +32,6 @@ namespace CVFuncs
             }
 
             double fps = cap.get(cv::CAP_PROP_FPS);
-            int total_frames = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_COUNT));
             int min_frames_between_scenes = static_cast<int>(fps * MIN_SCENE_DURATION);
 
             std::vector<double> scene_changes;
