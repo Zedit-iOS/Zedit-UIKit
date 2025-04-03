@@ -599,16 +599,19 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
             let destination = segue.destination as? TrimViewController
         {
             player?.pause()
+            destination.modalPresentationStyle = .fullScreen
             destination.projectNameTrim = projectname
         } else if segue.identifier == "Export",
             let destination = segue.destination as? ExportViewController
         {
             player?.pause()
+            destination.modalPresentationStyle = .fullScreen
             destination.projectname = projectname
         } else if segue.identifier == "colorGrade",
             let destination = segue.destination as? ColorViewController
         {
             player?.pause()
+            destination.modalPresentationStyle = .fullScreen
             destination.projectNameColorGrade = projectname
         }
     }
@@ -654,8 +657,6 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
 
         print("Unwind action complete.")
     }
-
-    
 
 }
 
