@@ -55,6 +55,14 @@ class CreateProjectCollectionViewController: UIViewController, UINavigationContr
         } catch {
             print("Error setting up AVAudioSession: \(error.localizedDescription)")
         }
+        
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+            if granted {
+                print("Camera access granted")
+            } else {
+                print("Camera access denied")
+            }
+        }
         updateVideoPreviewView()
         view.backgroundColor = .black
         projectNameTextField.backgroundColor = .black
