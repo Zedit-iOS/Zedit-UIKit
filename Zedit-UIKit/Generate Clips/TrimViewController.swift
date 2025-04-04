@@ -404,14 +404,7 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        // Position the playhead over the scrollView
-        playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = videoScrubberView.frame.minY + 10
-        playheadIndicator.frame.size.height = videoScrubberView.bounds.height
-    }
+   
     
     func setupCollectionView() {
         collectionView.collectionViewLayout = generateLayout()

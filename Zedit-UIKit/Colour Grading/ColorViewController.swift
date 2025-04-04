@@ -474,9 +474,6 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         super.viewDidLayoutSubviews()
         playerViewController?.view.frame = videoPlayer.bounds
         colorPlayerLayer?.frame = colorVideoPlayer.bounds
-        playheadIndicator.frame.origin.x = videoScrubberView.frame.midX - (playheadIndicator.frame.width / 2)
-        playheadIndicator.frame.origin.y = playerView.frame.minY + 132
-        playheadIndicator.frame.size.height = videoScrubberView.bounds.height
         adjustVideoPlayerLayouts()
     }
     
