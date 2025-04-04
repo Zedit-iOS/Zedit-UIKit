@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Zedit requires acess to photos library to import videos and store them in the app to enable you to edit them. This data will not be shared or used by anyone</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Zedit requires acess to speech detection to analyze your audio to create the best clips. This data remains entirely on device and will not be shared or used by anyone else</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Zedit requires acess to the microphone to enable you to record audio for videos and store them within the app. This data will not be shared or used by anyone else </string>
+	<key>NSCameraUsageDescription</key>
+	<string>Zedit requires access to the camera to enable you take videos and store them within the app. This data will not be shared or used by anyone else </string>
 	<key>NSCameraReactionEffectGesturesEnabledDefault</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
