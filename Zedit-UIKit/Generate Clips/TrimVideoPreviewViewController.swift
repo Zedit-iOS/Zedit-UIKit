@@ -25,22 +25,38 @@ class TrimVideoPreviewViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        generateClips(VideoURL: videoToClip!, minuites: minuites, seconds: seconds, numberOfClips: numberOfClips, projectName: trimPreviewProjectName)
-        
-        // Show the loading pop-up
         showLoadingIndicator()
-        
-        // Start checking for videos every 10 seconds
         checkClipsTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(checkForVideos), userInfo: nil, repeats: true)
         
-        // Set up the collection view
-        vidoListCollectionView.setupCollectionView(in: view)
-        vidoListCollectionView.delegate = self
+        
+        
+    }
+    
+    
+    func updateLoadingMessage(_ message: String) {
+        DispatchQueue.main.async {
+            guard let loadingAlert = self.loadingIndicator else { return }
+            // Create a new attributed string for the message with the original (non-bold) font size.
+            let messageAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 15)
+            ]
+            let attributedMsg = NSAttributedString(string: message, attributes: messageAttributes)
+            loadingAlert.setValue(attributedMsg, forKey: "attributedMessage")
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.global(qos: .userInitiated).async {
+            generateClips(VideoURL: self.videoToClip!, minuites: self.minuites, seconds: self.seconds, numberOfClips: self.numberOfClips, projectName: self.trimPreviewProjectName, isCreatingScenes: self.isCreatingScenes, isLLmProcessing: self.isLLmProcessing, isCreatingTimestamps: self.isCreatingTimestamps, isCreatingClips: self.isCreatingClips, delegate: self)
+        }
+        
+        vidoListCollectionView.setupCollectionView(in: view)
+        vidoListCollectionView.delegate = self
+        vidoListCollectionView.backgroundColor = .black
+        
+        // Start checking for videos every 10 seconds
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -122,14 +138,42 @@ class TrimVideoPreviewViewController: UIViewController {
     }
 
     private func showLoadingIndicator() {
-        loadingIndicator = UIAlertController(title: "Loading", message: "Checking for videos...", preferredStyle: .alert)
+        // Create the alert without any title or message initially.
+        loadingIndicator = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        
+        // Set attributed title with a larger bold font.
+        let titleText = "Loading"
+        let titleAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 20)
+        ]
+        let attributedTitle = NSAttributedString(string: titleText, attributes: titleAttributes)
+        loadingIndicator?.setValue(attributedTitle, forKey: "attributedTitle")
+        
+        // Set attributed message with a smaller, non-bold font (using system font).
+        let messageText = "Checking for videos..."
+        let messageAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 15)
+        ]
+        let attributedMessage = NSAttributedString(string: messageText, attributes: messageAttributes)
+        loadingIndicator?.setValue(attributedMessage, forKey: "attributedMessage")
+        
+        // Increase the alert controller's height by adding an extra height constraint.
+        // Adjust the constant as necessary for the desired height.
+        loadingIndicator?.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
+        
+        // Setup the spinner
         let spinner = UIActivityIndicatorView(style: .medium)
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.startAnimating()
         
+        // Add spinner as a subview to the alert's view.
         loadingIndicator?.view.addSubview(spinner)
-        spinner.centerXAnchor.constraint(equalTo: loadingIndicator!.view.centerXAnchor).isActive = true
-        spinner.bottomAnchor.constraint(equalTo: loadingIndicator!.view.bottomAnchor, constant: -20).isActive = true
+        
+        // Position the spinner below the title/message using Auto Layout.
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: loadingIndicator!.view.centerXAnchor),
+            spinner.topAnchor.constraint(equalTo: loadingIndicator!.view.topAnchor, constant: 70)
+        ])
         
         if let loadingIndicator = loadingIndicator {
             present(loadingIndicator, animated: true, completion: nil)

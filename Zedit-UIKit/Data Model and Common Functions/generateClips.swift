@@ -9,24 +9,39 @@ import Foundation
 import AVFoundation
 import Speech
 
-func generateClips(VideoURL: URL, minuites: Int, seconds: Int, numberOfClips: Int, projectName: String) {
-    let videoURL = VideoURL
-    let savedVideoURL = videoURL
-    
-    
+func generateClips(
+    VideoURL: URL,
+    minuites: Int,
+    seconds: Int,
+    numberOfClips: Int,
+    projectName: String,
+    isCreatingScenes: Bool,
+    isLLmProcessing: Bool,
+    isCreatingTimestamps: Bool,
+    isCreatingClips: Bool,
+    delegate: TrimVideoPreviewViewController
+) {
+    delegate.updateLoadingMessage("Analyzing video...")
+
     let minutes = minuites
     let seconds = seconds
     let minimumClipDuration = (minutes * 60) + seconds
-    
-    let scenes = processVideoForScenes(videoPath: videoURL.path, minimumClipDuration: minimumClipDuration)
-    
+
+    let scenes = processVideoForScenes(videoPath: VideoURL.path, minimumClipDuration: minimumClipDuration)
+
     let finalSceneRanges = scenes.map { $0.start...$0.end }
     let flatSceneRanges = finalSceneRanges.map { range in
         [range.lowerBound, range.upperBound]
     }
+
     print("Scenes are : \(flatSceneRanges)")
-    extractAudioAndTranscribe(from: videoURL, finalSceneRanges: flatSceneRanges, numberOfClips: numberOfClips, projectName: projectName)
+
+    delegate.updateLoadingMessage("Extracting audio...")
+
+    extractAudioAndTranscribe(from: VideoURL, finalSceneRanges: flatSceneRanges, numberOfClips: numberOfClips, projectName: projectName, delegate: delegate)
 }
+
+
 
 func processVideoForScenes(videoPath: String, minimumClipDuration: Int) -> [SceneRange]{
     let scenesArray = NSMutableArray()
@@ -44,7 +59,7 @@ func processVideoForScenes(videoPath: String, minimumClipDuration: Int) -> [Scen
     return scenes
 }
 
-func extractAudioAndTranscribe(from videoURL: URL, finalSceneRanges: [[Double]], numberOfClips: Int, projectName: String) {
+func extractAudioAndTranscribe(from videoURL: URL, finalSceneRanges: [[Double]], numberOfClips: Int, projectName: String, delegate: TrimVideoPreviewViewController) {
     let asset = AVAsset(url: videoURL)
     guard let track = asset.tracks(withMediaType: .audio).first else {
         print("No audio track found in video.")
@@ -108,16 +123,18 @@ func extractAudioAndTranscribe(from videoURL: URL, finalSceneRanges: [[Double]],
                 
                 // 4. Proceed with transcription
                 transcribeAudio(at: audioOutputURL, sceneRanges: finalSceneRanges, videoURL: videoURL, numberOfClips: numberOfClips) { timestamps in
-                    getResults(timestamps: timestamps, sceneRanges: finalSceneRanges, videoURL: videoURL, numberOfClips: numberOfClips, projectName: projectName)
+                    delegate.updateLoadingMessage("Running LLm analysis")
+                    getResults(timestamps: timestamps, sceneRanges: finalSceneRanges, videoURL: videoURL, numberOfClips: numberOfClips, projectName: projectName, delegate: delegate)
                 }
 
                 
             case .failed:
                 print("Failed to export audio: \(exportSession.error?.localizedDescription ?? "Unknown error")")
+                delegate.updateLoadingMessage("creating clips")
                 getResults(timestamps: [],
                            sceneRanges: finalSceneRanges,
                                 videoURL: videoURL,
-                           numberOfClips: numberOfClips, projectName: projectName)
+                           numberOfClips: numberOfClips, projectName: projectName, delegate: delegate)
             case .cancelled:
                 print("Audio export cancelled")
             default:
@@ -232,7 +249,8 @@ func getResults(
     sceneRanges: [[Double]],
     videoURL: URL,
     numberOfClips: Int,
-    projectName: String
+    projectName: String,
+    delegate: TrimVideoPreviewViewController?
 ) {
     Task {
         do {
@@ -244,10 +262,16 @@ func getResults(
                 let sortedTimestamps = extractedTimestamps.sorted()
                 print("Extracted timestamps: \(sortedTimestamps)")
                 if sortedTimestamps.count >= 2 {
+                    DispatchQueue.main.async {
+                           delegate?.updateLoadingMessage("creating Clips...")
+                       }
                     exportClip(from: videoURL, timestamps: sortedTimestamps, projectName: projectName)
                 } else {
                     print("Not enough timestamps extracted. Falling back.")
                     if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                        DispatchQueue.main.async {
+                               delegate?.updateLoadingMessage("creating Clips...")
+                           }
                         exportClip(from: videoURL, timestamps: fallbackTimestamps, projectName: projectName)
                     } else {
                         print("Failed to generate fallback clip timestamps.")
@@ -256,6 +280,9 @@ func getResults(
             } else {
                 // Fallback if extraction returned nil.
                 if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                    DispatchQueue.main.async {
+                           delegate?.updateLoadingMessage("creating Clips...")
+                       }
                     exportClip(from: videoURL, timestamps: fallbackTimestamps, projectName: projectName)
                 } else {
                     print("Failed to generate fallback clip timestamps.")
@@ -264,6 +291,9 @@ func getResults(
         } catch {
             print("Error running LLM: \(error)")
             if let fallbackTimestamps = generateEvenClipTimestamps(for: videoURL, numberOfClips: numberOfClips) {
+                DispatchQueue.main.async {
+                       delegate?.updateLoadingMessage("creating Clips...")
+                   }
                 exportClip(from: videoURL, timestamps: fallbackTimestamps, projectName: projectName)
             } else {
                 print("Failed to generate fallback clip timestamps.")

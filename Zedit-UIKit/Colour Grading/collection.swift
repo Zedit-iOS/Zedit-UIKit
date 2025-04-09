@@ -27,8 +27,10 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedVideo = videoList[indexPath.item]
         print("Playing video from collection: \(selectedVideo)")
-        loadVideo(url: selectedVideo)
-        generateThumbnails(for: selectedVideo)
+        DispatchQueue.global(qos: .userInitiated).async {
+                    self.loadVideo(url: selectedVideo)
+                    self.generateThumbnails(for: selectedVideo)
+            }
     }
     
     func setupTimelineControls() {
@@ -138,6 +140,7 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func setupSwipeGesture() {
+        videoScrubberView.gestureRecognizers?.forEach { videoScrubberView.removeGestureRecognizer($0) }
             let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
             swipeLeft.direction = .left
         videoScrubberView.addGestureRecognizer(swipeLeft)
@@ -156,6 +159,8 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
         let asset = AVAsset(url: videoURL)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
+        imageGenerator.requestedTimeToleranceBefore = CMTime(seconds: 0.1, preferredTimescale: 600)
+        imageGenerator.requestedTimeToleranceAfter = CMTime(seconds: 0.1, preferredTimescale: 600)
 
         let duration = Int(CMTimeGetSeconds(asset.duration))  // Total seconds of video
         let interval = 1  // Generate one thumbnail per second
@@ -197,7 +202,9 @@ extension ColorViewController: UICollectionViewDelegate, UICollectionViewDataSou
 
     
     func setupGestureRecognizer() {
-            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        videoScrubberView.gestureRecognizers?.forEach { videoScrubberView.removeGestureRecognizer($0) }
+            
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         videoScrubberView.addGestureRecognizer(panGesture)
         }
         

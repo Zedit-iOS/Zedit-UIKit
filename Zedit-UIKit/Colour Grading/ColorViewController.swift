@@ -96,6 +96,9 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         generateThumbnails(for: videoList.first!)
         setupTimelineControls()
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        playerViewController?.view.frame = videoPlayer.bounds
+        colorPlayerLayer?.frame = colorVideoPlayer.bounds
+        adjustVideoPlayerLayouts()
         playheadIndicator.translatesAutoresizingMaskIntoConstraints = false
         colorVideoPlayer.translatesAutoresizingMaskIntoConstraints = false
         videoScrubberView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +112,7 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
            // Set up constraints for playheadIndicator, including a width constraint
            NSLayoutConstraint.activate([
                // Anchor the top of playheadIndicator to the bottom of videoPreviewView with a 20-point offset
-            playheadIndicator.topAnchor.constraint(equalTo: colorVideoPlayer.bottomAnchor, constant: 10),
+            playheadIndicator.bottomAnchor.constraint(equalTo: videoScrubberView.bottomAnchor, constant: 0),
                
                // Center playheadIndicator horizontally with videoScrubber
                playheadIndicator.centerXAnchor.constraint(equalTo: videoScrubberView.centerXAnchor),
@@ -123,13 +126,21 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
         
     }
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
         NotificationCenter.default.removeObserver(self)
-            if player != nil{
-                player?.replaceCurrentItem(with: nil)
-                player = nil
-            }
+        
+        // Remove the time observer before releasing the player
+        if let token = timeObserverToken {
+            token.player.removeTimeObserver(token.observer)
+            timeObserverToken = nil
+        }
+        
+        if player != nil {
+            player?.replaceCurrentItem(with: nil)
+            player = nil
+        }
     }
-    
     private func findAllStackViews(in view: UIView) -> [UIStackView] {
         return view.subviews.compactMap { $0 as? UIStackView }
     }
@@ -446,11 +457,16 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
             timeObserverToken = nil
         }
         
-        let interval = CMTime(seconds: 0.03, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        // Use a less frequent interval (e.g., 0.1 seconds instead of 0.03)
+        let interval = CMTime(seconds: 0.1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         
         if let player = playerViewController?.player {
             let observer = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-                self?.colorPlayerLayer?.player?.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
+                guard let self = self,
+                      let colorPlayer = self.colorPlayerLayer?.player,
+                      colorPlayer.rate > 0 else { return }
+                
+                colorPlayer.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
             }
             timeObserverToken = (observer: observer, player: player)
         }
@@ -472,9 +488,6 @@ class ColorViewController: UIViewController, UINavigationControllerDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        playerViewController?.view.frame = videoPlayer.bounds
-        colorPlayerLayer?.frame = colorVideoPlayer.bounds
-        adjustVideoPlayerLayouts()
     }
     
     deinit {

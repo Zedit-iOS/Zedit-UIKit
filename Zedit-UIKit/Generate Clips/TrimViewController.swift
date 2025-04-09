@@ -462,9 +462,10 @@ class TrimViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 
         // Optionally, clear previous thumbnails if needed:
         // self.videoScrubberView.subviews.forEach { $0.removeFromSuperview() }
+        
+        var xOffset: CGFloat = self.videoScrubberView.frame.midX - (self.playheadIndicator.frame.width / 2)
 
         DispatchQueue.global(qos: .userInitiated).async {
-            var xOffset: CGFloat = self.videoScrubberView.frame.midX - (self.playheadIndicator.frame.width / 2)
             let thumbnailWidth: CGFloat = 60  // Thumbnail width
             let spacing: CGFloat = 1  // Space between thumbnails
 
@@ -1151,7 +1152,10 @@ extension TrimViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedVideo = videoList[indexPath.item]
         print("Playing video from collection: \(selectedVideo)")
-        playVideo(url: selectedVideo)
-        generateThumbnails(for: selectedVideo)
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.playVideo(url: selectedVideo)
+            self.generateThumbnails(for: selectedVideo)
+        }
+        
     }
 }

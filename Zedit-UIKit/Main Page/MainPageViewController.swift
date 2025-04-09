@@ -321,9 +321,9 @@ class MainPageViewController: UIViewController, UIGestureRecognizerDelegate {
             times.append(NSValue(time: cmTime))
         }
 
+        var xOffset: CGFloat = self.videoScrubber.frame.midX - (self.playheadIndicator.frame.width / 2)  // Start at playhead position
+
         DispatchQueue.global(qos: .userInitiated).async {
-            var xOffset: CGFloat =
-                self.videoScrubber.frame.midX - (self.playheadIndicator.frame.width / 2)  // Start at playhead position
             let thumbnailWidth: CGFloat = 60  // Thumbnail width
             let spacing: CGFloat = 1  // Space between thumbnails
 
